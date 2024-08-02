@@ -47,4 +47,3 @@ jobs:
         if: ${{ env.IS_RELEASE == 'true' }}
         run: |
           dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
-          dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.snupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
