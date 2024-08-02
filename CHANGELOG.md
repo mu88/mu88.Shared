@@ -1,5 +1,12 @@
 
 
+<a name="0.2.1"></a>
+## [0.2.1](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.2.1) (2024-08-02)
+
+### Bug Fixes
+
+* move targets to project root ([d2d81e9](https://www.github.com/mu88/mu88.Shared/commit/d2d81e9ca64aa327038eb3df0fbcb2c113f1ccbe))
+
 <a name="0.2.0"></a>
 ## [0.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.2.0) (2024-08-02)
 
