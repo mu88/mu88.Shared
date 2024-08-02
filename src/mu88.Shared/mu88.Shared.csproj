@@ -16,6 +16,11 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+  <PropertyGroup>
+    <!--    See: https://github.com/dotnet/sourcelink/issues/1203-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
 <!--    See: https://github.com/clairernovotny/DeterministicBuilds?tab=readme-ov-file#deterministic-builds-->
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
