@@ -1,5 +1,12 @@
 
 
+<a name="0.0.8"></a>
+## [0.0.8](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.0.8) (2024-08-02)
+
+### Bug Fixes
+
+* don't enforce using OTLP exporter ([471f916](https://www.github.com/mu88/mu88.Shared/commit/471f9168c7cd14bc80c2c0cda82e85192a2e4aaa))
+
 <a name="0.0.7"></a>
 ## [0.0.7](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.0.7) (2024-08-02)
 
