@@ -1,5 +1,12 @@
 
 
+<a name="0.1.1"></a>
+## [0.1.1](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.1.1) (2024-08-02)
+
+### Bug Fixes
+
+* ignore NU5104 as it's on purpose to use the prerelease packages from OpenTelemetry ([3767529](https://www.github.com/mu88/mu88.Shared/commit/376752929a4077de8dbffad07c17510b120f2dc7))
+
 <a name="0.1.0"></a>
 ## [0.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.1.0) (2024-08-02)
 
