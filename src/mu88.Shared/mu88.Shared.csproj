@@ -3,7 +3,9 @@
     <PackageId>mu88.Shared</PackageId>
     <Authors>mu88</Authors>
     <Description>
-
+      This is a little helper NuGet package to share certain the following aspects:
+      - Enable .NET metrics and expose them via OpenTelemetry
+      - Provide an MSBuild target for building a multi-manifest Docker image
     </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
