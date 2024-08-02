@@ -1,5 +1,8 @@
 
 
+<a name="0.0.4"></a>
+## [0.0.4](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.0.4) (2024-08-02)
+
 <a name="0.0.3"></a>
 ## [0.0.3](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.0.3) (2024-08-02)
 
