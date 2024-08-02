@@ -1,5 +1,12 @@
 
 
+<a name="0.1.2"></a>
+## [0.1.2](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.1.2) (2024-08-02)
+
+### Bug Fixes
+
+* temporarily remove MSBuild target as it breaks downstream ([45de444](https://www.github.com/mu88/mu88.Shared/commit/45de444ead8fef6ff8d1eab2018075465470abe6))
+
 <a name="0.1.1"></a>
 ## [0.1.1](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.1.1) (2024-08-02)
 
