@@ -1,5 +1,16 @@
 
 
+<a name="0.1.0"></a>
+## [0.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.1.0) (2024-08-02)
+
+### Features
+
+* add process and EF core instrumentation ([d1231ce](https://www.github.com/mu88/mu88.Shared/commit/d1231ceeb680984f0810e0f7915887d4c53d5507))
+
+### Bug Fixes
+
+* don't reference SDK type as it reimports the related targets ([8277743](https://www.github.com/mu88/mu88.Shared/commit/8277743238e6699107ad100a845819dcf7a7a07e))
+
 <a name="0.0.8"></a>
 ## [0.0.8](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.0.8) (2024-08-02)
 
