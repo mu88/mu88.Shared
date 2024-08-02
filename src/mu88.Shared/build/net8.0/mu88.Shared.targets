@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project>
   <!-- Multi-arch images (see https://github.com/dotnet/sdk-container-builds/issues/87) -->
   <PropertyGroup>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
