@@ -15,6 +15,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <NoWarn>NU5104</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <!--    See: https://github.com/dotnet/sourcelink/issues/1203-->
