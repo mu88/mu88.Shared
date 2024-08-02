@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solution
 		global.json = global.json
 		.config\dotnet-tools.json = .config\dotnet-tools.json
 		.github\workflows\CI_CD.yml = .github\workflows\CI_CD.yml
+		renovate.json = renovate.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mu88.Shared", "src\mu88.Shared\mu88.Shared.csproj", "{9E92B66B-167D-465C-884D-2F761620EDE8}"

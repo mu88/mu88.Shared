@@ -1,6 +1,69 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base",
+    "group:all",
+    ":semanticCommitTypeAll(chore)",
+    "schedule:earlyMondays"
+  ],
+  "ignorePresets": [
+    ":ignoreModulesAndTests"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/__fixtures__/**"
+  ],
+  "packageRules": [
+    {
+      "description": "Automatically merge minor and patch-level updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "branch"
+    },
+    {
+      "description": "Disable major updates of certain .NET packages as this shall be done manually",
+      "matchPackagePrefixes": [
+        "Microsoft.AspNetCore.",
+        "Microsoft.Bcl.",
+        "Microsoft.Extensions."
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Wait with non-major updates of global.json so that it is likely to be installed on all dev machines, too",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "matchFileNames": [
+        "global.json"
+      ],
+      "minimumReleaseAge": "14 days",
+      "automerge": true,
+      "automergeType": "branch"
+    },
+    {
+      "description": "Major updates of global.json will be done manually.",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchFileNames": [
+        "global.json"
+      ],
+      "enabled": false
+    }
   ]
 }
