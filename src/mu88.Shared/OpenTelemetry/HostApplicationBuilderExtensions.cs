@@ -27,11 +27,14 @@ public static class HostApplicationBuilderExtensions
                {
                    metrics
                        .AddAspNetCoreInstrumentation()
+                       .AddProcessInstrumentation()
                        .AddRuntimeInstrumentation();
                })
                .WithTracing(tracing =>
                {
-                   tracing.AddAspNetCoreInstrumentation();
+                   tracing
+                       .AddAspNetCoreInstrumentation()
+                       .AddEntityFrameworkCoreInstrumentation();
                });
 
         var otlpEndpointIsSet = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
