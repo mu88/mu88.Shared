@@ -9,7 +9,8 @@
     </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageReleaseNotes>CHANGELOG.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/mu88/mu88.Shared/blob/main/CHANGELOG.md</PackageReleaseNotes>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageTags>opentelemetry containers docker Microsoft.NET.Build.Containers</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -23,6 +24,7 @@
     <None Include="../../README.md" Pack="true" PackagePath=""/>
     <None Include="../../LICENSE.md" Pack="true" PackagePath=""/>
     <None Include="../../CHANGELOG.md" Pack="true" PackagePath=""/>
+    <None Include="../../icon.jpg" Pack="true" PackagePath="\"/>
 <!--    See: https://stackoverflow.com/a/47077259/4919526-->
     <None Include="build\**" Pack="True" PackagePath="build\" />
   </ItemGroup>
