@@ -8,16 +8,12 @@ using OpenTelemetry.Trace;
 
 namespace mu88.Shared.OpenTelemetry;
 
+// ReSharper disable once UnusedType.Global - reviewed mu88: public API
 public static class HostApplicationBuilderExtensions
 {
+    // ReSharper disable once UnusedMember.Global - reviewed mu88: public API
     public static void ConfigureOpenTelemetry(this IHostApplicationBuilder builder, string serviceName)
     {
-        var otlpEndpointNotSet = string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
-        if (otlpEndpointNotSet)
-        {
-            throw new InvalidOperationException("The configuration parameter 'OTEL_EXPORTER_OTLP_ENDPOINT' must be specified.");
-        }
-
         builder.Logging.AddOpenTelemetry(logging =>
         {
             logging.IncludeFormattedMessage = true;
@@ -38,6 +34,10 @@ public static class HostApplicationBuilderExtensions
                    tracing.AddAspNetCoreInstrumentation();
                });
 
-        builder.Services.AddOpenTelemetry().UseOtlpExporter();
+        var otlpEndpointIsSet = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+        if (otlpEndpointIsSet)
+        {
+            builder.Services.AddOpenTelemetry().UseOtlpExporter();
+        }
     }
 }
