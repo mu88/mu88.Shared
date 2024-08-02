@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solutions Items", "{82D41B7B-B980-4B28-83C0-89EEACEE2A01}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+		.github\workflows\CI_CD.yml = .github\workflows\CI_CD.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mu88.Shared", "src\mu88.Shared\mu88.Shared.csproj", "{9E92B66B-167D-465C-884D-2F761620EDE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "tests\Tests\Tests.csproj", "{2DC5FEDE-FB52-49DF-BAD8-EB6839F51388}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E92B66B-167D-465C-884D-2F761620EDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E92B66B-167D-465C-884D-2F761620EDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E92B66B-167D-465C-884D-2F761620EDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E92B66B-167D-465C-884D-2F761620EDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC5FEDE-FB52-49DF-BAD8-EB6839F51388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC5FEDE-FB52-49DF-BAD8-EB6839F51388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC5FEDE-FB52-49DF-BAD8-EB6839F51388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC5FEDE-FB52-49DF-BAD8-EB6839F51388}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
