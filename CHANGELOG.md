@@ -1,5 +1,12 @@
 
 
+<a name="0.2.0"></a>
+## [0.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.2.0) (2024-08-02)
+
+### Features
+
+* add MSBuild targets for multi-arch Docker images ([3a70f6c](https://www.github.com/mu88/mu88.Shared/commit/3a70f6c2d9cbdd3fabfdc915c319cc037a358c04))
+
 <a name="0.1.2"></a>
 ## [0.1.2](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.1.2) (2024-08-02)
 
