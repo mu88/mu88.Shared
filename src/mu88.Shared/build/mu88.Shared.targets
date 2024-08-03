@@ -59,7 +59,7 @@
       NOTE: We can only create the multi-arch manifest if we pushed to a registry. This is a fundamental constraint, so that condition has been applied to all of this code
     -->
     <!-- Call ComputeContainerConfig on this project so that the properties it sets are visible -->
-    <MSBuild Projects="$(MSBuildThisFile)" Targets="ComputeContainerConfig" Condition="'$(ContainerRegistry)' != ''" />
+    <CallTarget Targets="ComputeContainerConfig;" Condition="'$(ContainerRegistry)' != ''"/>
 
     <!-- To make a manifest we need to know the name of the manifest (e.g. mcr.microsoft.com/dotnet/sdk:8.0) and the names of all of the
          architecture-specific images that go into that manifest (e.g. mcr.microsoft.com/dotnet/sdk:8.0-arm64, mcr.microsoft.com/dotnet/sdk:8.0-amd64, etc).
