@@ -1,5 +1,12 @@
 
 
+<a name="0.2.2"></a>
+## [0.2.2](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.2.2) (2024-08-03)
+
+### Bug Fixes
+
+* call other target directly to avoid build problem ([f1ace63](https://www.github.com/mu88/mu88.Shared/commit/f1ace6370ae7c80eb124c4159860ac76c9dcb3b5))
+
 <a name="0.2.1"></a>
 ## [0.2.1](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.2.1) (2024-08-02)
 
