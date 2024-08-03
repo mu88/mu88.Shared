@@ -17,22 +17,23 @@
   </Target>
 
   <Target Name="MultiArchPublish">
-    <Error Text="ContainerRegistry MUST BE SET" Condition="'$(ContainerRegistry)' == ''" />
+    <Error Text="ContainerRegistry MUST BE SET" Condition="'$(ContainerRegistry)' == ''"/>
 
     <ItemGroup>
       <!-- first, define the container tags you want to create. these will be the roots of the arch-specific manifests - what users will mostly be using. -->
       <_TagsToPublish Include="$(ContainerImageTags)" />
-
-      <!-- next, define the architectures you want to publish for. we could have just used RuntimeIdentifiers from above, but I wanted to use golang-style tag parts,
-           so that these images would look and feel like other container images. -->
-      <_RIDItems Include="linux-x64" GolangArch="amd64" />
-      <_RIDItems Include="linux-arm64" GolangArch="arm64" />
     </ItemGroup>
 
-    <!-- Ideally at this point we'd call some target that would map .NET RIDs to Golang architecture items, but this doesn't currently exist -->
-    <!-- <MapRidsToGolangArch RIDs="@(_RIDItems)">
-      <Output TaskParameter="RidsWithArch" ItemName="_RIDItems" />
-    </MapRidsToGolangArch> -->
+    <!-- Map .NET RIDs to Golang architecture items -->
+    <ItemGroup>
+      <_rids Include="$(RuntimeIdentifiers)"/>
+      <_RIDItems Include="@(_rids)">
+        <GolangArch Condition="%(Identity.EndsWith('-x86')">i386</GolangArch>
+        <GolangArch Condition="%(Identity.EndsWith('-x64')">amd64</GolangArch>
+        <GolangArch Condition="%(Identity.EndsWith('-arm')">arm/v7</GolangArch>
+        <GolangArch Condition="%(Identity.EndsWith('-arm64')">arm64</GolangArch>
+      </_RIDItems>
+    </ItemGroup>
 
     <ItemGroup>
       <!-- this next part is kind of gross - we're trying to construct an MSBuild property value like 'ContainerImageTags=<tagbase>-<arch>;<tagbase>-<arch>'
