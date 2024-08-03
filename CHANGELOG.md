@@ -1,5 +1,12 @@
 
 
+<a name="0.3.0"></a>
+## [0.3.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.3.0) (2024-08-03)
+
+### Features
+
+* map .NET RIDs to Golang architecture items ([fa69789](https://www.github.com/mu88/mu88.Shared/commit/fa697890bb583dba771880bf9876e0e429bdf3f2))
+
 <a name="0.2.2"></a>
 ## [0.2.2](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.2.2) (2024-08-03)
 
