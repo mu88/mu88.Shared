@@ -12,7 +12,7 @@ namespace mu88.Shared.OpenTelemetry;
 public static class HostApplicationBuilderExtensions
 {
     // ReSharper disable once UnusedMember.Global - reviewed mu88: public API
-    public static void ConfigureOpenTelemetry(this IHostApplicationBuilder builder, string serviceName)
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, string serviceName, ILogger? logger = null)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -42,5 +42,17 @@ public static class HostApplicationBuilderExtensions
         {
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
+        else
+        {
+            if (logger == null)
+            {
+                using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Trace).AddConsole());
+                logger = loggerFactory.CreateLogger(nameof(HostApplicationBuilderExtensions));
+            }
+
+            logger.LogWarning("The OpenTelemetry endpoint configuration parameter 'OTEL_EXPORTER_OTLP_ENDPOINT' is not set");
+        }
+
+        return builder;
     }
 }
