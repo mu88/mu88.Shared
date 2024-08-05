@@ -28,10 +28,10 @@
     <ItemGroup>
       <_rids Include="$(RuntimeIdentifiers)"/>
       <_RIDItems Include="@(_rids)">
-        <GolangArch Condition="%(Identity.EndsWith('-x86')">i386</GolangArch>
-        <GolangArch Condition="%(Identity.EndsWith('-x64')">amd64</GolangArch>
-        <GolangArch Condition="%(Identity.EndsWith('-arm')">arm/v7</GolangArch>
-        <GolangArch Condition="%(Identity.EndsWith('-arm64')">arm64</GolangArch>
+        <GolangArch Condition="%(Identity) == 'linux-x86'">i386</GolangArch>
+        <GolangArch Condition="%(Identity) == 'linux-x64'">amd64</GolangArch>
+        <GolangArch Condition="%(Identity) == 'linux-arm'">arm/v7</GolangArch>
+        <GolangArch Condition="%(Identity) == 'linux-arm64'">arm64</GolangArch>
       </_RIDItems>
     </ItemGroup>
 
