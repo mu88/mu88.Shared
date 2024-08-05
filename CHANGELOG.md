@@ -1,5 +1,16 @@
 
 
+<a name="0.4.0"></a>
+## [0.4.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.4.0) (2024-08-05)
+
+### Features
+
+* log warning if OpenTelemetry endpoint is not set ([2c4d63a](https://www.github.com/mu88/mu88.Shared/commit/2c4d63ae6cc28c2e8074f55124db9d942a2f1b54))
+
+### Bug Fixes
+
+* map .NET RIDs to Golang architecture items on full strings ([f435745](https://www.github.com/mu88/mu88.Shared/commit/f4357453a67f1af6e6deac4f3cbf7fee090432a1))
+
 <a name="0.3.0"></a>
 ## [0.3.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.3.0) (2024-08-03)
 
