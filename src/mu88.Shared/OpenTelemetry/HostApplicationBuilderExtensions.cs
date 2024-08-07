@@ -62,21 +62,7 @@ public static class HostApplicationBuilderExtensions
                        .AddEntityFrameworkCoreInstrumentation();
                });
 
-        var otlpEndpointIsSet = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
-        if (otlpEndpointIsSet)
-        {
-            builder.Services.AddOpenTelemetry().UseOtlpExporter();
-        }
-        else
-        {
-            if (logger == null)
-            {
-                using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Trace).AddConsole());
-                logger = loggerFactory.CreateLogger(nameof(HostApplicationBuilderExtensions));
-            }
-
-            logger.LogWarning("The OpenTelemetry endpoint configuration parameter 'OTEL_EXPORTER_OTLP_ENDPOINT' is not set");
-        }
+        builder.Services.AddOpenTelemetry().UseOtlpExporter();
 
         return builder;
     }
