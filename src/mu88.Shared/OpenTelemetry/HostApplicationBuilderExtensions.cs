@@ -30,14 +30,13 @@ public static class HostApplicationBuilderExtensions
     ///     configured.
     /// </param>
     /// <param name="serviceName">The name of the service so that it can be identified (e.g. the application name).</param>
-    /// <param name="logger">An optional logger.</param>
     /// <returns>The provided <paramref name="builder" /> with configured OpenTelemetry features.</returns>
     /// <remarks>
     ///     Don't forget to set the .NET configuration parameter <c>OTEL_EXPORTER_OTLP_ENDPOINT</c> for the OpenTelemetry
     ///     endpoint receiving the exported metrics and traces.
     /// </remarks>
     // ReSharper disable once UnusedMember.Global - reviewed mu88: public API
-    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, string serviceName, ILogger? logger = null)
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, string serviceName)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -47,6 +46,7 @@ public static class HostApplicationBuilderExtensions
 
         builder.Services
                .AddOpenTelemetry()
+               .UseOtlpExporter()
                .ConfigureResource(c => c.AddService(serviceName))
                .WithMetrics(metrics =>
                {
@@ -61,8 +61,6 @@ public static class HostApplicationBuilderExtensions
                        .AddAspNetCoreInstrumentation()
                        .AddEntityFrameworkCoreInstrumentation();
                });
-
-        builder.Services.AddOpenTelemetry().UseOtlpExporter();
 
         return builder;
     }

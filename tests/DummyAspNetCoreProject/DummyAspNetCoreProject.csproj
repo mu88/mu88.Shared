@@ -16,4 +16,13 @@
   </ItemGroup>
 
   <Import Project="../../src/mu88.Shared/build/mu88.Shared.targets"/>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tests"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\mu88.Shared\mu88.Shared.csproj"/>
+  </ItemGroup>
+
 </Project>
