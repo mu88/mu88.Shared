@@ -37,6 +37,12 @@ jobs:
           dotnet sonarscanner begin /k:mu88_mu88.Shared /o:mu88 /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io /d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml
       - name: Build
         run: dotnet build --no-restore mu88.Shared.sln
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          registry: registry.hub.docker.com
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Test and collect coverage
         run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter "TestCategory=Unit|TestCategory=Integration"
       - name: End Sonar scan

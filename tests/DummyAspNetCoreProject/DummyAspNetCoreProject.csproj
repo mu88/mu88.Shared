@@ -6,8 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
+    <ContainerRegistry>registry.hub.docker.com</ContainerRegistry>
     <ContainerRepository>mu88/mu88-shared-dummy</ContainerRepository>
-    <ContainerImageTag>dev</ContainerImageTag>
+    <ContainerImageTags>dev</ContainerImageTags>
   </PropertyGroup>
 
   <ItemGroup>
