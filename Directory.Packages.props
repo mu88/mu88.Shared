@@ -7,7 +7,7 @@
     <PackageVersion Include="coverlet.msbuild" Version="6.0.2"/>
     <PackageVersion Include="FluentAssertions" Version="6.12.1"/>
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8"/>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.176"/>
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.177"/>
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.10"/>
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10"/>
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1"/>
