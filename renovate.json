@@ -1,4 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>mu88/renovate-config"]
+  "extends": ["github>mu88/renovate-config"],
+  "packageRules": [
+    {
+      "description": "Temporarily disable OpenTelemetry updates as they ship .NET major updates (v9) as minor updates",
+      "matchPackageNames": [
+        "OpenTelemetry*"
+      ],
+      "enabled": false
+    }
+  ]
 }
