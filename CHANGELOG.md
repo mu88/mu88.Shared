@@ -1,5 +1,16 @@
 
 
+<a name="1.0.0"></a>
+## [1.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v1.0.0) (2024-12-06)
+
+### Features
+
+* **deps:** upgrade to .NET 9 ([9db1c25](https://www.github.com/mu88/mu88.Shared/commit/9db1c252c0f78682c498d1a785639bd4feacbddc))
+
+### Breaking Changes
+
+* **deps:** upgrade to .NET 9 ([9db1c25](https://www.github.com/mu88/mu88.Shared/commit/9db1c252c0f78682c498d1a785639bd4feacbddc))
+
 <a name="0.5.1"></a>
 ## [0.5.1](https://www.github.com/mu88/mu88.Shared/releases/tag/v0.5.1) (2024-10-05)
 
