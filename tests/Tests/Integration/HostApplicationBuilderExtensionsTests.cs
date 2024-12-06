@@ -24,7 +24,7 @@ public class HostApplicationBuilderExtensionsTests
         await WaitAsync(metrics, TimeSpan.FromSeconds(30)); // wait some time so that the metrics get populated
 
         // Assert
-        metrics.Should().HaveCount(25);
+        metrics.Should().HaveCount(27);
     }
 
     private static async Task WaitAsync(List<Metric> metrics, TimeSpan maximumWaitTime)
