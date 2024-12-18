@@ -26,6 +26,6 @@ jobs:
       - name: Pack
         run: dotnet pack
       - name: Push packages to NuGet
-        if: ${{ env.IS_RELEASE == 'true' }}
+        if: ${{ steps.mu88-ci-cd.outputs.is-release == 'true' }}
         run: |
           dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
