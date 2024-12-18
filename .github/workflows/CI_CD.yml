@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Login to DockerHub (necessary for some tests)
+        uses: docker/login-action@v3
+        with:
+          registry: registry.hub.docker.com
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: CI/CD
         id: mu88-ci-cd
         uses: mu88/github-actions/ci-cd@0.1
