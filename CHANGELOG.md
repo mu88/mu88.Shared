@@ -1,5 +1,12 @@
 
 
+<a name="1.1.0"></a>
+## [1.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v1.1.0) (2024-12-19)
+
+### Features
+
+* provide minimalistic health check tool ([56e7c14](https://www.github.com/mu88/mu88.Shared/commit/56e7c14ba58a85c8b7eb1d951b28cd21dcb741f3))
+
 <a name="1.0.0"></a>
 ## [1.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v1.0.0) (2024-12-06)
 
