@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: CI/CD
         id: mu88-ci-cd
-        uses: mu88/github-actions/ci-cd@1.0
+        uses: mu88/github-actions/ci-cd@1.1
         with:
           github-ref-name: ${{ github.ref }}
           sonar-key: 'mu88_mu88.Shared'
@@ -23,6 +23,8 @@ jobs:
           sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml'
           docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
           docker-token: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: output
+        run: "echo '${{ steps.mu88-ci-cd.outputs.is-release }}'"
       - name: Pack
         run: dotnet pack
       - name: Push packages to NuGet
