@@ -19,6 +19,7 @@
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="OpenTelemetry.Exporter.InMemory"/>
+    <PackageReference Include="Testcontainers" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\mu88.HealthCheck\mu88.HealthCheck.csproj" />
     <ProjectReference Include="..\DummyAspNetCoreProject\DummyAspNetCoreProject.csproj"/>
   </ItemGroup>
 
