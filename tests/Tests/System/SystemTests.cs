@@ -13,23 +13,23 @@ public class SystemTests
     public async Task AppRunningInDocker_ShouldBeHealthy()
     {
         // Arrange
-        CancellationToken cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        DirectoryInfo tempDirectory = Directory.CreateTempSubdirectory("mu88_");
+        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
+        var tempDirectory = Directory.CreateTempSubdirectory("mu88_");
         try
         {
-            DirectoryInfo tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            DirectoryInfo tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
+            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
+            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
             CopyTestProject(tempTestProjectDirectory);
             await BuildNuGetPackageAsync(tempNuGetDirectory, cancellationToken);
             await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, cancellationToken);
             await BuildDockerImageOfAppAsync(tempTestProjectDirectory, cancellationToken);
-            IContainer container = await StartAppInContainersAsync(cancellationToken);
+            var container = await StartAppInContainersAsync(cancellationToken);
             var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
 
             // Act
-            HttpResponseMessage healthCheckResponse = await httpClient.GetAsync("healthz", cancellationToken);
-            HttpResponseMessage appResponse = await httpClient.GetAsync("/hello", cancellationToken);
-            ExecResult healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/healthz"], cancellationToken);
+            var healthCheckResponse = await httpClient.GetAsync("healthz", cancellationToken);
+            var appResponse = await httpClient.GetAsync("/hello", cancellationToken);
+            var healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/healthz"], cancellationToken);
 
             // Assert
             await LogsShouldNotContainWarningsAsync(container, cancellationToken);
@@ -67,14 +67,14 @@ public class SystemTests
     {
         var timeoutCts = new CancellationTokenSource();
         timeoutCts.CancelAfter(timeout);
-        CancellationToken cancellationToken = timeoutCts.Token;
+        var cancellationToken = timeoutCts.Token;
 
         return cancellationToken;
     }
 
-    private void CopyTestProject(DirectoryInfo directory)
+    private static void CopyTestProject(DirectoryInfo directory)
     {
-        DirectoryInfo rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectPath = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProjectViaNuGet");
 
         // Create all the directories
@@ -88,13 +88,14 @@ public class SystemTests
 
     private static async Task BuildNuGetPackageAsync(DirectoryInfo tempNugetDirectory, CancellationToken cancellationToken)
     {
-        DirectoryInfo rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var projectFile = Path.Join(rootDirectory.FullName, "src", "mu88.Shared", "mu88.Shared.csproj");
         await WaitUntilDotnetToolSucceededAsync($"pack {projectFile} -p:Version=99.99.99 -o {tempNugetDirectory.FullName}", cancellationToken);
     }
 
-    private static async Task AddNuGetPackageToTestProjectAsync(DirectoryInfo tempNugetDirectory, DirectoryInfo tempTestProjectDirectory,
-        CancellationToken cancellationToken)
+    private static async Task AddNuGetPackageToTestProjectAsync(DirectoryInfo tempNugetDirectory,
+                                                                DirectoryInfo tempTestProjectDirectory,
+                                                                CancellationToken cancellationToken)
     {
         var projectFile = Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
         await WaitUntilDotnetToolSucceededAsync($"add {projectFile} package mu88.Shared -v 99.99.99 -s {tempNugetDirectory.FullName}", cancellationToken);
@@ -110,12 +111,12 @@ public class SystemTests
     private static async Task<IContainer> StartAppInContainersAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine("Building and starting network");
-        INetwork? network = new NetworkBuilder().Build();
+        var network = new NetworkBuilder().Build();
         await network.CreateAsync(cancellationToken);
         Console.WriteLine("Network started");
 
         Console.WriteLine("Building and starting app container");
-        IContainer container = BuildAppContainer(network);
+        var container = BuildAppContainer(network);
         await container.StartAsync(cancellationToken);
         Console.WriteLine("App container started");
 
@@ -127,9 +128,9 @@ public class SystemTests
             .WithImage("mu88/mu88-shared-dummy-nuget:local-system-test-chiseled")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(
-                "Content root path: /app",
-                strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                                  .UntilMessageIsLogged("Content root path: /app",
+                                      strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
             .Build();
 
     private static Uri GetAppBaseAddress(IContainer container) => new($"http://{container.Hostname}:{container.GetMappedPublicPort(8080)}");
@@ -140,11 +141,7 @@ public class SystemTests
         {
             StartInfo = new ProcessStartInfo
             {
-                FileName = "dotnet",
-                Arguments = arguments,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+                FileName = "dotnet", Arguments = arguments, UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true
             }
         };
         process.Start();
