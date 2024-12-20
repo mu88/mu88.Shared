@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using mu88.HealthCheck;
+using RichardSzalay.MockHttp;
 
 namespace Tests.Integration;
 
@@ -13,11 +14,11 @@ public class HealthCheckerTests
     {
         // Arrange
         var webApplicationFactory = new WebApplicationFactory<Program>();
-        using HttpClient httpClient = webApplicationFactory.CreateClient();
+        using var httpClient = webApplicationFactory.CreateClient();
         var healthChecker = new HealthChecker(httpClient);
 
         // Act
-        HttpResponseMessage response = await httpClient.GetAsync("healthz");
+        var response = await httpClient.GetAsync("healthz");
         var healthCheckerResult = await healthChecker.CheckHealthAsync(["healthz"]);
 
         // Assert
@@ -29,13 +30,28 @@ public class HealthCheckerTests
     public async Task HealthChecker_ShouldIndicateFailure_WhenAppIsUnhealthy()
     {
         // Arrange
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When("http://localhost:8080/healthz").Respond("text/plain", "Unhealthy");
+        var healthChecker = new HealthChecker(mockHttp.ToHttpClient());
+
+        // Act
+        var healthCheckerResult = await healthChecker.CheckHealthAsync(["http://localhost:8080/healthz"]);
+
+        // Assert
+        healthCheckerResult.Should().Be(1);
+    }
+
+    [Test]
+    public async Task HealthChecker_ShouldIndicateFailure_WhenWrongHealthCheckEndpointIsUsed()
+    {
+        // Arrange
         var webApplicationFactory = new WebApplicationFactory<Program>();
-        using HttpClient httpClient = webApplicationFactory.CreateClient();
+        using var httpClient = webApplicationFactory.CreateClient();
         var healthChecker = new HealthChecker(httpClient);
 
         // Act
-        HttpResponseMessage response = await httpClient.GetAsync("healthz");
-        var healthCheckerResult = await healthChecker.CheckHealthAsync(["unhealthy"]);
+        var response = await httpClient.GetAsync("healthz");
+        var healthCheckerResult = await healthChecker.CheckHealthAsync(["invalidHealthCheckEndpoint"]);
 
         // Assert
         response.Should().BeSuccessful();
@@ -47,11 +63,11 @@ public class HealthCheckerTests
     {
         // Arrange
         var webApplicationFactory = new WebApplicationFactory<Program>();
-        using HttpClient httpClient = webApplicationFactory.CreateClient();
+        using var httpClient = webApplicationFactory.CreateClient();
         var healthChecker = new HealthChecker(httpClient);
 
         // Act
-        HttpResponseMessage response = await httpClient.GetAsync("healthz");
+        var response = await httpClient.GetAsync("healthz");
         Func<Task> act = async () => await healthChecker.CheckHealthAsync([]);
 
         // Assert

@@ -19,6 +19,7 @@
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="OpenTelemetry.Exporter.InMemory"/>
+    <PackageReference Include="RichardSzalay.MockHttp"/>
     <PackageReference Include="Testcontainers" />
   </ItemGroup>
 
