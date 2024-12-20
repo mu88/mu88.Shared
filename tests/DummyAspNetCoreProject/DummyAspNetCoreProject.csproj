@@ -27,4 +27,8 @@
     <ProjectReference Include="..\..\src\mu88.Shared\mu88.Shared.csproj"/>
   </ItemGroup>
 
+  <PropertyGroup>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+  </PropertyGroup>
+
 </Project>

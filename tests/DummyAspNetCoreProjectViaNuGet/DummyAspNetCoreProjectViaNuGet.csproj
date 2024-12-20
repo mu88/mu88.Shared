@@ -11,4 +11,8 @@
     <ContainerFamily>noble-chiseled</ContainerFamily>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+  </PropertyGroup>
 </Project>

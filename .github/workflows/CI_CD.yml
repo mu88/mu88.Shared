@@ -14,7 +14,7 @@ jobs:
     with:
       github-ref-name: ${{ github.ref }}
       sonar-key: 'mu88_mu88.Shared'
-      sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml'
+      sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
       requires-docker-login: true
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
