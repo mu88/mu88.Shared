@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using mu88.HealthCheck;
 using RichardSzalay.MockHttp;
+using System.Net;
 
 namespace Tests.Integration;
 
@@ -22,7 +23,7 @@ public class HealthCheckerTests
         var healthCheckerResult = await healthChecker.CheckHealthAsync(["healthz"]);
 
         // Assert
-        response.Should().BeSuccessful();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         healthCheckerResult.Should().Be(0);
     }
 
@@ -54,7 +55,7 @@ public class HealthCheckerTests
         var healthCheckerResult = await healthChecker.CheckHealthAsync(["invalidHealthCheckEndpoint"]);
 
         // Assert
-        response.Should().BeSuccessful();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         healthCheckerResult.Should().Be(1);
     }
 
@@ -71,7 +72,7 @@ public class HealthCheckerTests
         Func<Task> act = async () => await healthChecker.CheckHealthAsync([]);
 
         // Assert
-        response.Should().BeSuccessful();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         await act.Should().ThrowAsync<ArgumentException>().WithMessage("A valid URI must be given as first argument (Parameter 'args')");
     }
 }

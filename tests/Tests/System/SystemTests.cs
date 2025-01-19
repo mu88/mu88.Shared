@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
@@ -45,13 +46,13 @@ public class SystemTests
 
     private static async Task AppShouldRunAsync(HttpResponseMessage appResponse, CancellationToken cancellationToken)
     {
-        appResponse.Should().BeSuccessful();
+        appResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         (await appResponse.Content.ReadAsStringAsync(cancellationToken)).Should().Contain("World");
     }
 
     private static async Task HealthCheckShouldBeHealthyAsync(HttpResponseMessage healthCheckResponse, CancellationToken cancellationToken)
     {
-        healthCheckResponse.Should().BeSuccessful();
+        healthCheckResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         (await healthCheckResponse.Content.ReadAsStringAsync(cancellationToken)).Should().Be("Healthy");
     }
 
