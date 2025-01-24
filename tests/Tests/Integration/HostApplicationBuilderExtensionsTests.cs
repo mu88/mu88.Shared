@@ -20,7 +20,7 @@ public class HostApplicationBuilderExtensionsTests
         using var httpClient = customWebApplicationFactory.CreateClient();
 
         // Act
-        (await httpClient.GetAsync("hello")).StatusCode.Should().Be(HttpStatusCode.OK);; // trigger metrics creation
+        (await httpClient.GetAsync("hello")).Should().Be200Ok(); // trigger metrics creation
         await customWebApplicationFactory.DisposeAsync(); // must be disposed, otherwise metrics remain empty
         await WaitAsync(metrics, TimeSpan.FromSeconds(30)); // wait some time so that the metrics get populated
 

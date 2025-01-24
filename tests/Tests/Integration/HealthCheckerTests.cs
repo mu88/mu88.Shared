@@ -23,7 +23,7 @@ public class HealthCheckerTests
         var healthCheckerResult = await healthChecker.CheckHealthAsync(["healthz"]);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Should().Be200Ok();
         healthCheckerResult.Should().Be(0);
     }
 
@@ -55,7 +55,7 @@ public class HealthCheckerTests
         var healthCheckerResult = await healthChecker.CheckHealthAsync(["invalidHealthCheckEndpoint"]);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Should().Be200Ok();
         healthCheckerResult.Should().Be(1);
     }
 
@@ -72,7 +72,7 @@ public class HealthCheckerTests
         Func<Task> act = async () => await healthChecker.CheckHealthAsync([]);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Should().Be200Ok();
         await act.Should().ThrowAsync<ArgumentException>().WithMessage("A valid URI must be given as first argument (Parameter 'args')");
     }
 }
