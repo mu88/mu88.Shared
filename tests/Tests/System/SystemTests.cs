@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Net;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
@@ -105,7 +104,7 @@ public class SystemTests
     private static async Task BuildDockerImageOfAppAsync(DirectoryInfo tempTestProjectDirectory, CancellationToken cancellationToken)
     {
         var projectFile = Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
-        await WaitUntilDotnetToolSucceededAsync($"publish {projectFile} /t:MultiArchPublish -p:ContainerImageTags=local-system-test-chiseled",
+        await WaitUntilDotnetToolSucceededAsync($"publish {projectFile} /t:PublishContainer -p:ContainerImageTags=local-system-test-chiseled",
             cancellationToken);
     }
 

@@ -17,8 +17,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore"/>
   </ItemGroup>
 
-  <Import Project="../../src/mu88.Shared/build/mu88.Shared.targets"/>
-
   <ItemGroup>
     <InternalsVisibleTo Include="Tests"/>
   </ItemGroup>
