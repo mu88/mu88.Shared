@@ -1,5 +1,17 @@
 
 
+<a name="2.0.0"></a>
+## [2.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v2.0.0) (2025-03-30)
+
+### Features
+
+* add reusable workflow ([da1dfb8](https://www.github.com/mu88/mu88.Shared/commit/da1dfb8490422e6ccd665ae3e27f211d0e7fe9fc))
+* remove multi-platform Docker image publishing as the issue has been resolved in the SDK ([10e56e9](https://www.github.com/mu88/mu88.Shared/commit/10e56e96cd8878fb32c4f86ff462f03926ff7727))
+
+### Breaking Changes
+
+* remove multi-platform Docker image publishing as the issue has been resolved in the SDK ([10e56e9](https://www.github.com/mu88/mu88.Shared/commit/10e56e96cd8878fb32c4f86ff462f03926ff7727))
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://www.github.com/mu88/mu88.Shared/releases/tag/v1.1.1) (2024-12-19)
 
