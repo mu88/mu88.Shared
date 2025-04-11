@@ -5,7 +5,6 @@
     <Description>
       This is a little helper NuGet package to share certain the following aspects:
       - Enable .NET metrics and expose them via OpenTelemetry
-      - Provide an MSBuild target for building a multi-manifest Docker image
       - Provide a custom health check tool for distroless scenarios
     </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
