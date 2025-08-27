@@ -6,4 +6,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Tests"/>
   </ItemGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <!--    See: https://github.com/clairernovotny/DeterministicBuilds?tab=readme-ov-file#deterministic-builds-->
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
 </Project>
