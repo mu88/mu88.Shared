@@ -65,4 +65,42 @@
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
     </ItemGroup>
   </Target>
+
+  <!-- To support proper Source Link debugging, we need to include the PDB files of all assemblies in the symbol package. -->
+  <!-- Since the NuGet package contains both mu88.Shared.dll and mu88.HealthCheck.dll, mu88.HealthCheck.pdb has to be added to the symbol package, too. -->
+  <!-- Unfortunately, I haven't found (yet) a better way of embedding the additional debug symbol file than manually manipulating the the package with custom MSBuild logic. -->
+  <Target Name="AddHealthCheckSymbolsToSymbolPackage" AfterTargets="Pack">
+    <PropertyGroup>
+      <TemporarySymbolPackageModificationDirectory>$(PackageOutputPath)temp</TemporarySymbolPackageModificationDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <AdditionalDebugSymbols Include="$(OutputPath)/mu88.HealthCheck.pdb"/>
+    </ItemGroup>
+
+    <Message Text="Unzipping symbol package to '$(TemporarySymbolPackageModificationDirectory)'..." Importance="high" />
+    <Unzip
+      SourceFiles="$(PackageOutputPath)/$(PackageId).$(Version).snupkg"
+      DestinationFolder="$(TemporarySymbolPackageModificationDirectory)"
+      OverwriteReadOnlyFiles="true"
+    />
+
+    <Message Text="Deleting existing symbol package '$(PackageOutputPath)$(PackageId).$(Version).snupkg'..." Importance="high" />
+    <Delete Files="$(PackageOutputPath)$(PackageId).$(Version).snupkg" />
+
+    <Message Text="Adding additional debug symbols to '$(TemporarySymbolPackageModificationDirectory)/lib/$(TargetFramework)'..." Importance="high" />
+    <Copy
+      SourceFiles="@(AdditionalDebugSymbols)"
+      DestinationFolder="$(TemporarySymbolPackageModificationDirectory)/lib/$(TargetFramework)"
+    />
+
+    <Message Text="Repacking symbol package from '$(TemporarySymbolPackageModificationDirectory)' to '$(PackageOutputPath)$(PackageId).$(Version).snupkg'..." Importance="high" />
+    <ZipDirectory
+      SourceDirectory="$(TemporarySymbolPackageModificationDirectory)"
+      DestinationFile="$(PackageOutputPath)$(PackageId).$(Version).snupkg"
+      Overwrite="true" />
+
+    <Message Text="Cleaning up temporary directory '$(TemporarySymbolPackageModificationDirectory)'..." Importance="high" />
+    <RemoveDir Directories="$(TemporarySymbolPackageModificationDirectory)" />
+  </Target>
 </Project>
