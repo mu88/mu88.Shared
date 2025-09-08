@@ -29,7 +29,7 @@ jobs:
         with:
           fetch-depth: 0 # otherwise Versionize cannot read the Git history and the pre-release version cannot be bumped
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
       - name: Bump pre-release version
         if: ${{ needs.shared_ci_cd.outputs.is-release != 'true' }}
         run: |
