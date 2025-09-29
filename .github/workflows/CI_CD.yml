@@ -36,6 +36,11 @@ jobs:
         if: ${{ needs.shared_ci_cd.outputs.is-release != 'true' }}
         run: |
           dotnet tool restore
+
+          # Although no commit or tag is made, we still need to set the git user to avoid Versionize errors
+          git config --global user.name "John Doe"
+          git config --global user.email johndoe@example.com
+
           dotnet tool run versionize \
             --pre-release "alpha.${{ github.run_number }}.${{ github.run_attempt }}" \
             --skip-commit \
