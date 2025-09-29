@@ -8,6 +8,9 @@ on:
     branches:
       - '**'
 
+permissions:
+  id-token: write   # required for GitHub OIDC
+
 jobs:
   shared_ci_cd:
     uses: mu88/github-actions/.github/workflows/ci-cd.yml@main
@@ -24,6 +27,8 @@ jobs:
   ci_cd:
     runs-on: ubuntu-latest
     needs: shared_ci_cd
+    permissions:
+      id-token: write  # enable GitHub OIDC token issuance for this job
     steps:
       - uses: actions/checkout@v5
         with:
@@ -47,14 +52,14 @@ jobs:
             --skip-tag \
             --find-release-commit-via-message
 
-      - name: Pack
+      - name: Pack .NET project and create NuGet package
         run: dotnet pack
 
-      - name: NuGet login (OIDC → temp API key)
+      - name: NuGet login
         uses: NuGet/login@v1
         id: login
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      - name: Push packages to NuGet
+      - name: Publish NuGet package
         run: dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.nupkg -k ${{steps.login.outputs.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
