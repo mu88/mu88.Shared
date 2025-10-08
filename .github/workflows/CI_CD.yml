@@ -21,8 +21,6 @@ jobs:
       requires-docker-login: true
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
-      docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-token: ${{ secrets.DOCKERHUB_TOKEN }}
 
   ci_cd:
     runs-on: ubuntu-latest
