@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
-    <ContainerRegistry>registry.hub.docker.com</ContainerRegistry>
+    <ContainerRegistry>ghcr.io</ContainerRegistry>
     <ContainerRepository>mu88/mu88-shared-dummy</ContainerRepository>
     <ContainerImageTags>dev</ContainerImageTags>
     <IsPackable>false</IsPackable>

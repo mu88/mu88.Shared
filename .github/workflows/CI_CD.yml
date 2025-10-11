@@ -13,6 +13,12 @@ permissions:
 
 jobs:
   shared_ci_cd:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
     uses: mu88/github-actions/.github/workflows/ci-cd.yml@main
     with:
       github-ref-name: ${{ github.ref }}
