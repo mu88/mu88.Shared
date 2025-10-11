@@ -19,7 +19,7 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@26dd40f4b32f300fc5d95ed070d45fe847808a84
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@059657fc8f6fad38583a0404d7f57993168e68fc
     with:
       github-ref-name: ${{ github.ref }}
       sonar-key: 'mu88_mu88.Shared'
@@ -57,7 +57,9 @@ jobs:
             --find-release-commit-via-message
 
       - name: Pack .NET project and create NuGet package
-        run: dotnet pack
+        run: |
+          dotnet restore --locked-mode
+          dotnet pack --no-restore
 
       - name: NuGet login
         uses: NuGet/login@v1

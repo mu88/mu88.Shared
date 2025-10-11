@@ -3,6 +3,10 @@
     <!-- C# language features -->
     <ImplicitUsings>true</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet package handling -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
     <!-- Analyzers, code style enforcement, and warnings -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
