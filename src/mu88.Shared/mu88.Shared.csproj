@@ -15,7 +15,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <NoWarn>NU5104</NoWarn>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <!--    See: https://github.com/dotnet/sourcelink/issues/1203-->
@@ -26,12 +26,26 @@
     <!--    See: https://github.com/clairernovotny/DeterministicBuilds?tab=readme-ov-file#deterministic-builds-->
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="IDisposableAnalyzers">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Meziantou.Analyzer">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="\"/>
     <None Include="../../LICENSE.md" Pack="true" PackagePath="\"/>
     <None Include="../../CHANGELOG.md" Pack="true" PackagePath="\"/>
     <None Include="../../icon.jpg" Pack="true" PackagePath="\"/>
+    <None Include="mu88.Shared.props" Pack="true" PackagePath="\build"/>
+    <None Include="mu88.Shared.props" Pack="true" PackagePath="\buildMultiTargeting"/>
+    <None Include="mu88.Shared.props" Pack="true" PackagePath="\buildTransitive"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>

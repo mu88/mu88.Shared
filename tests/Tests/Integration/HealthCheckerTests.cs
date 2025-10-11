@@ -2,7 +2,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using mu88.HealthCheck;
 using RichardSzalay.MockHttp;
-using System.Net;
 
 namespace Tests.Integration;
 

@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
     <ContainerRegistry>ghcr.io</ContainerRegistry>
     <ContainerRepository>mu88/mu88-shared-dummy</ContainerRepository>
     <ContainerImageTags>dev</ContainerImageTags>
     <IsPackable>false</IsPackable>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,9 +23,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\mu88.Shared\mu88.Shared.csproj"/>
   </ItemGroup>
-
-  <PropertyGroup>
-    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-  </PropertyGroup>
 
 </Project>

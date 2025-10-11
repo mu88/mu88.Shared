@@ -79,11 +79,15 @@ public class SystemTests
 
         // Create all the directories
         foreach (var dirPath in Directory.GetDirectories(testProjectPath, "*", SearchOption.AllDirectories))
+        {
             Directory.CreateDirectory(dirPath.Replace(testProjectPath, directory.FullName));
+        }
 
         // Copy all the files & Replaces any files with the same name
         foreach (var newPath in Directory.GetFiles(testProjectPath, "*.*", SearchOption.AllDirectories))
+        {
             File.Copy(newPath, newPath.Replace(testProjectPath, directory.FullName), true);
+        }
     }
 
     private static async Task BuildNuGetPackageAsync(DirectoryInfo tempNugetDirectory, CancellationToken cancellationToken)
@@ -145,7 +149,10 @@ public class SystemTests
             }
         };
         process.Start();
-        while (!process.StandardOutput.EndOfStream) Console.WriteLine(await process.StandardOutput.ReadLineAsync(cancellationToken));
+        while (!process.StandardOutput.EndOfStream)
+        {
+            Console.WriteLine(await process.StandardOutput.ReadLineAsync(cancellationToken));
+        }
 
         await process.WaitForExitAsync(cancellationToken);
         process.ExitCode.Should().Be(0);

@@ -57,7 +57,10 @@ jobs:
             --find-release-commit-via-message
 
       - name: Pack .NET project and create NuGet package
-        run: dotnet pack
+        run: |
+          cd src/mu88.Shared
+          dotnet restore
+          dotnet pack --no-restore
 
       - name: NuGet login
         uses: NuGet/login@v1
