@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Solutions Items/">
+    <File Path=".config/dotnet-tools.json" />
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/CI_CD.yml" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+    <File Path="renovate.json" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/DummyAspNetCoreProject/DummyAspNetCoreProject.csproj" />
+    <Project Path="tests/DummyAspNetCoreProjectViaNuGet/DummyAspNetCoreProjectViaNuGet.csproj" />
+    <Project Path="tests/Tests/Tests.csproj" />
+  </Folder>
+  <Project Path="src/mu88.HealthCheck/mu88.HealthCheck.csproj" />
+  <Project Path="src/mu88.Shared/mu88.Shared.csproj" />
+</Solution>
