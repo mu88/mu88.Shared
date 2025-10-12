@@ -1,5 +1,17 @@
 
 
+<a name="3.0.0"></a>
+## [3.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v3.0.0) (2025-10-12)
+
+### Features
+
+* enable NuGet lock file via shared MSBuild properties ([4252c94](https://www.github.com/mu88/mu88.Shared/commit/4252c94c6f798e31d8e231e95b3d9e742e501cf3))
+* share common MSBuild settings via NuGet package ([944dcc9](https://www.github.com/mu88/mu88.Shared/commit/944dcc9e88480a000dba04c3e3b10ac79a317a37))
+
+### Breaking Changes
+
+* enable NuGet lock file via shared MSBuild properties ([4252c94](https://www.github.com/mu88/mu88.Shared/commit/4252c94c6f798e31d8e231e95b3d9e742e501cf3))
+
 <a name="2.0.0"></a>
 ## [2.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v2.0.0) (2025-03-30)
 
