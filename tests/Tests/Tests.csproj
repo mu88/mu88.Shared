@@ -3,6 +3,7 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);IDISP001;IDISP004;MA0012</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

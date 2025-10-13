@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -41,7 +40,6 @@ public class HostApplicationBuilderExtensionsTests
     {
         private readonly List<Metric> _metrics;
 
-        /// <inheritdoc />
         public CustomWebApplicationFactory(List<Metric> metrics) => _metrics = metrics;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder) =>
