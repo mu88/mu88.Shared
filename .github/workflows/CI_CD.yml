@@ -14,7 +14,7 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@f252e7d1c94652b5e51996174f6e2977ef88f1a5
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@483914fcf220440d145adfc81448311851dcb70c
     with:
       requires-docker-login: true
       sonar-key: 'mu88_mu88.Shared'
@@ -44,7 +44,7 @@ jobs:
           global-json-file: global.json
 
       - name: Bump pre-release version
-        if: ${{ needs.shared_ci_cd.outputs.is-release != 'true' }}
+        if: ${{ needs.shared_ci_cd.outputs.is_release != 'true' }}
         run: |
           dotnet tool restore
 
