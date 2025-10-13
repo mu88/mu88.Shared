@@ -6,6 +6,7 @@
 
     <!-- NuGet package handling -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
 
     <!-- Analyzers, code style enforcement, and warnings -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
