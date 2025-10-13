@@ -6,9 +6,6 @@ on:
     branches:
       - '**'
 
-permissions:
-  id-token: write   # required for GitHub OIDC
-
 jobs:
   shared_ci_cd:
     permissions:
@@ -17,9 +14,8 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@25dc01d2e2ecee5e1c109efab7a30c3bec3f6660
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@f252e7d1c94652b5e51996174f6e2977ef88f1a5
     with:
-      github-ref-name: ${{ github.ref }}
       requires-docker-login: true
       sonar-key: 'mu88_mu88.Shared'
       sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
@@ -72,6 +68,7 @@ jobs:
           user: ${{ secrets.NUGET_USER }}
 
       - name: Publish NuGet package
-        run: dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.nupkg \
+        run: |
+          dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.nupkg \
           --api-key ${{steps.login.outputs.NUGET_API_KEY}} \
           --source https://api.nuget.org/v3/index.json
