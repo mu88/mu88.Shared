@@ -1,5 +1,12 @@
 
 
+<a name="3.1.0"></a>
+## [3.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v3.1.0) (2025-10-13)
+
+### Features
+
+* set MSBuild property to always restore via NuGet lock file ([134b4b6](https://www.github.com/mu88/mu88.Shared/commit/134b4b6a2057dc9cb1857c38c45d7336c158d843))
+
 <a name="3.0.0"></a>
 ## [3.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v3.0.0) (2025-10-12)
 
