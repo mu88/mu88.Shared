@@ -3,8 +3,6 @@ name: Combined CI / Release
 on:
   workflow_dispatch:
   push:
-    tags:
-      - '*'
     branches:
       - '**'
 
@@ -19,27 +17,35 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@059657fc8f6fad38583a0404d7f57993168e68fc
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@25dc01d2e2ecee5e1c109efab7a30c3bec3f6660
     with:
       github-ref-name: ${{ github.ref }}
+      requires-docker-login: true
       sonar-key: 'mu88_mu88.Shared'
       sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
-      requires-docker-login: true
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   ci_cd:
     runs-on: ubuntu-latest
+
     needs: shared_ci_cd
+
     permissions:
       id-token: write  # enable GitHub OIDC token issuance for this job
+
     steps:
-      - uses: actions/checkout@v5
+      - name: Check out code
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # otherwise Versionize cannot read the Git history and the pre-release version cannot be bumped
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
+        with:
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+          global-json-file: global.json
 
       - name: Bump pre-release version
         if: ${{ needs.shared_ci_cd.outputs.is-release != 'true' }}
@@ -57,10 +63,7 @@ jobs:
             --find-release-commit-via-message
 
       - name: Pack .NET project and create NuGet package
-        run: |
-          cd src/mu88.Shared
-          dotnet restore --locked-mode
-          dotnet pack --no-restore
+        run: dotnet pack src/mu88.Shared/mu88.Shared.csproj
 
       - name: NuGet login
         uses: NuGet/login@v1
