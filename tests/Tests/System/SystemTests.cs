@@ -98,8 +98,8 @@ public class SystemTests
     }
 
     private static async Task AddNuGetPackageToTestProjectAsync(DirectoryInfo tempNugetDirectory,
-                                                                DirectoryInfo tempTestProjectDirectory,
-                                                                CancellationToken cancellationToken)
+        DirectoryInfo tempTestProjectDirectory,
+        CancellationToken cancellationToken)
     {
         var projectFile = Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
         await WaitUntilDotnetToolSucceededAsync($"add {projectFile} package mu88.Shared -v 99.99.99 -s {tempNugetDirectory.FullName}", cancellationToken);
@@ -133,8 +133,8 @@ public class SystemTests
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()
-                                  .UntilMessageIsLogged("Content root path: /app",
-                                      strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
+                .UntilMessageIsLogged("Content root path: /app",
+                    strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
             .Build();
 
     private static Uri GetAppBaseAddress(IContainer container) => new($"http://{container.Hostname}:{container.GetMappedPublicPort(8080)}");
@@ -149,9 +149,9 @@ public class SystemTests
             }
         };
         process.Start();
-        while (!process.StandardOutput.EndOfStream)
+        while (await process.StandardOutput.ReadLineAsync(cancellationToken) is { } line)
         {
-            Console.WriteLine(await process.StandardOutput.ReadLineAsync(cancellationToken));
+            Console.WriteLine(line);
         }
 
         await process.WaitForExitAsync(cancellationToken);
