@@ -1,5 +1,23 @@
 
 
+<a name="4.0.0"></a>
+## [4.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v4.0.0) (2025-12-03)
+
+### ✨ Features
+
+* upgrade to .NET 10 ([ff6e4d3](https://www.github.com/mu88/mu88.Shared/commit/ff6e4d3b28ea5644200fd4feed8c3ca28a4fdebe))
+
+### 🔧 Chores
+
+* **deps:** update all dependencies ([f3dc862](https://www.github.com/mu88/mu88.Shared/commit/f3dc862146c876df9225a9ad4013b8e1d8c695b6))
+* **deps:** update all dependencies ([e02426e](https://www.github.com/mu88/mu88.Shared/commit/e02426e504b4fbcebc43a9fe843eee257b39b4e8))
+* **deps:** update all dependencies ([93c858b](https://www.github.com/mu88/mu88.Shared/commit/93c858b8c3de25a3f0227780203102406c5508ed))
+* **deps:** update all dependencies ([dc14a14](https://www.github.com/mu88/mu88.Shared/commit/dc14a1450996040695bb357e40d34ecdcc73af07))
+
+### Breaking Changes
+
+* upgrade to .NET 10 ([ff6e4d3](https://www.github.com/mu88/mu88.Shared/commit/ff6e4d3b28ea5644200fd4feed8c3ca28a4fdebe))
+
 <a name="3.1.0"></a>
 ## [3.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v3.1.0) (2025-10-13)
 
