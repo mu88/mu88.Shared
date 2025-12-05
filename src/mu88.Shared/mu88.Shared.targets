@@ -1,0 +1,65 @@
+<Project>
+  <Target Name="PublishRegularContainer">
+    <Error Condition=" '$(IsRelease)' == '' " Text="IsRelease property must be set ('true' or 'false')" />
+    <Error Condition=" '$(ReleaseVersion)' == '' " Text="ReleaseVersion property must be set (e.g., '1.2.3')" />
+  
+    <PropertyGroup>
+      <ContainerImageTags>$(ReleaseVersion)</ContainerImageTags>
+      <ContainerImageTags Condition=" '$(IsRelease)' == 'true' ">$(ContainerImageTags);latest</ContainerImageTags>
+    </PropertyGroup>
+
+    <Message Text="Publishing regular container image with tags: $(ContainerImageTags)" Importance="High" />
+
+    <MSBuild
+      Condition=" '$(DryRun)' != 'true' "
+      Projects="$(MSBuildProjectFile)"
+      Targets="PublishContainer"
+      Properties="ContainerImageTags=$(ContainerImageTags)"/>
+  </Target>
+
+  <Target Name="PublishChiseledContainer">
+    <Error Condition=" '$(IsRelease)' == '' " Text="IsRelease property must be set ('true' or 'false')" />
+    <Error Condition=" '$(ReleaseVersion)' == '' " Text="ReleaseVersion property must be set (e.g., '1.2.3')" />
+
+    <PropertyGroup>
+      <ContainerBaseImage>$(ContainerBaseImage)-noble-chiseled</ContainerBaseImage>
+      <ContainerBaseImage Condition=" '$(InvariantGlobalization)' == 'false' ">$(ContainerBaseImage)-extra</ContainerBaseImage>
+
+      <ChiseledSuffix>-chiseled</ChiseledSuffix>
+      <ContainerImageTags>$(ReleaseVersion)$(ChiseledSuffix)</ContainerImageTags>
+      <ContainerImageTags Condition=" '$(IsRelease)' == 'true' ">$(ContainerImageTags);latest$(ChiseledSuffix)</ContainerImageTags>
+    </PropertyGroup>
+
+    <Message Text="Publishing chiseled container image with tags: $(ContainerImageTags)" Importance="High" />
+    <Message Text="Using container base image: $(ContainerBaseImage)" Importance="High"/>
+
+    <MSBuild
+      Condition=" '$(DryRun)' != 'true' "
+      Projects="$(MSBuildProjectFile)"
+      Targets="PublishContainer"
+      Properties="ContainerImageTags=$(ContainerImageTags);ContainerBaseImage=$(ContainerBaseImage)"/>
+  </Target>
+
+  <!-- Publish container images for multiple families -->
+  <Target Name="PublishContainersForMultipleFamilies">
+    <PropertyGroup>
+      <PublishRegularContainer Condition=" '$(PublishRegularContainer)' == '' ">false</PublishRegularContainer>
+      <PublishChiseledContainer Condition=" '$(PublishChiseledContainer)' == '' ">false</PublishChiseledContainer>
+    </PropertyGroup>
+
+    <Error Condition=" '$(PublishRegularContainer)' != 'true' and '$(PublishChiseledContainer)' != 'true' " Text="At least one of PublishRegularContainer or PublishChiseledContainer must be 'true'"/>
+    <Error Condition=" '$(PublishRegularContainer)' != 'true' and '$(PublishRegularContainer)' != 'false' " Text="PublishRegularContainer property must be 'true' or 'false'" />
+    <Error Condition=" '$(PublishChiseledContainer)' != 'true' and '$(PublishChiseledContainer)' != 'false' " Text="PublishChiseledContainer property must be 'true' or 'false'" />
+
+    <MSBuild
+      Condition=" '$(PublishRegularContainer)' == 'true' "
+      Projects="$(MSBuildProjectFile)"
+      Targets="PublishRegularContainer"
+      Properties="PublishRegularContainer=$(PublishRegularContainer)"/>
+    <MSBuild
+      Condition=" '$(PublishChiseledContainer)' == 'true' "
+      Projects="$(MSBuildProjectFile)"
+      Targets="PublishChiseledContainer"
+      Properties="PublishChiseledContainer=$(PublishChiseledContainer)"/>
+  </Target>
+</Project>

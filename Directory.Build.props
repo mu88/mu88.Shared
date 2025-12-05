@@ -1,5 +1,6 @@
 <Project>
   <Import Project="src/mu88.Shared/mu88.Shared.props" />
+  <Import Project="src/mu88.Shared/mu88.Shared.targets" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>4.0.0</Version>

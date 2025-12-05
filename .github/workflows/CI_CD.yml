@@ -16,7 +16,6 @@ jobs:
 
     uses: mu88/github-actions/.github/workflows/ci-cd.yml@9e69b372885aa30566ebf1dbfa0611e4b66294e9
     with:
-      requires-docker-login: true
       sonar-key: 'mu88_mu88.Shared'
       sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
     secrets:

@@ -14,6 +14,11 @@
 This repo contains the code of the NuGet package [`mu88.Shared`](https://www.nuget.org/packages/mu88.Shared/), providing the following features:
 - Add and configure certain OpenTelemetry features (metrics and traces)
 - Provide a minimalistic health check tool for .NET apps
+- Reference Roslyn analyzers for consistent code quality across projects
+- Enable NuGet package auditing to detect vulnerabilities in dependencies
+- Enable NuGet package lock files for deterministic builds
+- Set MSBuild properties for container builds using Microsoft.NET.Build.Containers, enabling OCI-compliant container image metadata
+- Provide dedicated MSBuild target for publishing both regular and chiseled container images with corresponding tags
 
 I use this NuGet package to share features and configurations between different .NET apps, hence avoiding the need to implement it repeatedly.
 
