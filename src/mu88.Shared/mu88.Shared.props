@@ -1,4 +1,20 @@
 <Project>
+  <!--See https://blog.martincostello.com/look-ma-no-hands-publishing-containers-with-the-dotnet-sdk#publishing-your-app-as-a-container-->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContainerAuthors>$(GITHUB_REPOSITORY_OWNER)</ContainerAuthors>
+    <ContainerDocumentationUrl>$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/README.md</ContainerDocumentationUrl>
+    <ContainerInformationUrl>$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)/pkgs/container/$(GITHUB_REPOSITORY.Replace("$(GITHUB_REPOSITORY_OWNER)/", ""))</ContainerInformationUrl>
+    <ContainerLicenseExpression>$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/LICENSE.md</ContainerLicenseExpression>
+    <ContainerRepository>$(GITHUB_REPOSITORY)</ContainerRepository>
+    <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
+    <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
+    <ContainerVersion>$(GITHUB_SHA)</ContainerVersion>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/CHANGELOG.md" />
+    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
+  </ItemGroup>
+
   <PropertyGroup>
     <!-- C# language features -->
     <ImplicitUsings>true</ImplicitUsings>

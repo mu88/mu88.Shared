@@ -27,6 +27,12 @@
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
         }
       },
+      "Microsoft.Sbom.Targets": {
+        "type": "Direct",
+        "requested": "[4.1.4, )",
+        "resolved": "4.1.4",
+        "contentHash": "ZC3r/TTZ9BELNFYstmL8GRzHK+KuMxaCzF5Rd3wsvKFGNgiPoOdhzPCw5Vt9YKgNbcdqYT6eid96NxMUJfVteg=="
+      },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "Direct",
         "requested": "[1.14.0, )",
