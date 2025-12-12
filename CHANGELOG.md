@@ -1,5 +1,16 @@
 
 
+<a name="4.1.0"></a>
+## [4.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v4.1.0) (2025-12-12)
+
+### ✨ Features
+
+* add several improvements ([5cebe48](https://www.github.com/mu88/mu88.Shared/commit/5cebe481adbf31dec2d0c3e6e614e0b67b993da8))
+
+### 🔧 Chores
+
+* update dev container to .NET 10 ([3d57d79](https://www.github.com/mu88/mu88.Shared/commit/3d57d798e9bee0d0046ce7b9b945b09c8c206a77))
+
 <a name="4.0.0"></a>
 ## [4.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v4.0.0) (2025-12-03)
 
