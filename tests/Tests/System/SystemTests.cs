@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
+using Docker.DotNet;
+using Docker.DotNet.Models;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
@@ -11,166 +13,168 @@ namespace Tests.System;
 [Category("System")]
 public class SystemTests
 {
+    private CancellationToken _cancellationToken;
+    private DirectoryInfo _tempDirectory;
+    private DockerClient _dockerClient;
+    private DirectoryInfo _tempTestProjectDirectory;
+    private DirectoryInfo _tempNuGetDirectory;
+    private string _tempVersion;
+
+    [SetUp]
+    public void Setup()
+    {
+        _cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
+        _tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
+        _dockerClient = new DockerClientConfiguration().CreateClient();
+        _tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(_tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
+        _tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(_tempDirectory.FullName, "NuGet"));
+        _tempVersion = GenerateVersion();
+    }
+
+    [TearDown]
+    public void Teardown()
+    {
+        _tempDirectory.Delete(true);
+        _dockerClient.Dispose();
+    }
+
     [Test]
     public async Task PublishContainer_ShouldPublishRegularContainer()
     {
         // Arrange
-        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        var tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        try
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            var nugetVersion = GenerateNuGetVersion();
-            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
-            CopyTestProject(tempTestProjectDirectory);
-            await BuildNuGetPackageAsync(tempNuGetDirectory, nugetVersion, cancellationToken);
-            await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, nugetVersion, cancellationToken);
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
+        };
 
-            // Act
-            var outputLines = await DryRunContainerPublishingAsync(tempTestProjectDirectory,
-                                  $"-p:PublishRegularContainer=true -p:ReleaseVersion={nugetVersion}",
-                                  cancellationToken);
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
-            // Assert
-            outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {nugetVersion};latest");
-        }
-        finally
-        {
-            tempDirectory.Delete(true);
-        }
+        // Assert
+        outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion};latest");
+        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
+                                                                                                    .Contain(image => image.RepoTags != null &&
+                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}") &&
+                                                                                                        image.RepoTags.Contains("me/test:latest"));
     }
 
     [Test]
     public async Task PublishContainer_ShouldPublishChiseledContainer()
     {
-        // Arrange
-        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        var tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        try
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            var nugetVersion = GenerateNuGetVersion();
-            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
-            CopyTestProject(tempTestProjectDirectory);
-            await BuildNuGetPackageAsync(tempNuGetDirectory, nugetVersion, cancellationToken);
-            await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, nugetVersion, cancellationToken);
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
+        };
 
-            // Act
-            var outputLines = await DryRunContainerPublishingAsync(tempTestProjectDirectory,
-                                  $"-p:PublishChiseledContainer=true -p:ReleaseVersion={nugetVersion}",
-                                  cancellationToken);
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
-            // Assert
-            outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {nugetVersion}-chiseled;latest-chiseled");
-            outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled");
-        }
-        finally
-        {
-            tempDirectory.Delete(true);
-        }
+        // Assert
+        outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
+        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
+                                                                                                    .Contain(image => image.RepoTags != null &&
+                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
+                                                                                                        image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
     [Test]
     public async Task PublishContainer_ShouldPublishChiseledContainerWithExtra()
     {
         // Arrange
-        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        var tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        try
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            var nugetVersion = GenerateNuGetVersion();
-            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
-            CopyTestProject(tempTestProjectDirectory);
-            await BuildNuGetPackageAsync(tempNuGetDirectory, nugetVersion, cancellationToken);
-            await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, nugetVersion, cancellationToken);
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "InvariantGlobalization", "false" }
+        };
 
-            // Act
-            var outputLines = await DryRunContainerPublishingAsync(tempTestProjectDirectory,
-                                  $"-p:PublishChiseledContainer=true -p:InvariantGlobalization=false -p:ReleaseVersion={nugetVersion}",
-                                  cancellationToken);
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
-            // Assert
-            outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {nugetVersion}-chiseled;latest-chiseled");
-            outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
-        }
-        finally
-        {
-            tempDirectory.Delete(true);
-        }
+        // Assert
+        outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
+        outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
+        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
+                                                                                                    .Contain(image => image.RepoTags != null &&
+                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
+                                                                                                        image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
     [Test]
     public async Task PublishContainer_ShouldPublishRegularAndChiseledContainer()
     {
         // Arrange
-        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        var tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        try
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            var nugetVersion = GenerateNuGetVersion();
-            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
-            CopyTestProject(tempTestProjectDirectory);
-            await BuildNuGetPackageAsync(tempNuGetDirectory, nugetVersion, cancellationToken);
-            await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, nugetVersion, cancellationToken);
+            { "PublishChiseledContainer", "true" }, { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
+        };
 
-            // Act
-            var outputLines = await DryRunContainerPublishingAsync(tempTestProjectDirectory,
-                                  $"-p:PublishRegularContainer=true -p:PublishChiseledContainer=true -p:ReleaseVersion={nugetVersion}",
-                                  cancellationToken);
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
-            // Assert
-            outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {nugetVersion};latest");
-            outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {nugetVersion}-chiseled;latest-chiseled");
-            outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled");
-        }
-        finally
-        {
-            tempDirectory.Delete(true);
-        }
+        // Assert
+        outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion};latest");
+        outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
+        outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled");
+        var dockerImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken);
+        dockerImages.Should()
+                    .Contain(image => image.RepoTags != null &&
+                                      image.RepoTags.Contains($"me/test:{_tempVersion}") &&
+                                      image.RepoTags.Contains("me/test:latest"));
+        dockerImages.Should()
+                    .Contain(image => image.RepoTags != null &&
+                                      image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
+                                      image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
     [Test]
     public async Task PublishContainer_ShouldSetContainerMetadata()
     {
         // Arrange
-        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        var tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        try
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            var nugetVersion = GenerateNuGetVersion();
-            var containerImageTag = GenerateContainerImageTag();
-            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
-            CopyTestProject(tempTestProjectDirectory);
-            await BuildNuGetPackageAsync(tempNuGetDirectory, nugetVersion, cancellationToken);
-            await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, nugetVersion, cancellationToken);
+            { "PublishRegularContainer", "true" },
+            { "ReleaseVersion", _tempVersion },
+            { "IsRelease", "true" },
+            { "GITHUB_REPOSITORY_OWNER", "me" },
+            { "GITHUB_REPOSITORY", "me/test" },
+            { "GITHUB_ACTIONS", "true" },
+            { "GITHUB_SERVER_URL", "https://github.com" },
+            { "GITHUB_SHA", "1234" }
+        };
 
-            // Act
-            await BuildDockerImageOfAppAndMimicGitHubAsync(tempTestProjectDirectory, containerImageTag, cancellationToken);
+        // Act
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
-            // Assert
-            var metadata = new Dictionary<string, string>(StringComparer.Ordinal)
-            {
-                { "org.opencontainers.image.authors", "me" },
-                { "org.opencontainers.image.revision", "1234" },
-                { "org.opencontainers.image.title", "me/test" },
-                { "org.opencontainers.image.vendor", "me" },
-                { "org.opencontainers.image.version", $"{containerImageTag}" },
-                { "org.opencontainers.image.documentation", "https://github.com/me/test/blob/1234/README.md" },
-                { "org.opencontainers.image.url", "https://github.com/me/pkgs/container/test" },
-                { "org.opencontainers.image.licenses", "https://github.com/me/test/blob/1234/LICENSE.md" },
-                { "org.opencontainers.image.source", "https://github.com/me/test" },
-                { "com.docker.extension.changelog", "https://github.com/me/test/blob/1234/CHANGELOG.md" },
-                { "com.docker.extension.publisher-url", "https://github.com/me" }
-            };
-            await ContainerShouldContainMetadataAsync(metadata, containerImageTag, cancellationToken);
-        }
-        finally
+        // Assert
+        var metadata = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            tempDirectory.Delete(true);
-        }
+            { "org.opencontainers.image.authors", "me" },
+            { "org.opencontainers.image.revision", "1234" },
+            { "org.opencontainers.image.title", "me/test" },
+            { "org.opencontainers.image.vendor", "me" },
+            { "org.opencontainers.image.version", _tempVersion },
+            { "org.opencontainers.image.documentation", "https://github.com/me/test/blob/1234/README.md" },
+            { "org.opencontainers.image.url", "https://github.com/me/pkgs/container/test" },
+            { "org.opencontainers.image.licenses", "https://github.com/me/test/blob/1234/LICENSE.md" },
+            { "org.opencontainers.image.source", "https://github.com/me/test" },
+            { "com.docker.extension.changelog", "https://github.com/me/test/blob/1234/CHANGELOG.md" },
+            { "com.docker.extension.publisher-url", "https://github.com/me" }
+        };
+        await ContainerShouldContainMetadataAsync(metadata, _tempVersion, _cancellationToken);
     }
 
     [Test]
@@ -178,36 +182,27 @@ public class SystemTests
     public async Task AppRunningInDocker_ShouldBeHealthy()
     {
         // Arrange
-        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        var tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        try
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            var nugetVersion = GenerateNuGetVersion();
-            var containerImageTag = GenerateContainerImageTag();
-            var tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
-            var tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(tempDirectory.FullName, "NuGet"));
-            CopyTestProject(tempTestProjectDirectory);
-            await BuildNuGetPackageAsync(tempNuGetDirectory, nugetVersion, cancellationToken);
-            await AddNuGetPackageToTestProjectAsync(tempNuGetDirectory, tempTestProjectDirectory, nugetVersion, cancellationToken);
-            await BuildDockerImageOfAppAsync(tempTestProjectDirectory, string.Empty, containerImageTag, cancellationToken);
-            var container = await StartAppInContainersAsync(containerImageTag, cancellationToken);
-            var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
+        };
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+        var container = await StartAppInContainersAsync(_tempVersion, _cancellationToken);
+        var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
 
-            // Act
-            var healthCheckResponse = await httpClient.GetAsync("healthz", cancellationToken);
-            var appResponse = await httpClient.GetAsync("/hello", cancellationToken);
-            var healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/healthz"], cancellationToken);
+        // Act
+        var healthCheckResponse = await httpClient.GetAsync("healthz", _cancellationToken);
+        var appResponse = await httpClient.GetAsync("/hello", _cancellationToken);
+        var healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/healthz"], _cancellationToken);
 
-            // Assert
-            await LogsShouldNotContainWarningsAsync(container, cancellationToken);
-            await HealthCheckShouldBeHealthyAsync(healthCheckResponse, cancellationToken);
-            await AppShouldRunAsync(appResponse, cancellationToken);
-            healthCheckToolResult.ExitCode.Should().Be(0);
-        }
-        finally
-        {
-            tempDirectory.Delete(true);
-        }
+        // Assert
+        await LogsShouldNotContainWarningsAsync(container, _cancellationToken);
+        await HealthCheckShouldBeHealthyAsync(healthCheckResponse, _cancellationToken);
+        await AppShouldRunAsync(appResponse, _cancellationToken);
+        healthCheckToolResult.ExitCode.Should().Be(0);
     }
 
     private static async Task AppShouldRunAsync(HttpResponseMessage appResponse, CancellationToken cancellationToken)
@@ -265,18 +260,6 @@ public class SystemTests
             cancellationToken);
     }
 
-    private static async Task<IReadOnlyList<string>> DryRunContainerPublishingAsync(DirectoryInfo tempTestProjectDirectory,
-                                                                                    string additionalBuildParameters,
-                                                                                    CancellationToken cancellationToken) =>
-        await WaitUntilDotnetToolSucceededAsync($"msbuild {GetTestProjectFilePath(tempTestProjectDirectory)} " +
-                                                "/t:PublishContainersForMultipleFamilies " +
-                                                "-p:PublishRegularContainer=true " +
-                                                "-p:ReleaseVersion=dev " +
-                                                "-p:IsRelease=true " +
-                                                "-p:DryRun=true " +
-                                                $"{additionalBuildParameters}",
-            cancellationToken);
-
     private static async Task AddNuGetPackageToTestProjectAsync(DirectoryInfo tempNugetDirectory,
                                                                 DirectoryInfo tempTestProjectDirectory,
                                                                 string nugetVersion,
@@ -285,38 +268,22 @@ public class SystemTests
             $"add {GetTestProjectFilePath(tempTestProjectDirectory)} package mu88.Shared -v {nugetVersion} -s {tempNugetDirectory.FullName}",
             cancellationToken);
 
-    private static async Task BuildDockerImageOfAppAsync(DirectoryInfo tempTestProjectDirectory,
-                                                         string additionalBuildParameters,
-                                                         string containerImageTag,
-                                                         CancellationToken cancellationToken) =>
-        await WaitUntilDotnetToolSucceededAsync($"publish {GetTestProjectFilePath(tempTestProjectDirectory)} " +
-                                                "/t:PublishContainersForMultipleFamilies " +
-                                                "-p:PublishRegularContainer=true " +
-                                                $"-p:ReleaseVersion={containerImageTag} " +
-                                                "-p:IsRelease=false " +
-                                                "-p:ContainerRegistry=\"\" " + // image shall not be pushed
-                                                "-p:ContainerRepository=\"me/test\" " +
-                                                $"{additionalBuildParameters}",
-            cancellationToken);
+    private static async Task<IReadOnlyList<string>> BuildDockerImageOfAppAsync(DirectoryInfo tempTestProjectDirectory,
+                                                                                Dictionary<string, string> buildParameters,
+                                                                                CancellationToken cancellationToken)
+    {
+        buildParameters.Add("ContainerRegistry", string.Empty); // image shall not be pushed
+        buildParameters.Add("ContainerRepository", "me/test");
+        var arguments = string.Join(' ', buildParameters.Select(kvp => $"-p:{kvp.Key}=\"{kvp.Value}\""));
+
+        return await WaitUntilDotnetToolSucceededAsync($"publish {GetTestProjectFilePath(tempTestProjectDirectory)} " +
+                                                       "/t:PublishContainersForMultipleFamilies " +
+                                                       $" {arguments}",
+                   cancellationToken);
+    }
 
     private static string GetTestProjectFilePath(DirectoryInfo tempTestProjectDirectory) =>
         Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
-
-    private static async Task BuildDockerImageOfAppAndMimicGitHubAsync(DirectoryInfo tempTestProjectDirectory,
-                                                                       string containerImageTag,
-                                                                       CancellationToken cancellationToken)
-    {
-        var additionalBuildParameters = "-p:ContainerRegistry=\"\" " + // image shall not be pushed
-                                        "-p:GITHUB_REPOSITORY_OWNER=me " +
-                                        "-p:GITHUB_REPOSITORY=\"me/test\" " +
-                                        "-p:GITHUB_ACTIONS=true " +
-                                        "-p:GITHUB_SERVER_URL=\"https://github.com\" " +
-                                        "-p:GITHUB_SHA=1234";
-        await BuildDockerImageOfAppAsync(tempTestProjectDirectory,
-            additionalBuildParameters,
-            containerImageTag,
-            cancellationToken);
-    }
 
     private static async Task<IContainer> StartAppInContainersAsync(string containerImageTag, CancellationToken cancellationToken)
     {
@@ -386,8 +353,5 @@ public class SystemTests
     }
 
     [SuppressMessage("Design", "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings", Justification = "Okay for me")]
-    private static string GenerateContainerImageTag() => $"system-test-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
-
-    [SuppressMessage("Design", "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings", Justification = "Okay for me")]
-    private static string GenerateNuGetVersion() => $"0.0.1-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+    private static string GenerateVersion() => $"0.0.1-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 }

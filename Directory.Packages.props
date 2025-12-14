@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="AspNetCoreAnalyzers" Version="0.3.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
+    <PackageVersion Include="Docker.DotNet" Version="3.125.15"/>
     <PackageVersion Include="FluentAssertions" Version="8.8.0" />
     <PackageVersion Include="FluentAssertions.Web.v8" Version="1.9.5" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />

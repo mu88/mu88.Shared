@@ -8,6 +8,15 @@
         "resolved": "6.0.4",
         "contentHash": "Qa7Hg+wrOMDKpXVn2dw4Wlun490bIWsFW0fdNJQFJLZnbU27MCP0HJ2mPgS+3EQBQUb0zKlkwiQzP+j38Hc3Iw=="
       },
+      "Docker.DotNet": {
+        "type": "Direct",
+        "requested": "[3.125.15, )",
+        "resolved": "3.125.15",
+        "contentHash": "XN8FKxVv8Mjmwu104/Hl9lM61pLY675s70gzwSj8KR5pwblo8HfWLcCuinh9kYsqujBkMH4HVRCEcRuU6al4BQ==",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        }
+      },
       "FluentAssertions": {
         "type": "Direct",
         "requested": "[8.8.0, )",
@@ -539,7 +548,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "[10.0.0, )",
-          "mu88.Shared": "[4.0.0, )"
+          "mu88.Shared": "[4.1.0, )"
         }
       },
       "mu88.healthcheck": {

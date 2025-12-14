@@ -11,6 +11,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Docker.DotNet"/>
     <PackageReference Include="FluentAssertions"/>
     <PackageReference Include="FluentAssertions.Web.v8"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
