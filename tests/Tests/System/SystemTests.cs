@@ -39,6 +39,50 @@ public class SystemTests
     }
 
     [Test]
+    public async Task PublishContainer_ShouldNotReplaceTagsForRegularContainer_WhenProvidedViaInput()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "ContainerImageTags", "my-fixed-tag" }
+        };
+
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        outputLines.Should().ContainMatch("*Publishing regular container image with tags: my-fixed-tag");
+        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
+                                                                                                    .Contain(image => image.RepoTags != null &&
+                                                                                                        image.RepoTags.Contains("me/test:my-fixed-tag"));
+    }
+
+    [Test]
+    public async Task PublishContainer_ShouldNotReplaceTagsForChiseledContainer_WhenProvidedViaInput()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "ContainerImageTags", "my-fixed-tag" }
+        };
+
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        outputLines.Should().ContainMatch("*Publishing chiseled container image with tags: my-fixed-tag");
+        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
+                                                                                                    .Contain(image => image.RepoTags != null &&
+                                                                                                        image.RepoTags.Contains("me/test:my-fixed-tag"));
+    }
+
+    [Test]
     public async Task PublishContainer_ShouldPublishRegularContainer()
     {
         // Arrange
