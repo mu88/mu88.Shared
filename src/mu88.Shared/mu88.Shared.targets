@@ -1,20 +1,26 @@
 <Project>
+  <Target Name="UpdateContainerBaseImage" AfterTargets="ComputeContainerBaseImage">
+    <PropertyGroup Condition=" '$(CustomContainerBaseImageVersion)' != '' ">
+      <_ContainerBaseImageTag>$(CustomContainerBaseImageVersion)</_ContainerBaseImageTag>
+      <_ContainerBaseImageTag Condition=" '$(ContainerFamily)' != '' ">$(CustomContainerBaseImageVersion)-$(ContainerFamily)</_ContainerBaseImageTag>
+      <ContainerBaseImage>$([System.Text.RegularExpressions.Regex]::Replace("$(ContainerBaseImage)", "^(.*):.*$", "$1:$(_ContainerBaseImageTag)", "System.Text.RegularExpressions.RegexOptions.ECMAScript"))</ContainerBaseImage>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="PublishRegularContainer">
     <Error Condition=" '$(IsRelease)' == '' " Text="IsRelease property must be set ('true' or 'false')" />
     <Error Condition=" '$(ReleaseVersion)' == '' " Text="ReleaseVersion property must be set (e.g., '1.2.3')" />
   
     <PropertyGroup>
-      <NoContainerImageTagsSet Condition=" '$(ContainerImageTags)' == '' ">true</NoContainerImageTagsSet>
-      <ContainerImageTags Condition=" '$(NoContainerImageTagsSet)' == 'true' ">$(ReleaseVersion)</ContainerImageTags>
-      <ContainerImageTags Condition=" '$(NoContainerImageTagsSet)' == 'true' and '$(IsRelease)' == 'true' ">$(ContainerImageTags);latest</ContainerImageTags>
+      <ContainerImageTags Condition=" '$(_InitialContainerImageTags)' == '' ">$(ReleaseVersion)</ContainerImageTags>
+      <ContainerImageTags Condition=" '$(_InitialContainerImageTags)' == '' and '$(IsRelease)' == 'true' ">$(ContainerImageTags);latest</ContainerImageTags>
     </PropertyGroup>
 
-    <Message Text="Publishing regular container image with tags: $(ContainerImageTags)" Importance="High" />
+    <Message Condition=" '$(ContainerImageTags)' != '' " Text="Publishing regular container image with tags: $(ContainerImageTags)" Importance="High" />
 
-    <MSBuild
-      Projects="$(MSBuildProjectFile)"
-      Targets="PublishContainer"
-      Properties="ContainerImageTags=$(ContainerImageTags)"/>
+    <MSBuild Condition=" '$(DryRun)' != 'true' " Projects="$(MSBuildProjectFile)" Targets="PublishContainer" Properties="ContainerImageTags=$(ContainerImageTags)">
+      <Output TaskParameter="TargetOutputs" ItemName="PublishRegularContainerTargetOutputs"/>
+    </MSBuild>
   </Target>
 
   <Target Name="PublishChiseledContainer">
@@ -22,29 +28,32 @@
     <Error Condition=" '$(ReleaseVersion)' == '' " Text="ReleaseVersion property must be set (e.g., '1.2.3')" />
 
     <PropertyGroup>
-      <ContainerBaseImage>$(ContainerBaseImage)-noble-chiseled</ContainerBaseImage>
-      <ContainerBaseImage Condition=" '$(InvariantGlobalization)' == 'false' ">$(ContainerBaseImage)-extra</ContainerBaseImage>
+      <ContainerFamily Condition=" '$(_InitialContainerFamily)' == '' ">noble-chiseled</ContainerFamily>
 
-      <ChiseledSuffix>-chiseled</ChiseledSuffix>
-      <NoContainerImageTagsSet Condition=" '$(ContainerImageTags)' == '' ">true</NoContainerImageTagsSet>
-      <ContainerImageTags Condition=" '$(NoContainerImageTagsSet)' == 'true' ">$(ReleaseVersion)$(ChiseledSuffix)</ContainerImageTags>
-      <ContainerImageTags Condition=" '$(NoContainerImageTagsSet)' == 'true' and '$(IsRelease)' == 'true' ">$(ContainerImageTags);latest$(ChiseledSuffix)</ContainerImageTags>
+      <!-- See https://github.com/dotnet/sdk/issues/52160 -->
+      <ContainerFamily Condition=" '$(_InitialContainerFamily)' == '' and '$(InvariantGlobalization)' == 'false' ">$(ContainerFamily)-extra</ContainerFamily>
+
+      <_ChiseledSuffix>-chiseled</_ChiseledSuffix>
+      <ContainerImageTags Condition=" '$(_InitialContainerImageTags)' == '' ">$(ReleaseVersion)$(_ChiseledSuffix)</ContainerImageTags>
+      <ContainerImageTags Condition=" '$(_InitialContainerImageTags)' == '' and '$(IsRelease)' == 'true' ">$(ContainerImageTags);latest$(_ChiseledSuffix)</ContainerImageTags>
     </PropertyGroup>
 
-    <Message Text="Publishing chiseled container image with tags: $(ContainerImageTags)" Importance="High" />
-    <Message Text="Using container base image: $(ContainerBaseImage)" Importance="High"/>
+    <Message Condition=" '$(ContainerImageTags)' != '' " Text="Publishing chiseled container image with tags: $(ContainerImageTags)" Importance="High" />
+    <Message Text="Using container family: $(ContainerFamily)" Importance="High" />
+    <Message Text="Initial container family: $(_InitialContainerFamily)" Importance="High" />
 
-    <MSBuild
-      Projects="$(MSBuildProjectFile)"
-      Targets="PublishContainer"
-      Properties="ContainerImageTags=$(ContainerImageTags);ContainerBaseImage=$(ContainerBaseImage)"/>
+    <MSBuild Condition=" '$(DryRun)' != 'true' " Projects="$(MSBuildProjectFile)" Targets="PublishContainer" Properties="ContainerImageTags=$(ContainerImageTags);ContainerFamily=$(ContainerFamily)">
+      <Output TaskParameter="TargetOutputs" ItemName="PublishChiseledContainerTargetOutputs"/>
+    </MSBuild>
   </Target>
 
   <!-- Publish container images for multiple families -->
-  <Target Name="PublishContainersForMultipleFamilies">
+  <Target Name="PublishContainersForMultipleFamilies" Returns="@(PublishRegularContainerTargetOutputs)">
     <PropertyGroup>
       <PublishRegularContainer Condition=" '$(PublishRegularContainer)' == '' ">false</PublishRegularContainer>
       <PublishChiseledContainer Condition=" '$(PublishChiseledContainer)' == '' ">false</PublishChiseledContainer>
+      <_InitialContainerImageTags Condition=" '$(ContainerImageTags)' != '' ">$(ContainerImageTags)</_InitialContainerImageTags>
+      <_InitialContainerFamily Condition=" '$(ContainerFamily)' != '' ">$(ContainerFamily)</_InitialContainerFamily>
     </PropertyGroup>
 
     <Error Condition=" '$(PublishRegularContainer)' != 'true' and '$(PublishChiseledContainer)' != 'true' " Text="At least one of PublishRegularContainer or PublishChiseledContainer must be 'true'"/>
@@ -55,11 +64,20 @@
       Condition=" '$(PublishRegularContainer)' == 'true' "
       Projects="$(MSBuildProjectFile)"
       Targets="PublishRegularContainer"
-      Properties="PublishRegularContainer=$(PublishRegularContainer)"/>
+      Properties="
+        DryRun=$(DryRun);
+        _InitialContainerImageTags=$(_InitialContainerImageTags);
+        _InitialContainerFamily=$(_InitialContainerFamily);
+        ContainerDescription=$(ContainerDescription)"/>
     <MSBuild
       Condition=" '$(PublishChiseledContainer)' == 'true' "
       Projects="$(MSBuildProjectFile)"
       Targets="PublishChiseledContainer"
-      Properties="PublishChiseledContainer=$(PublishChiseledContainer)"/>
+      Properties="
+        DryRun=$(DryRun);
+        _InitialContainerImageTags=$(_InitialContainerImageTags);
+        _InitialContainerFamily=$(_InitialContainerFamily);
+        ContainerDescription=$(ContainerDescription)"/>
   </Target>
 </Project>
+

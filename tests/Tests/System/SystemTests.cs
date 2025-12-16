@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using Docker.DotNet;
@@ -32,14 +31,41 @@ public class SystemTests
     }
 
     [TearDown]
-    public void Teardown()
+    public async Task Teardown()
     {
         _tempDirectory.Delete(true);
+
+        if (string.IsNullOrWhiteSpace(_tempVersion))
+        {
+            return;
+        }
+
+        var dockerImageIds = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .Where(image => image.RepoTags.Any(tag => tag.Contains($"me/test:{_tempVersion}", StringComparison.Ordinal)))
+            .Select(image => image.ID)
+            .Distinct(StringComparer.Ordinal);
+
+        foreach (var dockerImageId in dockerImageIds)
+        {
+            var runningContainerIds = (await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters(), _cancellationToken))
+                .Where(container => string.Equals(container.ImageID, dockerImageId, StringComparison.Ordinal))
+                .Select(container => container.ID)
+                .Distinct(StringComparer.Ordinal);
+            foreach (var runningContainerId in runningContainerIds)
+            {
+                await _dockerClient.Containers.StopContainerAsync(runningContainerId, new ContainerStopParameters(), _cancellationToken);
+                await _dockerClient.Containers.RemoveContainerAsync(runningContainerId, new ContainerRemoveParameters { Force = true }, _cancellationToken);
+            }
+
+            await _dockerClient.Images.DeleteImageAsync(dockerImageId, new ImageDeleteParameters { Force = true }, _cancellationToken);
+        }
+
         _dockerClient.Dispose();
     }
 
     [Test]
-    public async Task PublishContainer_ShouldNotReplaceTagsForRegularContainer_WhenProvidedViaInput()
+    [Ignore("WIP")]
+    public async Task PublishContainer_ShouldEmitDigestsOfCreatedContainers()
     {
         // Arrange
         CopyTestProject(_tempTestProjectDirectory);
@@ -47,21 +73,23 @@ public class SystemTests
         await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "ContainerImageTags", "my-fixed-tag" }
+            { "PublishChiseledContainer", "true" }, { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
         };
 
         // Act
-        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken, "--getItem:ManifestDigests");
 
         // Assert
-        outputLines.Should().ContainMatch("*Publishing regular container image with tags: my-fixed-tag");
-        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags != null &&
-                                                                                                        image.RepoTags.Contains("me/test:my-fixed-tag"));
+        outputLines.Should().NotBeEmpty();
+        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
+        dockerImage.Should().NotBeNull();
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11");
     }
 
     [Test]
-    public async Task PublishContainer_ShouldNotReplaceTagsForChiseledContainer_WhenProvidedViaInput()
+    public async Task PublishRegularContainer_ShouldUseCustomContainerBaseImageVersion()
     {
         // Arrange
         CopyTestProject(_tempTestProjectDirectory);
@@ -69,21 +97,136 @@ public class SystemTests
         await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "ContainerImageTags", "my-fixed-tag" }
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }
+        };
+
+        // Act
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
+        dockerImage.Should().NotBeNull();
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11");
+    }
+
+    [Test]
+    public async Task PublishChiseledContainer_ShouldUseCustomContainerBaseImageVersion()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }
+        };
+
+        // Act
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+        dockerImage.Should().NotBeNull();
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled");
+    }
+
+    [Test]
+    public async Task PublishChiseledContainerWithExtra_ShouldUseCustomContainerBaseImageVersion()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishChiseledContainer", "true" }, { "InvariantGlobalization", "false" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" },
+            { "CustomContainerBaseImageVersion", "9.0.11" }
+        };
+
+        // Act
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+        dockerImage.Should().NotBeNull();
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled-extra");
+    }
+
+    [Test]
+    public async Task PublishRegularContainer_ShouldNotOverrideInitialContainerImageTags()
+    {
+        // Arrange
+        _tempVersion = "1.0.0";
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", "SomethingElse" }, { "IsRelease", "true" }, { "ContainerImageTags", _tempVersion }
         };
 
         // Act
         var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
         // Assert
-        outputLines.Should().ContainMatch("*Publishing chiseled container image with tags: my-fixed-tag");
+        outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion}");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags != null &&
-                                                                                                        image.RepoTags.Contains("me/test:my-fixed-tag"));
+                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
     }
 
     [Test]
-    public async Task PublishContainer_ShouldPublishRegularContainer()
+    public async Task PublishChiseledContainer_ShouldNotOverrideInitialContainerImageTags()
+    {
+        // Arrange
+        _tempVersion = "1.0.0";
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", "SomethingElse" }, { "IsRelease", "true" }, { "ContainerImageTags", _tempVersion }
+        };
+
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}");
+        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
+                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
+    }
+
+    [Test]
+    public async Task PublishChiseledContainer_ShouldNotOverrideInitialContainerFamily()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "ContainerFamily", "alpine" }
+        };
+
+        // Act
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+        dockerImage.Should().NotBeNull();
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-alpine");
+    }
+
+    [Test]
+    public async Task PublishRegularContainer()
     {
         // Arrange
         CopyTestProject(_tempTestProjectDirectory);
@@ -100,13 +243,12 @@ public class SystemTests
         // Assert
         outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion};latest");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags != null &&
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}") &&
+                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}") &&
                                                                                                         image.RepoTags.Contains("me/test:latest"));
     }
 
     [Test]
-    public async Task PublishContainer_ShouldPublishChiseledContainer()
+    public async Task PublishChiseledContainer()
     {
         CopyTestProject(_tempTestProjectDirectory);
         await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
@@ -122,13 +264,12 @@ public class SystemTests
         // Assert
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags != null &&
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
+                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
                                                                                                         image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
     [Test]
-    public async Task PublishContainer_ShouldPublishChiseledContainerWithExtra()
+    public async Task PublishChiseledContainerWithExtra()
     {
         // Arrange
         CopyTestProject(_tempTestProjectDirectory);
@@ -144,15 +285,15 @@ public class SystemTests
 
         // Assert
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
-        outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
-        (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags != null &&
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
-                                                                                                        image.RepoTags.Contains("me/test:latest-chiseled"));
+        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+        dockerImage.Should().NotBeNull();
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
     }
 
     [Test]
-    public async Task PublishContainer_ShouldPublishRegularAndChiseledContainer()
+    public async Task PublishRegularAndChiseledContainer()
     {
         // Arrange
         CopyTestProject(_tempTestProjectDirectory);
@@ -169,15 +310,12 @@ public class SystemTests
         // Assert
         outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion};latest");
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
-        outputLines.Should().ContainMatch("*Using container base image: mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled");
         var dockerImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken);
         dockerImages.Should()
-                    .Contain(image => image.RepoTags != null &&
-                                      image.RepoTags.Contains($"me/test:{_tempVersion}") &&
+                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}") &&
                                       image.RepoTags.Contains("me/test:latest"));
         dockerImages.Should()
-                    .Contain(image => image.RepoTags != null &&
-                                      image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
+                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
                                       image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
@@ -206,7 +344,9 @@ public class SystemTests
         // Assert
         var metadata = new Dictionary<string, string>(StringComparer.Ordinal)
         {
+            { "org.opencontainers.artifact.description", "This is an awesome project" },
             { "org.opencontainers.image.authors", "me" },
+            { "org.opencontainers.image.description", "This is an awesome project" },
             { "org.opencontainers.image.revision", "1234" },
             { "org.opencontainers.image.title", "me/test" },
             { "org.opencontainers.image.vendor", "me" },
@@ -314,16 +454,17 @@ public class SystemTests
 
     private static async Task<IReadOnlyList<string>> BuildDockerImageOfAppAsync(DirectoryInfo tempTestProjectDirectory,
                                                                                 Dictionary<string, string> buildParameters,
-                                                                                CancellationToken cancellationToken)
+                                                                                CancellationToken cancellationToken,
+                                                                                string? additionalArguments = null)
     {
+        buildParameters.Add("ContainerDescription", "This is an awesome project"); // description shall not be determined via GitHub CLI
         buildParameters.Add("ContainerRegistry", string.Empty); // image shall not be pushed
         buildParameters.Add("ContainerRepository", "me/test");
         var arguments = string.Join(' ', buildParameters.Select(kvp => $"-p:{kvp.Key}=\"{kvp.Value}\""));
-
         return await WaitUntilDotnetToolSucceededAsync($"publish {GetTestProjectFilePath(tempTestProjectDirectory)} " +
                                                        "/t:PublishContainersForMultipleFamilies " +
-                                                       $" {arguments}",
-                   cancellationToken);
+                                                       $" {arguments} {additionalArguments}",
+            cancellationToken);
     }
 
     private static string GetTestProjectFilePath(DirectoryInfo tempTestProjectDirectory) =>
@@ -359,28 +500,8 @@ public class SystemTests
     private static async Task<IReadOnlyList<string>> WaitUntilDotnetToolSucceededAsync(string arguments, CancellationToken cancellationToken) =>
         await WaitUntilToolSucceededAsync("dotnet", arguments, cancellationToken);
 
-    private static async Task<IReadOnlyList<string>> WaitUntilToolSucceededAsync(string toolToStart, string arguments, CancellationToken cancellationToken)
-    {
-        var outputLines = new List<string>();
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = toolToStart, Arguments = arguments, UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true
-            }
-        };
-        process.Start();
-        while (await process.StandardOutput.ReadLineAsync(cancellationToken) is { } line)
-        {
-            outputLines.Add(line);
-            Console.WriteLine(line);
-        }
-
-        await process.WaitForExitAsync(cancellationToken);
-        process.ExitCode.Should().Be(0);
-
-        return outputLines;
-    }
+    private static async Task<IReadOnlyList<string>> WaitUntilToolSucceededAsync(string toolToStart, string arguments, CancellationToken cancellationToken) =>
+        await Helper.WaitUntilToolFinishedAsync(toolToStart, arguments, true, cancellationToken);
 
     private static async Task ContainerShouldContainMetadataAsync(Dictionary<string, string> metadata, string containerImageTag, CancellationToken cancellationToken)
     {
