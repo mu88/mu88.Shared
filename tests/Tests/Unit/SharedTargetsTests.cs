@@ -1,8 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using Tests.System;
 
-namespace Tests;
+namespace Tests.Unit;
 
 [TestFixture]
 [Category("Unit")]

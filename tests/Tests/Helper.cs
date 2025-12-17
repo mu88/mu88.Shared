@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using FluentAssertions;
 
-namespace Tests.System;
+namespace Tests;
 
 public static class Helper
 {
