@@ -103,8 +103,7 @@
              Properties="
                DryRun=$(DryRun);
                _InitialContainerImageTags=$(_InitialContainerImageTags);
-               _InitialContainerFamily=$(_InitialContainerFamily);
-               ContainerDescription=$(ContainerDescription)">
+               _InitialContainerFamily=$(_InitialContainerFamily)">
       <Output TaskParameter="TargetOutputs" ItemName="_Regular_TargetOutputs"/>
     </MSBuild>
 
@@ -114,8 +113,7 @@
              Properties="
                DryRun=$(DryRun);
                _InitialContainerImageTags=$(_InitialContainerImageTags);
-               _InitialContainerFamily=$(_InitialContainerFamily);
-               ContainerDescription=$(ContainerDescription)">
+               _InitialContainerFamily=$(_InitialContainerFamily)">
       <Output TaskParameter="TargetOutputs" ItemName="_Chiseled_TargetOutputs"/>
     </MSBuild>
 
