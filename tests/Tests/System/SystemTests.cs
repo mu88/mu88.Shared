@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Docker.DotNet;
 using Docker.DotNet.Models;
@@ -64,8 +66,7 @@ public class SystemTests
     }
 
     [Test]
-    [Ignore("WIP")]
-    public async Task PublishContainer_ShouldEmitDigestsOfCreatedContainers()
+    public async Task PublishContainer_ShouldEmitCustomMsBuildItemGroupWithGeneratedImages()
     {
         // Arrange
         CopyTestProject(_tempTestProjectDirectory);
@@ -77,15 +78,49 @@ public class SystemTests
         };
 
         // Act
-        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken, "--getItem:ManifestDigests");
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken, "--getItem:GeneratedImages");
 
         // Assert
         outputLines.Should().NotBeEmpty();
-        var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
-        dockerImage.Should().NotBeNull();
-        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11");
+        var json = new StringBuilder().AppendJoin(string.Empty, outputLines).ToString();
+        var msBuildOutput = JsonSerializer.Deserialize<MsBuildOutput>(json);
+        msBuildOutput?.Items.GeneratedImages.Should().NotBeNullOrEmpty()
+            .And.HaveCount(4)
+            .And.AllSatisfy(image => image.Identity.Should().Be("GeneratedImage"));
+        msBuildOutput!.Items.GeneratedImages
+            .Select(image => image.ImageTag)
+            .Should().BeEquivalentTo(_tempVersion, "latest", $"{_tempVersion}-chiseled", "latest-chiseled");
+        msBuildOutput.Items.GeneratedImages
+            .Select(image => image.FullyQualifiedImageWithTag)
+            .Should().BeEquivalentTo($"me/test:{_tempVersion}", "me/test:latest", $"me/test:{_tempVersion}-chiseled", "me/test:latest-chiseled");
+    }
+
+    [Test]
+    public async Task PublishContainer_ShouldEmitCustomMsBuildItemGroupWithGeneratedContainersProvidedByTheSDK()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishChiseledContainer", "true" }, { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
+        };
+
+        // Act
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken, "--getItem:GeneratedContainers");
+
+        // Assert
+        outputLines.Should().NotBeEmpty();
+        var json = new StringBuilder().AppendJoin(string.Empty, outputLines).ToString();
+        var msBuildOutput = JsonSerializer.Deserialize<MsBuildOutput>(json);
+        msBuildOutput?.Items.GeneratedContainers.Should().NotBeNullOrEmpty()
+            .And.HaveCount(4)
+            .And.AllSatisfy(image =>
+            {
+                image.Identity.Should().Be("GeneratedContainer");
+                image.ManifestDigest.Should().NotBeNullOrWhiteSpace();
+            });
     }
 
     [Test]

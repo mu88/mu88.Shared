@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
-    <ContainerRegistry>ghcr.io</ContainerRegistry>
     <ContainerRepository>mu88/mu88-shared-dummy</ContainerRepository>
     <ContainerImageTags>dev</ContainerImageTags>
     <IsPackable>false</IsPackable>
