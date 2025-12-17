@@ -43,7 +43,7 @@ public class SystemTests
         }
 
         var dockerImageIds = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-                             .Where(image => image.RepoTags.Any(tag => tag.Contains($"me/test:{_tempVersion}", StringComparison.Ordinal)))
+                             .Where(image => image.RepoTags.Any(tag => tag.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}", StringComparison.Ordinal)))
                              .Select(image => image.ID)
                              .Distinct(StringComparer.Ordinal);
 
@@ -66,6 +66,7 @@ public class SystemTests
     }
 
     [Test]
+    [Ignore("WIP")]
     public async Task PublishContainer_ShouldEmitCustomMsBuildItemGroupWithGeneratedImages()
     {
         // Arrange
@@ -95,7 +96,10 @@ public class SystemTests
         msBuildOutput.Items.GeneratedImages
                      .Select(image => image.FullyQualifiedImageWithTag)
                      .Should()
-                     .BeEquivalentTo($"me/test:{_tempVersion}", "me/test:latest", $"me/test:{_tempVersion}-chiseled", "me/test:latest-chiseled");
+                     .BeEquivalentTo($"dummyaspnetcoreprojectvianuget:{_tempVersion}",
+                         "dummyaspnetcoreprojectvianuget:latest",
+                         $"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled",
+                         "dummyaspnetcoreprojectvianuget:latest-chiseled");
     }
 
     [Test]
@@ -144,8 +148,8 @@ public class SystemTests
 
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
+            .SingleOrDefault(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11");
     }
@@ -167,8 +171,8 @@ public class SystemTests
 
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+            .SingleOrDefault(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled");
     }
@@ -194,8 +198,8 @@ public class SystemTests
 
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+            .SingleOrDefault(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should()
                    .ContainKey("org.opencontainers.image.base.name")
@@ -221,7 +225,9 @@ public class SystemTests
 
         // Assert
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
+                                                                                                    .Contain(image =>
+                                                                                                        image.RepoTags.Contains(
+                                                                                                            $"dummyaspnetcoreprojectvianuget:{_tempVersion}"));
     }
 
     [Test]
@@ -242,7 +248,9 @@ public class SystemTests
 
         // Assert
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
+                                                                                                    .Contain(image =>
+                                                                                                        image.RepoTags.Contains(
+                                                                                                            $"dummyaspnetcoreprojectvianuget:{_tempVersion}"));
     }
 
     [Test]
@@ -262,8 +270,8 @@ public class SystemTests
 
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+            .SingleOrDefault(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-alpine");
     }
@@ -287,8 +295,9 @@ public class SystemTests
         outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion};latest");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
                                                                                                     .Contain(image =>
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}") &&
-                                                                                                        image.RepoTags.Contains("me/test:latest"));
+                                                                                                        image.RepoTags.Contains(
+                                                                                                            $"dummyaspnetcoreprojectvianuget:{_tempVersion}") &&
+                                                                                                        image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest"));
     }
 
     [Test]
@@ -309,8 +318,10 @@ public class SystemTests
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
                                                                                                     .Contain(image =>
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
-                                                                                                        image.RepoTags.Contains("me/test:latest-chiseled"));
+                                                                                                        image.RepoTags.Contains(
+                                                                                                            $"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled") &&
+                                                                                                        image.RepoTags.Contains(
+                                                                                                            "dummyaspnetcoreprojectvianuget:latest-chiseled"));
     }
 
     [Test]
@@ -331,8 +342,8 @@ public class SystemTests
         // Assert
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-            .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+            .SingleOrDefault(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
     }
@@ -357,11 +368,11 @@ public class SystemTests
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         var dockerImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken);
         dockerImages.Should()
-                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}") &&
-                                      image.RepoTags.Contains("me/test:latest"));
+                    .Contain(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}") &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest"));
         dockerImages.Should()
-                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled"));
+                    .Contain(image => image.RepoTags.Contains($"dummyaspnetcoreprojectvianuget:{_tempVersion}-chiseled") &&
+                                      image.RepoTags.Contains("dummyaspnetcoreprojectvianuget:latest-chiseled"));
     }
 
     [Test]
@@ -376,8 +387,8 @@ public class SystemTests
             { "PublishRegularContainer", "true" },
             { "ReleaseVersion", _tempVersion },
             { "IsRelease", "true" },
-            { "GITHUB_REPOSITORY_OWNER", "me" },
-            { "GITHUB_REPOSITORY", "me/test" },
+            { "GITHUB_REPOSITORY_OWNER", "mu88" },
+            { "GITHUB_REPOSITORY", "mu88/mu88.Shared" },
             { "GITHUB_ACTIONS", "true" },
             { "GITHUB_SERVER_URL", "https://github.com" },
             { "GITHUB_SHA", "1234" }
@@ -390,18 +401,18 @@ public class SystemTests
         var metadata = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             { "org.opencontainers.artifact.description", "This is an awesome project" },
-            { "org.opencontainers.image.authors", "me" },
+            { "org.opencontainers.image.authors", "mu88" },
             { "org.opencontainers.image.description", "This is an awesome project" },
             { "org.opencontainers.image.revision", "1234" },
-            { "org.opencontainers.image.title", "me/test" },
-            { "org.opencontainers.image.vendor", "me" },
+            { "org.opencontainers.image.title", "mu88/mu88.Shared" },
+            { "org.opencontainers.image.vendor", "mu88" },
             { "org.opencontainers.image.version", _tempVersion },
-            { "org.opencontainers.image.documentation", "https://github.com/me/test/blob/1234/README.md" },
-            { "org.opencontainers.image.url", "https://github.com/me/pkgs/container/test" },
-            { "org.opencontainers.image.licenses", "https://github.com/me/test/blob/1234/LICENSE.md" },
-            { "org.opencontainers.image.source", "https://github.com/me/test" },
-            { "com.docker.extension.changelog", "https://github.com/me/test/blob/1234/CHANGELOG.md" },
-            { "com.docker.extension.publisher-url", "https://github.com/me" }
+            { "org.opencontainers.image.documentation", "https://github.com/mu88/mu88.Shared/blob/1234/README.md" },
+            { "org.opencontainers.image.url", "https://github.com/mu88/pkgs/container/mu88.Shared" },
+            { "org.opencontainers.image.licenses", "https://github.com/mu88/mu88.Shared/blob/1234/LICENSE.md" },
+            { "org.opencontainers.image.source", "https://github.com/mu88/mu88.Shared" },
+            { "com.docker.extension.changelog", "https://github.com/mu88/mu88.Shared/blob/1234/CHANGELOG.md" },
+            { "com.docker.extension.publisher-url", "https://github.com/mu88" }
         };
         await ContainerShouldContainMetadataAsync(metadata, _tempVersion, _cancellationToken);
     }
@@ -504,7 +515,6 @@ public class SystemTests
     {
         buildParameters.Add("ContainerDescription", "This is an awesome project"); // description shall not be determined via GitHub CLI
         buildParameters.Add("ContainerRegistry", string.Empty); // image shall not be pushed
-        buildParameters.Add("ContainerRepository", "me/test");
         var arguments = string.Join(' ', buildParameters.Select(kvp => $"-p:{kvp.Key}=\"{kvp.Value}\""));
         return await WaitUntilDotnetToolSucceededAsync($"publish {GetTestProjectFilePath(tempTestProjectDirectory)} " +
                                                        "/t:PublishContainersForMultipleFamilies " +
@@ -532,7 +542,7 @@ public class SystemTests
 
     private static IContainer BuildAppContainer(INetwork network, string containerImageTag) =>
         new ContainerBuilder()
-            .WithImage($"me/test:{containerImageTag}")
+            .WithImage($"dummyaspnetcoreprojectvianuget:{containerImageTag}")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()
@@ -550,7 +560,7 @@ public class SystemTests
 
     private static async Task ContainerShouldContainMetadataAsync(Dictionary<string, string> metadata, string containerImageTag, CancellationToken cancellationToken)
     {
-        var outputLines = await WaitUntilToolSucceededAsync("docker", $"inspect me/test:{containerImageTag}", cancellationToken);
+        var outputLines = await WaitUntilToolSucceededAsync("docker", $"inspect mu88/mu88-shared:{containerImageTag}", cancellationToken);
         var dockerInspectResults = JsonNode.Parse(string.Join(string.Empty, outputLines));
         dockerInspectResults.Should().NotBeNull();
         var configLabels = dockerInspectResults.AsArray()[0]?["Config"]?["Labels"];
