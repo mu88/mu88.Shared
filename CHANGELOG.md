@@ -1,5 +1,24 @@
 
 
+<a name="4.2.0"></a>
+## [4.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/4.2.0) (2025-12-17)
+
+### ✨ Features
+
+* add multiple improvements ([d3d232f](https://www.github.com/mu88/mu88.Shared/commit/d3d232f6641749fd9e79d19e48c97d2dbba29d12))
+* emit MSBuild ItemGroups GeneratedImages and GeneratedContainers ([6e89fa1](https://www.github.com/mu88/mu88.Shared/commit/6e89fa1c12f6f20d2da12e658841f11b623f3e94))
+
+### 🐛 Bug Fixes
+
+* only calculate ContainerImageTags when not already set ([da51dda](https://www.github.com/mu88/mu88.Shared/commit/da51ddad9b2db3c57a8d4bbbbf7190c48d974b93))
+
+### ✅ Tests
+
+* add tests for error handling of container publishing ([adb8710](https://www.github.com/mu88/mu88.Shared/commit/adb8710ca61068f123a4b42ffe51785984e373c7))
+* fix broken test ([73f599e](https://www.github.com/mu88/mu88.Shared/commit/73f599e9256bd1fed4cc238e0fa7f6caf17eece7))
+* improve tests ([4c8f1fb](https://www.github.com/mu88/mu88.Shared/commit/4c8f1fbd5a13f435204d60c598c66ab0ff850f55))
+* refactor tests so that they are easier to maintain ([08441cc](https://www.github.com/mu88/mu88.Shared/commit/08441ccda6d4433240e3b3abc7989b9760b0cbba))
+
 <a name="4.1.0"></a>
 ## [4.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/v4.1.0) (2025-12-12)
 
