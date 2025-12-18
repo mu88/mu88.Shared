@@ -52,7 +52,7 @@ jobs:
           git config --global user.email johndoe@example.com
 
           dotnet tool run versionize \
-            --pre-release "alpha.${{ github.run_number }}.${{ github.run_attempt }}" \
+            --pre-release "alpha-${{ github.run_number }}-${{ github.run_attempt }}" \
             --skip-commit \
             --skip-tag \
             --find-release-commit-via-message
