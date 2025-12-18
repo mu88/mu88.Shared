@@ -80,4 +80,34 @@ public class SharedTargetsTests
         // Assert
         outputLines.Should().ContainMatch($"*{expectedErrorMessage}*");
     }
+
+    [Test]
+    public async Task PublishContainerForMultipleFamilies_ShouldPrecomputeContainerRepository_WhenNotSet()
+    {
+        // Arrange
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
+        var arguments = $"msbuild {testProjectFile} /t:PrecomputeContainerRepository --getProperty:ComputedContainerRepository";
+
+        // Act
+        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+
+        // Assert
+        outputLines.Should().HaveCount(1).And.ContainMatch("mu88/mu88-shared-dummy");
+    }
+
+    [Test]
+    public async Task PublishContainerForMultipleFamilies_ShouldUseSpecifiedContainerRepository_WhenSet()
+    {
+        // Arrange
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
+        var arguments = $"msbuild {testProjectFile} /t:PrecomputeContainerRepository /p:ContainerRepository=\"me/test\" --getProperty:ComputedContainerRepository";
+
+        // Act
+        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+
+        // Assert
+        outputLines.Should().HaveCount(1).And.ContainMatch("me/test");
+    }
 }
