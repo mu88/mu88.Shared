@@ -1,5 +1,24 @@
 <Project>
-  <Target Name="PrecomputeContainerRepository" Returns="$(ComputedContainerRepository)">
+  <!--See https://blog.martincostello.com/look-ma-no-hands-publishing-containers-with-the-dotnet-sdk#publishing-your-app-as-a-container-->
+  <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' and '$(DoNotApplyGitHubScope)' != 'true' ">
+    <ContainerAuthors Condition=" '$(ContainerAuthors)' == '' ">$(GITHUB_REPOSITORY_OWNER)</ContainerAuthors>
+    <ContainerDocumentationUrl Condition=" '$(ContainerDocumentationUrl)' == '' ">$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/README.md</ContainerDocumentationUrl>
+    <ContainerInformationUrl Condition=" '$(ContainerInformationUrl)' == '' ">$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)/pkgs/container/$(GITHUB_REPOSITORY.Replace("$(GITHUB_REPOSITORY_OWNER)/", ""))</ContainerInformationUrl>
+    <ContainerLicenseExpression Condition=" '$(ContainerLicenseExpression)' == '' ">$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/LICENSE.md</ContainerLicenseExpression>
+    <ContainerRegistry Condition=" '$(ContainerRegistry)' == '' ">ghcr.io</ContainerRegistry>
+    <ContainerRepository Condition=" '$(ContainerRepository)' == '' ">$(GITHUB_REPOSITORY)</ContainerRepository>
+    <ContainerTitle Condition=" '$(ContainerTitle)' == '' ">$(GITHUB_REPOSITORY)</ContainerTitle>
+    <ContainerVendor Condition=" '$(ContainerVendor)' == '' ">$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
+    <ContainerVersion Condition=" '$(ContainerVersion)' == '' ">$(ReleaseVersion)</ContainerVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' and '$(DoNotApplyGitHubScope)' != 'true' ">
+    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/CHANGELOG.md"/>
+    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)"/>
+    <ContainerLabel Include="org.opencontainers.image.source" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)"/>
+    <ContainerLabel Include="org.opencontainers.image.revision" Value="$(GITHUB_SHA)"/>
+  </ItemGroup>
+
+  <Target Name="PrecomputePublishingProperties" Returns="$(ComputedContainerRepository);$(ComputedFullyQualifiedImage)">
     <!-- This target is just a very dumb workaround:
          The goal is that the ContainerRepository must not be set and can be computed automatically. 
          But I haven't been able to retrieve the computed ContainerRepository from the target ComputeContainerConfig.
@@ -33,8 +52,14 @@
                               ContainerImageTag="$(ContainerImageTag)"
                               ContainerImageTags="$(ContainerImageTags)"
                               ContainerEnvironmentVariables="@(ContainerEnvironmentVariable)">
+      <Output TaskParameter="NewContainerRegistry" PropertyName="ComputedContainerRegistry"/>
       <Output TaskParameter="NewContainerRepository" PropertyName="ComputedContainerRepository" />
     </ParseContainerProperties>
+
+    <PropertyGroup>
+      <ComputedFullyQualifiedImage Condition=" '$(ComputedContainerRegistry)' == '' ">$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
+      <ComputedFullyQualifiedImage Condition=" '$(ComputedContainerRegistry)' != '' ">$(ComputedContainerRegistry)/$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
+    </PropertyGroup>
   </Target>
 
   <Target Name="UpdateContainerBaseImage" AfterTargets="ComputeContainerBaseImage">
@@ -138,7 +163,7 @@
     <Error Condition=" '$(PublishChiseledContainer)' != 'true' and '$(PublishChiseledContainer)' != 'false' "
            Text="PublishChiseledContainer property must be 'true' or 'false'" />
 
-    <CallTarget Targets="PrecomputeContainerRepository">
+    <CallTarget Targets="PrecomputePublishingProperties">
       <Output TaskParameter="TargetOutputs" PropertyName="ContainerRepository"/>
     </CallTarget>
     <Message Text="Using ContainerRepository: $(ContainerRepository)" Importance="High" />

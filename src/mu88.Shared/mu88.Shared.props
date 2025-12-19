@@ -18,23 +18,4 @@
     <NuGetAuditLevel>low</NuGetAuditLevel>
     <WarningsAsErrors>$(WarningsAsErrors);NU1900;NU1901;NU1902;NU1903;NU1904</WarningsAsErrors> <!-- Fails the build on CI or on release when a vulnerability is detected -->
   </PropertyGroup>
-
-  <!--See https://blog.martincostello.com/look-ma-no-hands-publishing-containers-with-the-dotnet-sdk#publishing-your-app-as-a-container-->
-  <PropertyGroup Condition=" ('$(PublishRegularContainer)' == 'true' or '$(PublishChiseledContainer)' == 'true') and '$(GITHUB_ACTIONS)' == 'true' ">
-    <ContainerAuthors>$(GITHUB_REPOSITORY_OWNER)</ContainerAuthors>
-    <ContainerDocumentationUrl>$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/README.md</ContainerDocumentationUrl>
-    <ContainerInformationUrl>$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)/pkgs/container/$(GITHUB_REPOSITORY.Replace("$(GITHUB_REPOSITORY_OWNER)/", ""))</ContainerInformationUrl>
-    <ContainerLicenseExpression>$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/LICENSE.md</ContainerLicenseExpression>
-    <ContainerRegistry>ghcr.io</ContainerRegistry>
-    <ContainerRepository>$(GITHUB_REPOSITORY)</ContainerRepository>
-    <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
-    <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
-    <ContainerVersion>$(ReleaseVersion)</ContainerVersion>
-  </PropertyGroup>
-  <ItemGroup Condition=" ('$(PublishRegularContainer)' == 'true' or '$(PublishChiseledContainer)' == 'true') and '$(GITHUB_ACTIONS)' == 'true'">
-    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/CHANGELOG.md" />
-    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
-    <ContainerLabel Include="org.opencontainers.image.source" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)" />
-    <ContainerLabel Include="org.opencontainers.image.revision" Value="$(GITHUB_SHA)" />
-  </ItemGroup>
 </Project>

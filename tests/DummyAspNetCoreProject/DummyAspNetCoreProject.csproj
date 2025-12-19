@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
-    <ContainerRepository>mu88/mu88-shared-dummy</ContainerRepository>
-    <ContainerImageTags>dev</ContainerImageTags>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <IsPackable>false</IsPackable>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+    <PublishRegularContainer>true</PublishRegularContainer>
   </PropertyGroup>
 
   <ItemGroup>
