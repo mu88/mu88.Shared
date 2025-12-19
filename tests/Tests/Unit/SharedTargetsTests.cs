@@ -90,7 +90,7 @@ public class SharedTargetsTests
         // Arrange
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments = $"msbuild {testProjectFile} /t:PrecomputePublishingProperties /p:DoNotApplyGitHubScope=true --getProperty:ComputedContainerRepository";
+        var arguments = $"msbuild {testProjectFile} /t:PrecomputeContainerRepository /p:DoNotApplyGitHubScope=true --getProperty:ComputedContainerRepository";
 
         // Act
         var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
@@ -106,7 +106,7 @@ public class SharedTargetsTests
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
         var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputePublishingProperties /p:DoNotApplyGitHubScope=true /p:ContainerRepository=\"me/test\" --getProperty:ComputedContainerRepository";
+            $"msbuild {testProjectFile} /t:PrecomputeContainerRepository /p:DoNotApplyGitHubScope=true /p:ContainerRepository=\"me/test\" --getProperty:ComputedContainerRepository";
 
         // Act
         var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
@@ -121,7 +121,7 @@ public class SharedTargetsTests
         // Arrange
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments = $"msbuild {testProjectFile} /t:PrecomputePublishingProperties /p:DoNotApplyGitHubScope=true --getProperty:ComputedFullyQualifiedImage";
+        var arguments = $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true --getProperty:ComputedFullyQualifiedImage";
 
         // Act
         var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
@@ -137,7 +137,7 @@ public class SharedTargetsTests
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
         var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputePublishingProperties /p:DoNotApplyGitHubScope=true /p:ContainerRegistry=\"ghcr.io\" --getProperty:ComputedFullyQualifiedImage";
+            $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true /p:ContainerRegistry=\"ghcr.io\" --getProperty:ComputedFullyQualifiedImage";
 
         // Act
         var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
@@ -153,7 +153,7 @@ public class SharedTargetsTests
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
         var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputePublishingProperties /p:DoNotApplyGitHubScope=true /p:ContainerRepository=\"me/test\" --getProperty:ComputedFullyQualifiedImage";
+            $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true /p:ContainerRepository=\"me/test\" --getProperty:ComputedFullyQualifiedImage";
 
         // Act
         var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
@@ -169,7 +169,7 @@ public class SharedTargetsTests
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
         var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputePublishingProperties /p:DoNotApplyGitHubScope=true /p:ContainerRegistry=\"ghcr.io\" /p:ContainerRepository=\"me/test\" --getProperty:ComputedFullyQualifiedImage";
+            $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true /p:ContainerRegistry=\"ghcr.io\" /p:ContainerRepository=\"me/test\" --getProperty:ComputedFullyQualifiedImage";
 
         // Act
         var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);

@@ -18,7 +18,7 @@
     <ContainerLabel Include="org.opencontainers.image.revision" Value="$(GITHUB_SHA)"/>
   </ItemGroup>
 
-  <Target Name="PrecomputePublishingProperties" Returns="$(ComputedContainerRepository);$(ComputedFullyQualifiedImage)">
+  <Target Name="PrecomputeContainerRepository" Returns="$(ComputedContainerRepository)">
     <!-- This target is just a very dumb workaround:
          The goal is that the ContainerRepository must not be set and can be computed automatically. 
          But I haven't been able to retrieve the computed ContainerRepository from the target ComputeContainerConfig.
@@ -52,13 +52,17 @@
                               ContainerImageTag="$(ContainerImageTag)"
                               ContainerImageTags="$(ContainerImageTags)"
                               ContainerEnvironmentVariables="@(ContainerEnvironmentVariable)">
-      <Output TaskParameter="NewContainerRegistry" PropertyName="ComputedContainerRegistry"/>
       <Output TaskParameter="NewContainerRepository" PropertyName="ComputedContainerRepository" />
     </ParseContainerProperties>
+  </Target>
 
+  <Target Name="PrecomputeFullyQualifiedImage" Returns="$(ComputedFullyQualifiedImage)">
+    <CallTarget Targets="PrecomputeContainerRepository">
+      <Output TaskParameter="TargetOutputs" PropertyName="ComputedContainerRepository"/>
+    </CallTarget>
     <PropertyGroup>
-      <ComputedFullyQualifiedImage Condition=" '$(ComputedContainerRegistry)' == '' ">$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
-      <ComputedFullyQualifiedImage Condition=" '$(ComputedContainerRegistry)' != '' ">$(ComputedContainerRegistry)/$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
+      <ComputedFullyQualifiedImage Condition=" '$(ContainerRegistry)' == '' ">$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
+      <ComputedFullyQualifiedImage Condition=" '$(ContainerRegistry)' != '' ">$(ContainerRegistry)/$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
     </PropertyGroup>
   </Target>
 
@@ -163,7 +167,7 @@
     <Error Condition=" '$(PublishChiseledContainer)' != 'true' and '$(PublishChiseledContainer)' != 'false' "
            Text="PublishChiseledContainer property must be 'true' or 'false'" />
 
-    <CallTarget Targets="PrecomputePublishingProperties">
+    <CallTarget Targets="PrecomputeContainerRepository">
       <Output TaskParameter="TargetOutputs" PropertyName="ContainerRepository"/>
     </CallTarget>
     <Message Text="Using ContainerRepository: $(ContainerRepository)" Importance="High" />
