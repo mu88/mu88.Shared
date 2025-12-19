@@ -1,5 +1,21 @@
 
 
+<a name="4.3.0"></a>
+## [4.3.0](https://www.github.com/mu88/mu88.Shared/releases/tag/4.3.0) (2025-12-19)
+
+### ✨ Features
+
+* add PrecomputeContainerRepository target to compute container repository automatically ([e87f60a](https://www.github.com/mu88/mu88.Shared/commit/e87f60afaf5b6d3dcdb12b9696281652ab82a846))
+* publish fully qualified image via MSBuild ([6972a64](https://www.github.com/mu88/mu88.Shared/commit/6972a644af81d6975e85adb1896a2a5af15acb54))
+
+### ♻️ Refactors
+
+* split precomputation logic into separate targets ([6bafd97](https://www.github.com/mu88/mu88.Shared/commit/6bafd97f5ef916b1a4cbefd65d1cd89d91ab8137))
+
+### ✅ Tests
+
+* do not explicitly couple tests to fixed ContainerRepository ([a315cf8](https://www.github.com/mu88/mu88.Shared/commit/a315cf8d22579e9308a3555d274558f7872443d5))
+
 <a name="4.2.0"></a>
 ## [4.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/4.2.0) (2025-12-17)
 
