@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.ConfigureOpenTelemetry("test");
+builder.ConfigureOpenTelemetryMetrics("test");
 
 var app = builder.Build();
 

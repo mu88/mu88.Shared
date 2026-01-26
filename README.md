@@ -12,7 +12,7 @@
 
 ## General
 This repo contains the code of the NuGet package [`mu88.Shared`](https://www.nuget.org/packages/mu88.Shared/), providing the following features:
-- Add and configure certain OpenTelemetry features (metrics and traces)
+- Add and configure OpenTelemetry metrics
 - Provide a minimalistic health check tool for .NET apps
 - Reference Roslyn analyzers for consistent code quality across projects
 - Enable NuGet package auditing to detect vulnerabilities in dependencies
@@ -24,16 +24,13 @@ I use this NuGet package to share features and configurations between different 
 
 ## Functionality details
 ### OpenTelemetry
-By calling the extension method `ConfigureOpenTelemetry` on an instance of `Microsoft.Extensions.Hosting.IHostApplicationBuilder`, the following OpenTelemetry features will be enabled:
+By calling the extension method `ConfigureOpenTelemetryMetrics` on an instance of `Microsoft.Extensions.Hosting.IHostApplicationBuilder`, the following OpenTelemetry features will be enabled:
 - Metrics
   - ASP.NET Core (e.g. request duration) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#metrics)
   - .NET process information (e.g. process memory) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.Process#metrics)
   - .NET runtime information (e.g. GC heap size) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.Runtime#metrics)
-- Tracing
-  - ASP.NET Core → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#traces)
-  - Entity Framework Core → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.EntityFrameworkCore)
 
-To export these data, the .NET configuration parameter `OTEL_EXPORTER_OTLP_ENDPOINT` for the OpenTelemetry endpoint receiving the exported metrics and traces must be configured, e.g. via an environment variable. [See the official OpenTelemetry docs for more information](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint).
+To export these data, the .NET configuration parameter `OTEL_EXPORTER_OTLP_ENDPOINT` for the OpenTelemetry endpoint receiving the exported metrics must be configured, e.g. via an environment variable. [See the official OpenTelemetry docs for more information](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint).
 
 ### Health check tool
 As the [GitHub issue "Consider defining a helper "health check" utility for distroless scenarios"](https://github.com/dotnet/dotnet-docker/issues/4300) describes, it is not possible to use the `HEALTHCHECK` instruction in a Docker scenario when using a distroless image as there is neither a shell nor a tool like `curl`. To overcome this limitation, I created a minimalistic health check tool that can be used in .NET apps (inspired by [this comment](https://github.com/dotnet/dotnet-docker/issues/4300#issuecomment-2546036016)).
