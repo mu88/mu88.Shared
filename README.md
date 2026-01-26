@@ -50,7 +50,7 @@ services:
     container_name: yourcontainer
     image: yourapp:latest
     healthcheck:
-      test: [ "CMD", "dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/healthz" ]
+      test: [ "CMD", "dotnet", "/app/mu88.HealthCheck.dll", "http://127.0.0.1:8080/healthz" ]
       interval: 60s
       timeout: 5s
       retries: 3
