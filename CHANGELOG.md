@@ -1,5 +1,20 @@
 
 
+<a name="5.0.0"></a>
+## [5.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/5.0.0) (2026-01-26)
+
+### ✨ Features
+
+* remove tracing for the moment as it is not needed ([1e581fa](https://www.github.com/mu88/mu88.Shared/commit/1e581fa15ebc474d2458d6ff27048414795c4d44))
+
+### 🐛 Bug Fixes
+
+* dispose `HttpClient` in health check to avoid socket exceptions ([df4a395](https://www.github.com/mu88/mu88.Shared/commit/df4a39595ee906dab786dba5acce377316dd9de2))
+
+### Breaking Changes
+
+* remove tracing for the moment as it is not needed ([1e581fa](https://www.github.com/mu88/mu88.Shared/commit/1e581fa15ebc474d2458d6ff27048414795c4d44))
+
 <a name="4.3.0"></a>
 ## [4.3.0](https://www.github.com/mu88/mu88.Shared/releases/tag/4.3.0) (2025-12-19)
 
