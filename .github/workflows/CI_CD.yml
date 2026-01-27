@@ -14,7 +14,7 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@a40175e6c3fc8b190b649073f86305c1d57e2946
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@7ed8a75c08f8e8518a225766dc2c59383c776c47
     with:
       sonar-key: 'mu88_mu88.Shared'
       sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # otherwise Versionize cannot read the Git history and the pre-release version cannot be bumped
 
