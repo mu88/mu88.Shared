@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="AspNetCoreAnalyzers" Version="0.3.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
-    <PackageVersion Include="Docker.DotNet" Version="3.125.15"/>
+    <PackageVersion Include="Docker.DotNet" Version="3.125.15" />
     <PackageVersion Include="FluentAssertions" Version="8.8.0" />
     <PackageVersion Include="FluentAssertions.Web.v8" Version="1.9.5" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
@@ -28,6 +28,6 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
     <PackageVersion Include="RichardSzalay.MockHttp" Version="7.0.0" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-    <PackageVersion Include="Testcontainers" Version="4.9.0" />
+    <PackageVersion Include="Testcontainers" Version="4.10.0" />
   </ItemGroup>
 </Project>

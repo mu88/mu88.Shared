@@ -21,6 +21,7 @@ public class SystemTests
     private DirectoryInfo _tempTestProjectDirectory;
     private DirectoryInfo _tempNuGetDirectory;
     private string _tempVersion;
+    private IContainer? _container;
 
     [SetUp]
     public void Setup()
@@ -39,29 +40,17 @@ public class SystemTests
     {
         _tempDirectory.Delete(true);
 
-        if (string.IsNullOrWhiteSpace(_tempVersion))
+        if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GITHUB_ACTIONS")))
         {
-            return;
+            return; // no need to clean up on GitHub Actions runners
         }
 
-        var dockerImageIds = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-                             .Where(image => image.RepoTags.Any(tag => tag.Contains(_tempVersion, StringComparison.Ordinal)))
-                             .Select(image => image.ID)
-                             .Distinct(StringComparer.Ordinal);
-
-        foreach (var dockerImageId in dockerImageIds)
+        // If the test passed, clean up the container and image. Otherwise, keep them for investigation.
+        if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed && _container is not null)
         {
-            var runningContainerIds = (await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters(), _cancellationToken))
-                                      .Where(container => string.Equals(container.ImageID, dockerImageId, StringComparison.Ordinal))
-                                      .Select(container => container.ID)
-                                      .Distinct(StringComparer.Ordinal);
-            foreach (var runningContainerId in runningContainerIds)
-            {
-                await _dockerClient.Containers.StopContainerAsync(runningContainerId, new ContainerStopParameters(), _cancellationToken);
-                await _dockerClient.Containers.RemoveContainerAsync(runningContainerId, new ContainerRemoveParameters { Force = true }, _cancellationToken);
-            }
-
-            await _dockerClient.Images.DeleteImageAsync(dockerImageId, new ImageDeleteParameters { Force = true }, _cancellationToken);
+            await _container.StopAsync(_cancellationToken);
+            await _container.DisposeAsync();
+            await _dockerClient.Images.DeleteImageAsync(_container.Image.FullName, new ImageDeleteParameters { Force = true }, _cancellationToken);
         }
 
         _dockerClient.Dispose();
@@ -442,16 +431,16 @@ public class SystemTests
             { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
         };
         await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
-        var container = await StartAppInContainersAsync(_tempVersion, _cancellationToken);
-        var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
+        _container = await StartAppInContainersAsync(_tempVersion, _cancellationToken);
+        var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(_container) };
 
         // Act
         var healthCheckResponse = await httpClient.GetAsync("healthz", _cancellationToken);
         var appResponse = await httpClient.GetAsync("/hello", _cancellationToken);
-        var healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/healthz"], _cancellationToken);
+        var healthCheckToolResult = await _container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://127.0.0.1:8080/healthz"], _cancellationToken);
 
         // Assert
-        await LogsShouldNotContainWarningsAsync(container, _cancellationToken);
+        await LogsShouldNotContainWarningsAsync(_container, _cancellationToken);
         await HealthCheckShouldBeHealthyAsync(healthCheckResponse, _cancellationToken);
         await AppShouldRunAsync(appResponse, _cancellationToken);
         healthCheckToolResult.ExitCode.Should().Be(0);
@@ -552,8 +541,7 @@ public class SystemTests
     }
 
     private static IContainer BuildAppContainer(INetwork network, string containerImageTag) =>
-        new ContainerBuilder()
-            .WithImage($"me/test:{containerImageTag}")
+        new ContainerBuilder($"me/test:{containerImageTag}")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()
