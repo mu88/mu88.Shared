@@ -29,12 +29,6 @@ public static class HostApplicationBuilderExtensions
     // ReSharper disable once UnusedMember.Global - reviewed mu88: public API
     public static IHostApplicationBuilder ConfigureOpenTelemetryMetrics(this IHostApplicationBuilder builder, string serviceName)
     {
-        builder.Logging.AddOpenTelemetry(logging =>
-        {
-            logging.IncludeFormattedMessage = true;
-            logging.IncludeScopes = true;
-        });
-
         builder.Services
                .AddOpenTelemetry()
                .UseOtlpExporter()
