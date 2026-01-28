@@ -1,5 +1,16 @@
 
 
+<a name="5.0.1"></a>
+## [5.0.1](https://www.github.com/mu88/mu88.Shared/releases/tag/5.0.1) (2026-01-29)
+
+### 🐛 Bug Fixes
+
+* remove OTel logging from metrics codepath ([f4bf18b](https://www.github.com/mu88/mu88.Shared/commit/f4bf18be737897a09f18820e699e1f4ed78f3c8f))
+
+### ✅ Tests
+
+* improve system test ([54e02ec](https://www.github.com/mu88/mu88.Shared/commit/54e02ec4caf8652d8e8651df0cb3188670c260ec))
+
 <a name="5.0.0"></a>
 ## [5.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/5.0.0) (2026-01-26)
 
