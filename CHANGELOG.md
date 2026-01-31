@@ -1,5 +1,12 @@
 
 
+<a name="5.1.0"></a>
+## [5.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/5.1.0) (2026-01-31)
+
+### ✨ Features
+
+* enhance OpenTelemetry integration to support logs, metrics, and traces ([bd8d914](https://www.github.com/mu88/mu88.Shared/commit/bd8d914ee3c54c02c4b0975ca6b676869036d69a))
+
 <a name="5.0.1"></a>
 ## [5.0.1](https://www.github.com/mu88/mu88.Shared/releases/tag/5.0.1) (2026-01-29)
 
