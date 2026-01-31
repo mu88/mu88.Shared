@@ -1,5 +1,12 @@
 
 
+<a name="5.2.0"></a>
+## [5.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/5.2.0) (2026-01-31)
+
+### ✨ Features
+
+* refactor OpenTelemetry options structure for improved configuration ([a3daa05](https://www.github.com/mu88/mu88.Shared/commit/a3daa054bae816fb26ff773102ae8bcc4b3f7b03))
+
 <a name="5.1.0"></a>
 ## [5.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/5.1.0) (2026-01-31)
 
