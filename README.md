@@ -12,7 +12,8 @@
 
 ## General
 This repo contains the code of the NuGet package [`mu88.Shared`](https://www.nuget.org/packages/mu88.Shared/), providing the following features:
-- Add and configure OpenTelemetry metrics
+
+- Add and configure OpenTelemetry logs, metrics and traces
 - Provide a minimalistic health check tool for .NET apps
 - Reference Roslyn analyzers for consistent code quality across projects
 - Enable NuGet package auditing to detect vulnerabilities in dependencies
@@ -29,6 +30,11 @@ By calling the extension method `ConfigureOpenTelemetryMetrics` on an instance o
   - ASP.NET Core (e.g. request duration) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#metrics)
   - .NET process information (e.g. process memory) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.Process#metrics)
   - .NET runtime information (e.g. GC heap size) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.Runtime#metrics)
+- Tracing
+  - ASP.NET
+    Core → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#traces)
+  - Entity Framework
+    Core → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.EntityFrameworkCore)
 
 To export these data, the .NET configuration parameter `OTEL_EXPORTER_OTLP_ENDPOINT` for the OpenTelemetry endpoint receiving the exported metrics must be configured, e.g. via an environment variable. [See the official OpenTelemetry docs for more information](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint).
 
