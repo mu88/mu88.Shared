@@ -1,9 +1,7 @@
-﻿namespace mu88.Shared;
+﻿namespace mu88.Shared.Settings;
 
-public class Mu88SharedOptions
+public class OpenTelemetryOptions
 {
-    public const string SectionName = "mu88Shared";
-
     public bool OpenTelemetryMetricsEnabled { get; set; } = true;
 
     public bool OpenTelemetryTracesEnabled { get; set; } = true;
