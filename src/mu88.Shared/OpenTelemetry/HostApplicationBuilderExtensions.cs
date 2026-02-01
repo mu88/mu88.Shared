@@ -38,7 +38,7 @@ public static class HostApplicationBuilderExtensions
         builder.Services
                .AddOpenTelemetry()
                .ConfigureResource(c => c.AddService(serviceName));
-        if (mu88SharedOptions.OpenTelemetry.OpenTelemetryLogsEnabled)
+        if (mu88SharedOptions.OpenTelemetry.LogsEnabled)
         {
             builder.Logging
                    .AddOpenTelemetry(logging =>
@@ -51,7 +51,7 @@ public static class HostApplicationBuilderExtensions
                    .WithLogging(logging => logging.AddOtlpExporter());
         }
 
-        if (mu88SharedOptions.OpenTelemetry.OpenTelemetryMetricsEnabled)
+        if (mu88SharedOptions.OpenTelemetry.MetricsEnabled)
         {
             builder.Services
                    .AddOpenTelemetry()
@@ -65,7 +65,7 @@ public static class HostApplicationBuilderExtensions
                    });
         }
 
-        if (mu88SharedOptions.OpenTelemetry.OpenTelemetryTracesEnabled)
+        if (mu88SharedOptions.OpenTelemetry.TracesEnabled)
         {
             builder.Services
                    .AddOpenTelemetry()

@@ -2,9 +2,9 @@
 
 public class OpenTelemetryOptions
 {
-    public bool OpenTelemetryMetricsEnabled { get; set; } = true;
+    public bool MetricsEnabled { get; set; } = true;
 
-    public bool OpenTelemetryTracesEnabled { get; set; } = true;
+    public bool LogsEnabled { get; set; } = true;
 
-    public bool OpenTelemetryLogsEnabled { get; set; } = true;
+    public bool TracesEnabled { get; set; } = true;
 }

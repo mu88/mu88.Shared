@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using mu88.Shared.OpenTelemetry;
 using mu88.Shared.Settings;
-using NUnit.Framework;
 
 namespace Tests.Unit;
 
@@ -30,9 +27,9 @@ public class HostApplicationBuilderExtensionsTests
         using var sp = builder.Services.BuildServiceProvider();
         var options = sp.GetService<IOptions<Mu88SharedOptions>>();
         options.Should().NotBeNull();
-        options.Value.OpenTelemetry.OpenTelemetryMetricsEnabled.Should().BeTrue();
-        options.Value.OpenTelemetry.OpenTelemetryTracesEnabled.Should().BeTrue();
-        options.Value.OpenTelemetry.OpenTelemetryLogsEnabled.Should().BeTrue();
+        options.Value.OpenTelemetry.MetricsEnabled.Should().BeTrue();
+        options.Value.OpenTelemetry.TracesEnabled.Should().BeTrue();
+        options.Value.OpenTelemetry.LogsEnabled.Should().BeTrue();
     }
 
     [Test]
@@ -44,9 +41,9 @@ public class HostApplicationBuilderExtensionsTests
         // Explicitly set the configuration values to disable all OpenTelemetry features
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal)
         {
-            ["mu88Shared:OpenTelemetry:OpenTelemetryMetricsEnabled"] = "false",
-            ["mu88Shared:OpenTelemetry:OpenTelemetryTracesEnabled"] = "false",
-            ["mu88Shared:OpenTelemetry:OpenTelemetryLogsEnabled"] = "false"
+            ["mu88Shared:OpenTelemetry:MetricsEnabled"] = "false",
+            ["mu88Shared:OpenTelemetry:TracesEnabled"] = "false",
+            ["mu88Shared:OpenTelemetry:LogsEnabled"] = "false"
         });
 
         // Act
@@ -56,8 +53,8 @@ public class HostApplicationBuilderExtensionsTests
         using var sp = builder.Services.BuildServiceProvider();
         var options = sp.GetService<IOptions<Mu88SharedOptions>>();
         options.Should().NotBeNull();
-        options.Value.OpenTelemetry.OpenTelemetryMetricsEnabled.Should().BeFalse();
-        options.Value.OpenTelemetry.OpenTelemetryTracesEnabled.Should().BeFalse();
-        options.Value.OpenTelemetry.OpenTelemetryLogsEnabled.Should().BeFalse();
+        options.Value.OpenTelemetry.MetricsEnabled.Should().BeFalse();
+        options.Value.OpenTelemetry.TracesEnabled.Should().BeFalse();
+        options.Value.OpenTelemetry.LogsEnabled.Should().BeFalse();
     }
 }
