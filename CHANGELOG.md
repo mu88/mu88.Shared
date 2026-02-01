@@ -1,5 +1,20 @@
 
 
+<a name="6.0.0"></a>
+## [6.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/6.0.0) (2026-02-01)
+
+### ♻️ Refactors
+
+* rename OpenTelemetry options for consistency ([a132c22](https://www.github.com/mu88/mu88.Shared/commit/a132c22e9d3a3612eb6b67cf68c4b31f6bf6f36f))
+
+### ✅ Tests
+
+* add unit tests for ConfigureOpenTelemetry method ([14c2e4d](https://www.github.com/mu88/mu88.Shared/commit/14c2e4d13843340953541f7cb85ed8367f4c9206))
+
+### Breaking Changes
+
+* rename OpenTelemetry options for consistency ([a132c22](https://www.github.com/mu88/mu88.Shared/commit/a132c22e9d3a3612eb6b67cf68c4b31f6bf6f36f))
+
 <a name="5.2.0"></a>
 ## [5.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/5.2.0) (2026-01-31)
 
