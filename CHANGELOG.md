@@ -1,5 +1,16 @@
 
 
+<a name="7.0.0"></a>
+## [7.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/7.0.0) (2026-02-05)
+
+### ♻️ Refactors
+
+* change OpenTelemetry implementation to work on IServiceCollection for better testability ([8ef2435](https://www.github.com/mu88/mu88.Shared/commit/8ef243596e9a1b3c33155c0bbabc82e9423706bd))
+
+### Breaking Changes
+
+* change OpenTelemetry implementation to work on IServiceCollection for better testability ([8ef2435](https://www.github.com/mu88/mu88.Shared/commit/8ef243596e9a1b3c33155c0bbabc82e9423706bd))
+
 <a name="6.0.0"></a>
 ## [6.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/6.0.0) (2026-02-01)
 

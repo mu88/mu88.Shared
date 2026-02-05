@@ -3,6 +3,6 @@
   <Import Project="src/mu88.Shared/mu88.Shared.targets" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>6.0.0</Version>
+    <Version>7.0.0</Version>
   </PropertyGroup>
 </Project>
