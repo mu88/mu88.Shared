@@ -19,11 +19,9 @@ public class HostApplicationBuilderExtensionsTests
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions { Args = Array.Empty<string>() });
 
         // Act
-        var returned = builder.ConfigureOpenTelemetry("my-service");
+        builder.Services.ConfigureOpenTelemetry("my-service", builder.Configuration);
 
         // Assert
-        returned.Should().BeSameAs(builder);
-
         using var sp = builder.Services.BuildServiceProvider();
         var options = sp.GetService<IOptions<Mu88SharedOptions>>();
         options.Should().NotBeNull();
@@ -47,7 +45,7 @@ public class HostApplicationBuilderExtensionsTests
         });
 
         // Act
-        builder.ConfigureOpenTelemetry("my-service");
+        builder.Services.ConfigureOpenTelemetry("my-service", builder.Configuration);
 
         // Assert
         using var sp = builder.Services.BuildServiceProvider();
