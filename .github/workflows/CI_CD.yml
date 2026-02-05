@@ -14,7 +14,7 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@7ed8a75c08f8e8518a225766dc2c59383c776c47
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@0213ed5565c48d2c19f9d2588dc49a79c4339a33
     with:
       sonar-key: 'mu88_mu88.Shared'
       sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
@@ -32,33 +32,16 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # otherwise Versionize cannot read the Git history and the pre-release version cannot be bumped
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
         with:
           cache: true
-          cache-dependency-path: "**/packages.lock.json"
+          cache-dependency-path: '**/packages.lock.json'
           global-json-file: global.json
 
-      - name: Bump pre-release version
-        if: ${{ needs.shared_ci_cd.outputs.is_release != 'true' }}
-        run: |
-          dotnet tool restore
-
-          # Although no commit or tag is made, we still need to set the git user to avoid Versionize errors
-          git config --global user.name "John Doe"
-          git config --global user.email johndoe@example.com
-
-          dotnet tool run versionize \
-            --pre-release "alpha-${{ github.run_number }}-${{ github.run_attempt }}" \
-            --skip-commit \
-            --skip-tag \
-            --find-release-commit-via-message
-
       - name: Pack .NET project and create NuGet package
-        run: dotnet pack src/mu88.Shared/mu88.Shared.csproj
+        run: dotnet pack src/mu88.Shared/mu88.Shared.csproj /p:Version=${{ needs.shared_ci_cd.outputs.version }}
 
       - name: NuGet login
         uses: NuGet/login@v1
