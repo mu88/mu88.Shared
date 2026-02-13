@@ -23,6 +23,11 @@
         "hidden": false
       },
       {
+        "type": "style",
+        "section": "🎨 Styles",
+        "hidden": false
+      },
+      {
         "type": "test",
         "section": "✅ Tests",
         "hidden": false
@@ -30,7 +35,7 @@
       {
         "type": "chore",
         "section": "🔧 Chores",
-        "hidden": true
+        "hidden": false
       },
       {
         "type": "build",
@@ -42,10 +47,6 @@
       },
       {
         "type": "docs",
-        "hidden": true
-      },
-      {
-        "type": "style",
         "hidden": true
       }
     ]
