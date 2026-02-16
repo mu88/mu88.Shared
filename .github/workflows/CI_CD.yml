@@ -14,7 +14,7 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/common/.github/workflows/ci-cd.yml@41211ccf6073933dffcf58c29b43a3462c081d1a
+    uses: mu88/common/.github/workflows/ci-cd.yml@8767b210ce4d6eb0575af764bed5244d51be1396
     with:
       sonar-key: 'mu88_mu88.Shared'
       sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=tests/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
