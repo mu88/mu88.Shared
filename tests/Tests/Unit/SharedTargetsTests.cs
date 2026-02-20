@@ -28,6 +28,22 @@ public class SharedTargetsTests
         outputLines.Should().ContainMatch($"*{expectedErrorMessage}*");
     }
 
+    [TestCase("/p:ContainerRegistry=ghcr.io", "ghcr.io/dummyaspnetcoreproject")]
+    [TestCase("/p:ContainerRegistry=", "dummyaspnetcoreproject")]
+    public async Task PublishContainersForMultipleFamilies_ShouldComputeFullyQualifiedImageName(string buildArguments, string expectedFullyQualifiedImageName)
+    {
+        // Arrange
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
+        var arguments =
+            $"publish {testProjectFile} /t:PublishContainersForMultipleFamilies /p:IsRelease=false /p:ReleaseVersion=dev /p:DoNotApplyGitHubScope=true {buildArguments} /p:DryRun=true --getProperty:ComputedFullyQualifiedImageName";
+
+        // Act
+        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+        outputLines.Should().NotBeNull();
+        outputLines.Should().HaveCount(1).And.Subject.Single().Should().Be(expectedFullyQualifiedImageName);
+    }
+
     [Test]
     public async Task PublishContainerForMultipleFamilies_ShouldPrecomputeContainerRepository_WhenNotSet()
     {
@@ -57,69 +73,6 @@ public class SharedTargetsTests
 
         // Assert
         outputLines.Should().HaveCount(1).And.ContainMatch("me/test");
-    }
-
-    [Test]
-    public async Task PublishContainerForMultipleFamilies_ShouldPrecomputeFullyQualifiedImageWithoutRegistry_WhenNotSet()
-    {
-        // Arrange
-        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
-        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments = $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true --getProperty:ComputedFullyQualifiedImage";
-
-        // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
-
-        // Assert
-        outputLines.Should().HaveCount(1).And.ContainMatch("dummyaspnetcoreproject");
-    }
-
-    [Test]
-    public async Task PublishContainerForMultipleFamilies_ShouldPrecomputeFullyQualifiedImageWithRegistry_WhenNotSet()
-    {
-        // Arrange
-        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
-        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true /p:ContainerRegistry=\"ghcr.io\" --getProperty:ComputedFullyQualifiedImage";
-
-        // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
-
-        // Assert
-        outputLines.Should().HaveCount(1).And.ContainMatch("ghcr.io/dummyaspnetcoreproject");
-    }
-
-    [Test]
-    public async Task PublishContainerForMultipleFamilies_ShouldUseSpecifiedContainerRepositoryWithoutRegistry_WhenSet()
-    {
-        // Arrange
-        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
-        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true /p:ContainerRepository=\"me/test\" --getProperty:ComputedFullyQualifiedImage";
-
-        // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
-
-        // Assert
-        outputLines.Should().HaveCount(1).And.ContainMatch("me/test");
-    }
-
-    [Test]
-    public async Task PublishContainerForMultipleFamilies_ShouldUseSpecifiedContainerRepositoryWithRegistry_WhenSet()
-    {
-        // Arrange
-        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
-        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments =
-            $"msbuild {testProjectFile} /t:PrecomputeFullyQualifiedImage /p:DoNotApplyGitHubScope=true /p:ContainerRegistry=\"ghcr.io\" /p:ContainerRepository=\"me/test\" --getProperty:ComputedFullyQualifiedImage";
-
-        // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
-
-        // Assert
-        outputLines.Should().HaveCount(1).And.ContainMatch("ghcr.io/me/test");
     }
 
     [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1010:Opening square brackets should be spaced correctly", Justification = "False positive")]

@@ -56,16 +56,6 @@
     </ParseContainerProperties>
   </Target>
 
-  <Target Name="PrecomputeFullyQualifiedImage" Returns="$(ComputedFullyQualifiedImage)">
-    <CallTarget Targets="PrecomputeContainerRepository">
-      <Output TaskParameter="TargetOutputs" PropertyName="ComputedContainerRepository"/>
-    </CallTarget>
-    <PropertyGroup>
-      <ComputedFullyQualifiedImage Condition=" '$(ContainerRegistry)' == '' ">$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
-      <ComputedFullyQualifiedImage Condition=" '$(ContainerRegistry)' != '' ">$(ContainerRegistry)/$(ComputedContainerRepository)</ComputedFullyQualifiedImage>
-    </PropertyGroup>
-  </Target>
-
   <Target Name="UpdateContainerBaseImage" AfterTargets="ComputeContainerBaseImage">
     <PropertyGroup Condition=" '$(CustomContainerBaseImageVersion)' != '' ">
       <_ContainerBaseImageTag>$(CustomContainerBaseImageVersion)</_ContainerBaseImageTag>
@@ -168,15 +158,19 @@
            Text="PublishChiseledContainer property must be 'true' or 'false'" />
 
     <CallTarget Targets="PrecomputeContainerRepository">
-      <Output TaskParameter="TargetOutputs" PropertyName="ContainerRepository"/>
+      <Output TaskParameter="TargetOutputs" PropertyName="ComputedContainerRepository"/>
     </CallTarget>
-    <Message Text="Using ContainerRepository: $(ContainerRepository)" Importance="High" />
+    <PropertyGroup>
+      <ComputedFullyQualifiedImageName Condition=" '$(ContainerRegistry)' == '' ">$(ComputedContainerRepository)</ComputedFullyQualifiedImageName>
+      <ComputedFullyQualifiedImageName Condition=" '$(ContainerRegistry)' != '' ">$(ContainerRegistry)/$(ComputedContainerRepository)</ComputedFullyQualifiedImageName>
+    </PropertyGroup>
+    <Message Text="Using ContainerRepository: $(ComputedContainerRepository)" Importance="High"/>
 
     <MSBuild Condition=" '$(PublishRegularContainer)' == 'true' "
              Projects="$(MSBuildProjectFile)"
              Targets="PublishRegularContainer" 
              Properties="
-               ContainerRepository=$(ContainerRepository);
+               ContainerRepository=$(ComputedContainerRepository);
                DryRun=$(DryRun);
                _InitialContainerImageTags=$(_InitialContainerImageTags);
                _InitialContainerFamily=$(_InitialContainerFamily)">
@@ -187,7 +181,7 @@
              Projects="$(MSBuildProjectFile)"
              Targets="PublishChiseledContainer"
              Properties="
-               ContainerRepository=$(ContainerRepository);
+               ContainerRepository=$(ComputedContainerRepository);
                DryRun=$(DryRun);
                _InitialContainerImageTags=$(_InitialContainerImageTags);
                _InitialContainerFamily=$(_InitialContainerFamily)">
