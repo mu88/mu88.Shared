@@ -98,7 +98,7 @@ public class SystemTests
         var outputLines = await BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(_tempTestProjectDirectory,
                               buildParameters,
                               _cancellationToken,
-                              "--getProperty:ComputedFullyQualifiedImageName");
+                              "-getProperty:ComputedFullyQualifiedImageName");
 
         // Assert
         outputLines.Should().NotBeNull();
@@ -129,7 +129,7 @@ public class SystemTests
         var outputLines = await BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(_tempTestProjectDirectory,
                               buildParameters,
                               _cancellationToken,
-                              "--getItem:GeneratedImages");
+                              "-getItem:GeneratedImages");
 
         // Assert
         var dockerImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken);
@@ -171,7 +171,7 @@ public class SystemTests
         };
 
         // Act
-        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken, "--getItem:GeneratedContainers");
+        var outputLines = await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken, "-getItem:GeneratedContainers");
 
         // Assert
         outputLines.Should().NotBeEmpty();
@@ -565,7 +565,7 @@ public class SystemTests
         buildParameters.Add("ContainerRegistry", string.Empty); // image shall not be pushed
         var arguments = string.Join(' ', buildParameters.Select(kvp => $"-p:{kvp.Key}=\"{kvp.Value}\""));
         return await WaitUntilDotnetToolSucceededAsync($"publish {GetTestProjectFilePath(tempTestProjectDirectory)} " +
-                                                       "/t:PublishContainersForMultipleFamilies " +
+                                                       "-t:PublishContainersForMultipleFamilies " +
                                                        $" {arguments} {additionalArguments}",
                    cancellationToken);
     }
