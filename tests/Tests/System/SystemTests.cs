@@ -8,6 +8,7 @@ using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentAssertions;
+using NUnit.Framework.Interfaces;
 
 namespace Tests.System;
 
@@ -46,11 +47,27 @@ public class SystemTests
         }
 
         // If the test passed, clean up the container and image. Otherwise, keep them for investigation.
-        if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed && _container is not null)
+        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed)
         {
-            await _container.StopAsync(_cancellationToken);
-            await _container.DisposeAsync();
-            await _dockerClient.Images.DeleteImageAsync(_container.Image.FullName, new ImageDeleteParameters { Force = true }, _cancellationToken);
+            var dockerImageIds = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
+                                 .Where(image => image.RepoTags.Any(tag => tag.Contains(_tempVersion, StringComparison.Ordinal)))
+                                 .Select(image => image.ID)
+                                 .Distinct(StringComparer.Ordinal);
+
+            foreach (var dockerImageId in dockerImageIds)
+            {
+                var runningContainerIds = (await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters(), _cancellationToken))
+                                          .Where(container => string.Equals(container.ImageID, dockerImageId, StringComparison.Ordinal))
+                                          .Select(container => container.ID)
+                                          .Distinct(StringComparer.Ordinal);
+                foreach (var runningContainerId in runningContainerIds)
+                {
+                    await _dockerClient.Containers.StopContainerAsync(runningContainerId, new ContainerStopParameters(), _cancellationToken);
+                    await _dockerClient.Containers.RemoveContainerAsync(runningContainerId, new ContainerRemoveParameters { Force = true }, _cancellationToken);
+                }
+
+                await _dockerClient.Images.DeleteImageAsync(dockerImageId, new ImageDeleteParameters { Force = true }, _cancellationToken);
+            }
         }
 
         _dockerClient.Dispose();
