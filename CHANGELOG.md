@@ -1,5 +1,26 @@
 
 
+<a name="8.0.0"></a>
+## [8.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.0.0) (2026-02-20)
+
+### ✨ Features
+
+* remove MSBuild target 'PrecomputeFullyQualifiedImage' and integrate output into 'PublishContainersForMultipleFamilies' ([08c1743](https://www.github.com/mu88/mu88.Shared/commit/08c17434eb7776959d7e4ceb7749ecb3c99ace1a))
+
+### ✅ Tests
+
+* fix local teardown problem ([27995ab](https://www.github.com/mu88/mu88.Shared/commit/27995ab357dcc96fe1230080b850a25793ae0615))
+* harmonize MSBuild syntax usage ([d98f103](https://www.github.com/mu88/mu88.Shared/commit/d98f103846f46a51db3f843042bcf1bf0b4cf285))
+
+### 🔧 Chores
+
+* use new shared GitHub repo mu88/common ([6191485](https://www.github.com/mu88/mu88.Shared/commit/6191485d369585502e04b330d3444b91dbbe457c))
+* **deps:** update all dependencies ([37cf9c6](https://www.github.com/mu88/mu88.Shared/commit/37cf9c6b498596302f3ded386b4def3cef8012fc))
+
+### Breaking Changes
+
+* remove MSBuild target 'PrecomputeFullyQualifiedImage' and integrate output into 'PublishContainersForMultipleFamilies' ([08c1743](https://www.github.com/mu88/mu88.Shared/commit/08c17434eb7776959d7e4ceb7749ecb3c99ace1a))
+
 <a name="7.0.0"></a>
 ## [7.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/7.0.0) (2026-02-05)
 
