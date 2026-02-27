@@ -10,10 +10,7 @@ public static class Helper
         var outputLines = new List<string>();
         var process = new Process
         {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = toolToStart, Arguments = arguments, UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true
-            }
+            StartInfo = new ProcessStartInfo { FileName = toolToStart, Arguments = arguments, UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true }
         };
         process.Start();
         while (await process.StandardOutput.ReadLineAsync(cancellationToken) is { } line)

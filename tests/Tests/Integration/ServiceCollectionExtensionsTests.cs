@@ -41,7 +41,7 @@ public class ServiceCollectionExtensionsTests
         var logs = new Collection<LogRecord>();
         var metrics = new Collection<Metric>();
         var traces = new Collection<Activity>();
-        var customWebApplicationFactory = new CustomWebApplicationFactory(logs, metrics, traces, [new ("mu88Shared:OpenTelemetry:MetricsEnabled", "false")]);
+        var customWebApplicationFactory = new CustomWebApplicationFactory(logs, metrics, traces, [new("mu88Shared:OpenTelemetry:MetricsEnabled", "false")]);
         using var httpClient = customWebApplicationFactory.CreateClient();
 
         // Act
@@ -80,7 +80,7 @@ public class ServiceCollectionExtensionsTests
         var logs = new Collection<LogRecord>();
         var metrics = new Collection<Metric>();
         var traces = new Collection<Activity>();
-        var customWebApplicationFactory = new CustomWebApplicationFactory(logs, metrics, traces, [new ("mu88Shared:OpenTelemetry:LogsEnabled", "false")]);
+        var customWebApplicationFactory = new CustomWebApplicationFactory(logs, metrics, traces, [new("mu88Shared:OpenTelemetry:LogsEnabled", "false")]);
         using var httpClient = customWebApplicationFactory.CreateClient();
 
         // Act
@@ -118,7 +118,7 @@ public class ServiceCollectionExtensionsTests
         var logs = new Collection<LogRecord>();
         var metrics = new Collection<Metric>();
         var traces = new Collection<Activity>();
-        var customWebApplicationFactory = new CustomWebApplicationFactory(logs, metrics, traces, [new ("mu88Shared:OpenTelemetry:TracesEnabled", "false")]);
+        var customWebApplicationFactory = new CustomWebApplicationFactory(logs, metrics, traces, [new("mu88Shared:OpenTelemetry:TracesEnabled", "false")]);
         using var httpClient = customWebApplicationFactory.CreateClient();
 
         // Act
@@ -149,8 +149,8 @@ public class ServiceCollectionExtensionsTests
         IEnumerable<KeyValuePair<string, string?>>? configOptions = null)
         : WebApplicationFactory<Program>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder) =>
-            builder
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+            => builder
                 .ConfigureServices(services =>
                 {
                     var configurationManager = new ConfigurationManager();

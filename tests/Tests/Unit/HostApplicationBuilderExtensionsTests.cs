@@ -39,9 +39,7 @@ public class HostApplicationBuilderExtensionsTests
         // Explicitly set the configuration values to disable all OpenTelemetry features
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal)
         {
-            ["mu88Shared:OpenTelemetry:MetricsEnabled"] = "false",
-            ["mu88Shared:OpenTelemetry:TracesEnabled"] = "false",
-            ["mu88Shared:OpenTelemetry:LogsEnabled"] = "false"
+            ["mu88Shared:OpenTelemetry:MetricsEnabled"] = "false", ["mu88Shared:OpenTelemetry:TracesEnabled"] = "false", ["mu88Shared:OpenTelemetry:LogsEnabled"] = "false"
         });
 
         // Act

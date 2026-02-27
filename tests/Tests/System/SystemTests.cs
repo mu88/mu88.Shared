@@ -50,16 +50,16 @@ public class SystemTests
         if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed)
         {
             var dockerImageIds = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
-                                 .Where(image => image.RepoTags.Any(tag => tag.Contains(_tempVersion, StringComparison.Ordinal)))
-                                 .Select(image => image.ID)
-                                 .Distinct(StringComparer.Ordinal);
+                .Where(image => image.RepoTags.Any(tag => tag.Contains(_tempVersion, StringComparison.Ordinal)))
+                .Select(image => image.ID)
+                .Distinct(StringComparer.Ordinal);
 
             foreach (var dockerImageId in dockerImageIds)
             {
                 var runningContainerIds = (await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters(), _cancellationToken))
-                                          .Where(container => string.Equals(container.ImageID, dockerImageId, StringComparison.Ordinal))
-                                          .Select(container => container.ID)
-                                          .Distinct(StringComparer.Ordinal);
+                    .Where(container => string.Equals(container.ImageID, dockerImageId, StringComparison.Ordinal))
+                    .Select(container => container.ID)
+                    .Distinct(StringComparer.Ordinal);
                 foreach (var runningContainerId in runningContainerIds)
                 {
                     await _dockerClient.Containers.StopContainerAsync(runningContainerId, new ContainerStopParameters(), _cancellationToken);
@@ -96,9 +96,9 @@ public class SystemTests
 
         // Act
         var outputLines = await BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(_tempTestProjectDirectory,
-                              buildParameters,
-                              _cancellationToken,
-                              "-getProperty:ComputedFullyQualifiedImageName");
+            buildParameters,
+            _cancellationToken,
+            "-getProperty:ComputedFullyQualifiedImageName");
 
         // Assert
         outputLines.Should().NotBeNull();
@@ -127,35 +127,35 @@ public class SystemTests
 
         // Act
         var outputLines = await BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(_tempTestProjectDirectory,
-                              buildParameters,
-                              _cancellationToken,
-                              "-getItem:GeneratedImages");
+            buildParameters,
+            _cancellationToken,
+            "-getItem:GeneratedImages");
 
         // Assert
         var dockerImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken);
         dockerImages.Should()
-                    .Contain(image => image.RepoTags.Contains($"mu88/mu88-shared:{_tempVersion}") &&
-                                      image.RepoTags.Contains("mu88/mu88-shared:latest"))
-                    .And.Contain(image => image.RepoTags.Contains($"mu88/mu88-shared:{_tempVersion}-chiseled") &&
-                                          image.RepoTags.Contains("mu88/mu88-shared:latest-chiseled"));
+            .Contain(image => image.RepoTags.Contains($"mu88/mu88-shared:{_tempVersion}") &&
+                image.RepoTags.Contains("mu88/mu88-shared:latest"))
+            .And.Contain(image => image.RepoTags.Contains($"mu88/mu88-shared:{_tempVersion}-chiseled") &&
+                image.RepoTags.Contains("mu88/mu88-shared:latest-chiseled"));
         outputLines.Should().NotBeEmpty();
         var json = new StringBuilder().AppendJoin(string.Empty, outputLines).ToString();
         var msBuildOutput = JsonSerializer.Deserialize<MsBuildOutput>(json);
         msBuildOutput?.Items.GeneratedImages.Should()
-                     .NotBeNullOrEmpty()
-                     .And.HaveCount(4)
-                     .And.AllSatisfy(image => image.Identity.Should().Be("GeneratedImage"));
+            .NotBeNullOrEmpty()
+            .And.HaveCount(4)
+            .And.AllSatisfy(image => image.Identity.Should().Be("GeneratedImage"));
         msBuildOutput!.Items.GeneratedImages
-                      .Select(image => image.ImageTag)
-                      .Should()
-                      .BeEquivalentTo(_tempVersion, "latest", $"{_tempVersion}-chiseled", "latest-chiseled");
+            .Select(image => image.ImageTag)
+            .Should()
+            .BeEquivalentTo(_tempVersion, "latest", $"{_tempVersion}-chiseled", "latest-chiseled");
         msBuildOutput.Items.GeneratedImages
-                     .Select(image => image.FullyQualifiedImageWithTag)
-                     .Should()
-                     .BeEquivalentTo($"mu88/mu88-shared:{_tempVersion}",
-                         "mu88/mu88-shared:latest",
-                         $"mu88/mu88-shared:{_tempVersion}-chiseled",
-                         "mu88/mu88-shared:latest-chiseled");
+            .Select(image => image.FullyQualifiedImageWithTag)
+            .Should()
+            .BeEquivalentTo($"mu88/mu88-shared:{_tempVersion}",
+                "mu88/mu88-shared:latest",
+                $"mu88/mu88-shared:{_tempVersion}-chiseled",
+                "mu88/mu88-shared:latest-chiseled");
     }
 
     [Test]
@@ -178,13 +178,13 @@ public class SystemTests
         var json = new StringBuilder().AppendJoin(string.Empty, outputLines).ToString();
         var msBuildOutput = JsonSerializer.Deserialize<MsBuildOutput>(json);
         msBuildOutput?.Items.GeneratedContainers.Should()
-                     .NotBeNullOrEmpty()
-                     .And.HaveCount(4)
-                     .And.AllSatisfy(image =>
-                     {
-                         image.Identity.Should().Be("GeneratedContainer");
-                         image.ManifestDigest.Should().NotBeNullOrWhiteSpace();
-                     });
+            .NotBeNullOrEmpty()
+            .And.HaveCount(4)
+            .And.AllSatisfy(image =>
+            {
+                image.Identity.Should().Be("GeneratedContainer");
+                image.ManifestDigest.Should().NotBeNullOrWhiteSpace();
+            });
     }
 
     [Test]
@@ -205,7 +205,7 @@ public class SystemTests
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
             .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
+                image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11");
     }
@@ -228,7 +228,7 @@ public class SystemTests
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
             .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+                image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled");
     }
@@ -255,12 +255,12 @@ public class SystemTests
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
             .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+                image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should()
-                   .ContainKey("org.opencontainers.image.base.name")
-                   .WhoseValue.Should()
-                   .Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled-extra");
+            .ContainKey("org.opencontainers.image.base.name")
+            .WhoseValue.Should()
+            .Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled-extra");
     }
 
     [Test]
@@ -281,7 +281,7 @@ public class SystemTests
 
         // Assert
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
+            .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
     }
 
     [Test]
@@ -302,7 +302,7 @@ public class SystemTests
 
         // Assert
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
+            .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}"));
     }
 
     [Test]
@@ -323,7 +323,7 @@ public class SystemTests
         // Assert
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
             .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+                image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-alpine");
     }
@@ -346,9 +346,9 @@ public class SystemTests
         // Assert
         outputLines.Should().ContainMatch($"*Publishing regular container image with tags: {_tempVersion};latest");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image =>
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}")
-                                                                                                        && image.RepoTags.Contains("me/test:latest"));
+            .Contain(image =>
+                image.RepoTags.Contains($"me/test:{_tempVersion}")
+                && image.RepoTags.Contains("me/test:latest"));
     }
 
     [Test]
@@ -368,9 +368,9 @@ public class SystemTests
         // Assert
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken)).Should()
-                                                                                                    .Contain(image =>
-                                                                                                        image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled")
-                                                                                                        && image.RepoTags.Contains("me/test:latest-chiseled"));
+            .Contain(image =>
+                image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled")
+                && image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
     [Test]
@@ -392,7 +392,7 @@ public class SystemTests
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         var dockerImage = (await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken))
             .SingleOrDefault(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
-                                      image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
+                image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
         dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
     }
@@ -417,10 +417,10 @@ public class SystemTests
         outputLines.Should().ContainMatch($"*Publishing chiseled container image with tags: {_tempVersion}-chiseled;latest-chiseled");
         var dockerImages = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters(), _cancellationToken);
         dockerImages.Should()
-                    .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}") &&
-                                      image.RepoTags.Contains("me/test:latest"))
-                    .And.Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
-                                          image.RepoTags.Contains("me/test:latest-chiseled"));
+            .Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}") &&
+                image.RepoTags.Contains("me/test:latest"))
+            .And.Contain(image => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled") &&
+                image.RepoTags.Contains("me/test:latest-chiseled"));
     }
 
     [Test]
@@ -540,38 +540,39 @@ public class SystemTests
             cancellationToken);
     }
 
-    private static async Task AddNuGetPackageToTestProjectAsync(DirectoryInfo tempNugetDirectory,
-                                                                DirectoryInfo tempTestProjectDirectory,
-                                                                string nugetVersion,
-                                                                CancellationToken cancellationToken) =>
-        await WaitUntilDotnetToolSucceededAsync(
-            $"add {GetTestProjectFilePath(tempTestProjectDirectory)} package mu88.Shared -v {nugetVersion} -s {tempNugetDirectory.FullName}",
+    private static async Task AddNuGetPackageToTestProjectAsync(
+        DirectoryInfo tempNugetDirectory,
+        DirectoryInfo tempTestProjectDirectory,
+        string nugetVersion,
+        CancellationToken cancellationToken)
+        => await WaitUntilDotnetToolSucceededAsync($"add {GetTestProjectFilePath(tempTestProjectDirectory)} package mu88.Shared -v {nugetVersion} -s {tempNugetDirectory.FullName}",
             cancellationToken);
 
-    private static async Task<IReadOnlyList<string>> BuildDockerImageOfAppAsync(DirectoryInfo tempTestProjectDirectory,
-                                                                                Dictionary<string, string> buildParameters,
-                                                                                CancellationToken cancellationToken,
-                                                                                string? additionalArguments = null)
+    private static async Task<IReadOnlyList<string>> BuildDockerImageOfAppAsync(
+        DirectoryInfo tempTestProjectDirectory,
+        Dictionary<string, string> buildParameters,
+        CancellationToken cancellationToken,
+        string? additionalArguments = null)
     {
         buildParameters.Add("ContainerRepository", "me/test"); // to avoid differences between running locally and in GitHub Actions (which sets this value automatically)
         return await BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(tempTestProjectDirectory, buildParameters, cancellationToken, additionalArguments);
     }
 
-    private static async Task<IReadOnlyList<string>> BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(DirectoryInfo tempTestProjectDirectory,
-                                                                                                                Dictionary<string, string> buildParameters,
-                                                                                                                CancellationToken cancellationToken,
-                                                                                                                string? additionalArguments = null)
+    private static async Task<IReadOnlyList<string>> BuildDockerImageOfAppAsyncWithoutPresetContainerRepository(
+        DirectoryInfo tempTestProjectDirectory,
+        Dictionary<string, string> buildParameters,
+        CancellationToken cancellationToken,
+        string? additionalArguments = null)
     {
         buildParameters.Add("ContainerRegistry", string.Empty); // image shall not be pushed
         var arguments = string.Join(' ', buildParameters.Select(kvp => $"-p:{kvp.Key}=\"{kvp.Value}\""));
         return await WaitUntilDotnetToolSucceededAsync($"publish {GetTestProjectFilePath(tempTestProjectDirectory)} " +
-                                                       "-t:PublishContainersForMultipleFamilies " +
-                                                       $" {arguments} {additionalArguments}",
-                   cancellationToken);
+            "-t:PublishContainersForMultipleFamilies " +
+            $" {arguments} {additionalArguments}",
+            cancellationToken);
     }
 
-    private static string GetTestProjectFilePath(DirectoryInfo tempTestProjectDirectory) =>
-        Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
+    private static string GetTestProjectFilePath(DirectoryInfo tempTestProjectDirectory) => Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
 
     private static async Task<IContainer> StartAppInContainersAsync(string containerImageTag, CancellationToken cancellationToken)
     {
@@ -588,22 +589,22 @@ public class SystemTests
         return container;
     }
 
-    private static IContainer BuildAppContainer(INetwork network, string containerImageTag) =>
-        new ContainerBuilder($"me/test:{containerImageTag}")
+    private static IContainer BuildAppContainer(INetwork network, string containerImageTag)
+        => new ContainerBuilder($"me/test:{containerImageTag}")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()
-                                  .UntilMessageIsLogged("Content root path: /app",
-                                      strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
+                .UntilMessageIsLogged("Content root path: /app",
+                    strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
             .Build();
 
     private static Uri GetAppBaseAddress(IContainer container) => new($"http://{container.Hostname}:{container.GetMappedPublicPort(8080)}");
 
-    private static async Task<IReadOnlyList<string>> WaitUntilDotnetToolSucceededAsync(string arguments, CancellationToken cancellationToken) =>
-        await WaitUntilToolSucceededAsync("dotnet", arguments, cancellationToken);
+    private static async Task<IReadOnlyList<string>> WaitUntilDotnetToolSucceededAsync(string arguments, CancellationToken cancellationToken)
+        => await WaitUntilToolSucceededAsync("dotnet", arguments, cancellationToken);
 
-    private static async Task<IReadOnlyList<string>> WaitUntilToolSucceededAsync(string toolToStart, string arguments, CancellationToken cancellationToken) =>
-        await Helper.WaitUntilToolFinishedAsync(toolToStart, arguments, true, cancellationToken);
+    private static async Task<IReadOnlyList<string>> WaitUntilToolSucceededAsync(string toolToStart, string arguments, CancellationToken cancellationToken)
+        => await Helper.WaitUntilToolFinishedAsync(toolToStart, arguments, true, cancellationToken);
 
     private static async Task ContainerShouldContainMetadataAsync(Dictionary<string, string> metadata, string containerImageTag, CancellationToken cancellationToken)
     {

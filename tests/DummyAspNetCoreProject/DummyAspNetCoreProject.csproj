@@ -9,15 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Tests"/>
+    <InternalsVisibleTo Include="Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\mu88.Shared\mu88.Shared.csproj"/>
+    <ProjectReference Include="..\..\src\mu88.Shared\mu88.Shared.csproj" />
   </ItemGroup>
 
 </Project>

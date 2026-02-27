@@ -1,4 +1,17 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+﻿<wpf:ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xml:space="preserve">
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=61C573C799216E48A8095B2ECF0BB9E6/@KeyIndexDefined">True</s:Boolean>
+  <s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=61C573C799216E48A8095B2ECF0BB9E6/AbsolutePath/@EntryValue">..\..\dotfiles\ReSharper\mu88 - Templates.DotSettings</s:String>
+  <s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=61C573C799216E48A8095B2ECF0BB9E6/RelativePath/@EntryValue">..\..\dotfiles\ReSharper\mu88 - Templates.DotSettings</s:String>
+  <s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B082F6618DACD6409A176D3F92717761/@KeyIndexDefined">True</s:Boolean>
+  <s:String
+    x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B082F6618DACD6409A176D3F92717761/AbsolutePath/@EntryValue">..\..\dotfiles\ReSharper\mu88.DotSettings</s:String>
+  <s:String
+    x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B082F6618DACD6409A176D3F92717761/RelativePath/@EntryValue">..\..\dotfiles\ReSharper\mu88.DotSettings</s:String>
+  <s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File61C573C799216E48A8095B2ECF0BB9E6/@KeyIndexDefined">True</s:Boolean>
+  <s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File61C573C799216E48A8095B2ECF0BB9E6/RelativePriority/@EntryValue">1</s:Double>
+  <s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileB082F6618DACD6409A176D3F92717761/@KeyIndexDefined">True</s:Boolean>
+  <s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileB082F6618DACD6409A176D3F92717761/RelativePriority/@EntryValue">2</s:Double>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=opencontainers/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=otel/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=otlp/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

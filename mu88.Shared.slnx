@@ -9,7 +9,7 @@
     <File Path="global.json" />
     <File Path="LICENSE.md" />
     <File Path="README.md" />
-    <File Path="renovate.json" />
+    <File Path="renovate.json5" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/DummyAspNetCoreProject/DummyAspNetCoreProject.csproj" />

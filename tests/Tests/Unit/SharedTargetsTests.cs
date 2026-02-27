@@ -8,11 +8,12 @@ namespace Tests.Unit;
 public class SharedTargetsTests
 {
     [TestCaseSource(nameof(Cases_PublishContainersForMultipleFamilies_ShouldFail_WhenPropertiesAreInvalidOrMissing))]
-    public async Task PublishContainersForMultipleFamilies_ShouldFail_WhenPropertiesAreInvalidOrMissing(string expectedErrorMessage,
-                                                                                                        [SuppressMessage("Design",
-                                                                                                            "MA0016:Prefer using collection abstraction instead of implementation",
-                                                                                                            Justification = "Limitation of NUnit")]
-                                                                                                        Dictionary<string, string> buildParameters)
+    public async Task PublishContainersForMultipleFamilies_ShouldFail_WhenPropertiesAreInvalidOrMissing(
+        string expectedErrorMessage,
+        [SuppressMessage("Design",
+            "MA0016:Prefer using collection abstraction instead of implementation",
+            Justification = "Limitation of NUnit")]
+        Dictionary<string, string> buildParameters)
     {
         // Arrange
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
@@ -107,10 +108,7 @@ public class SharedTargetsTests
             new object[]
             {
                 "IsRelease property must be set ('true' or 'false')",
-                new Dictionary<string, string>(StringComparer.Ordinal)
-                {
-                    { "PublishRegularContainer", "true" }, { "IsRelease", string.Empty }, { "ReleaseVersion", "dev" }
-                }
+                new Dictionary<string, string>(StringComparer.Ordinal) { { "PublishRegularContainer", "true" }, { "IsRelease", string.Empty }, { "ReleaseVersion", "dev" } }
             },
             new object[]
             {

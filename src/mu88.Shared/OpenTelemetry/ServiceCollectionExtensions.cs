@@ -31,14 +31,13 @@ public static class ServiceCollectionExtensions
         var mu88SharedOptions = configuration.GetSection(Mu88SharedOptions.SectionName).Get<Mu88SharedOptions>() ?? new Mu88SharedOptions();
 
         services
-               .AddOpenTelemetry()
-               .ConfigureResource(builder => builder.AddService(serviceName));
+            .AddOpenTelemetry()
+            .ConfigureResource(builder => builder.AddService(serviceName));
         if (mu88SharedOptions.OpenTelemetry.LogsEnabled)
         {
             services
                 .AddOpenTelemetry()
-                .WithLogging(
-                    loggingBuilder => loggingBuilder.AddOtlpExporter(),
+                .WithLogging(loggingBuilder => loggingBuilder.AddOtlpExporter(),
                     loggingOptions =>
                     {
                         loggingOptions.IncludeFormattedMessage = true;
@@ -49,28 +48,28 @@ public static class ServiceCollectionExtensions
         if (mu88SharedOptions.OpenTelemetry.MetricsEnabled)
         {
             services
-                   .AddOpenTelemetry()
-                   .WithMetrics(metricsBuilder =>
-                   {
-                       metricsBuilder
-                           .AddAspNetCoreInstrumentation()
-                           .AddProcessInstrumentation()
-                           .AddRuntimeInstrumentation()
-                           .AddOtlpExporter();
-                   });
+                .AddOpenTelemetry()
+                .WithMetrics(metricsBuilder =>
+                {
+                    metricsBuilder
+                        .AddAspNetCoreInstrumentation()
+                        .AddProcessInstrumentation()
+                        .AddRuntimeInstrumentation()
+                        .AddOtlpExporter();
+                });
         }
 
         if (mu88SharedOptions.OpenTelemetry.TracesEnabled)
         {
             services
-                   .AddOpenTelemetry()
-                   .WithTracing(tracingBuilder =>
-                   {
-                       tracingBuilder
-                           .AddAspNetCoreInstrumentation()
-                           .AddEntityFrameworkCoreInstrumentation()
-                           .AddOtlpExporter();
-                   });
+                .AddOpenTelemetry()
+                .WithTracing(tracingBuilder =>
+                {
+                    tracingBuilder
+                        .AddAspNetCoreInstrumentation()
+                        .AddEntityFrameworkCoreInstrumentation()
+                        .AddOtlpExporter();
+                });
         }
 
         return services;

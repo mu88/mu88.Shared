@@ -12,15 +12,15 @@
     <ContainerVersion Condition=" '$(ContainerVersion)' == '' ">$(ReleaseVersion)</ContainerVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' and '$(DoNotApplyGitHubScope)' != 'true' ">
-    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/CHANGELOG.md"/>
-    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)"/>
-    <ContainerLabel Include="org.opencontainers.image.source" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)"/>
-    <ContainerLabel Include="org.opencontainers.image.revision" Value="$(GITHUB_SHA)"/>
+    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/CHANGELOG.md" />
+    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
+    <ContainerLabel Include="org.opencontainers.image.source" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)" />
+    <ContainerLabel Include="org.opencontainers.image.revision" Value="$(GITHUB_SHA)" />
   </ItemGroup>
 
   <Target Name="PrecomputeContainerRepository" Returns="$(ComputedContainerRepository)">
     <!-- This target is just a very dumb workaround:
-         The goal is that the ContainerRepository must not be set and can be computed automatically. 
+         The goal is that the ContainerRepository must not be set and can be computed automatically.
          But I haven't been able to retrieve the computed ContainerRepository from the target ComputeContainerConfig.
          Instead, I extract the necessary logic here again.
          The property is needed to compute the fully qualified image name.
@@ -86,7 +86,7 @@
              Projects="$(MSBuildProjectFile)"
              Targets="PublishContainer"
              Properties="ContainerImageTags=$(ContainerImageTags);ContainerRepository=$(ContainerRepository)">
-      <Output TaskParameter="TargetOutputs" ItemName="_Regular_Publish_TargetOutputs"/>
+      <Output TaskParameter="TargetOutputs" ItemName="_Regular_Publish_TargetOutputs" />
     </MSBuild>
 
     <ItemGroup>
@@ -131,7 +131,7 @@
                ContainerFamily=$(ContainerFamily);
                ContainerImageTags=$(ContainerImageTags);
                ContainerRepository=$(ContainerRepository);">
-      <Output TaskParameter="TargetOutputs" ItemName="_Chiseled_Publish_TargetOutputs"/>
+      <Output TaskParameter="TargetOutputs" ItemName="_Chiseled_Publish_TargetOutputs" />
     </MSBuild>
 
     <ItemGroup>
@@ -151,30 +151,30 @@
     </PropertyGroup>
 
     <Error Condition=" '$(PublishRegularContainer)' != 'true' and '$(PublishChiseledContainer)' != 'true' "
-           Text="At least one of PublishRegularContainer or PublishChiseledContainer must be 'true'"/>
+           Text="At least one of PublishRegularContainer or PublishChiseledContainer must be 'true'" />
     <Error Condition=" '$(PublishRegularContainer)' != 'true' and '$(PublishRegularContainer)' != 'false' "
            Text="PublishRegularContainer property must be 'true' or 'false'" />
     <Error Condition=" '$(PublishChiseledContainer)' != 'true' and '$(PublishChiseledContainer)' != 'false' "
            Text="PublishChiseledContainer property must be 'true' or 'false'" />
 
     <CallTarget Targets="PrecomputeContainerRepository">
-      <Output TaskParameter="TargetOutputs" PropertyName="ComputedContainerRepository"/>
+      <Output TaskParameter="TargetOutputs" PropertyName="ComputedContainerRepository" />
     </CallTarget>
     <PropertyGroup>
       <ComputedFullyQualifiedImageName Condition=" '$(ContainerRegistry)' == '' ">$(ComputedContainerRepository)</ComputedFullyQualifiedImageName>
       <ComputedFullyQualifiedImageName Condition=" '$(ContainerRegistry)' != '' ">$(ContainerRegistry)/$(ComputedContainerRepository)</ComputedFullyQualifiedImageName>
     </PropertyGroup>
-    <Message Text="Using ContainerRepository: $(ComputedContainerRepository)" Importance="High"/>
+    <Message Text="Using ContainerRepository: $(ComputedContainerRepository)" Importance="High" />
 
     <MSBuild Condition=" '$(PublishRegularContainer)' == 'true' "
              Projects="$(MSBuildProjectFile)"
-             Targets="PublishRegularContainer" 
+             Targets="PublishRegularContainer"
              Properties="
                ContainerRepository=$(ComputedContainerRepository);
                DryRun=$(DryRun);
                _InitialContainerImageTags=$(_InitialContainerImageTags);
                _InitialContainerFamily=$(_InitialContainerFamily)">
-      <Output TaskParameter="TargetOutputs" ItemName="_Regular_TargetOutputs"/>
+      <Output TaskParameter="TargetOutputs" ItemName="_Regular_TargetOutputs" />
     </MSBuild>
 
     <MSBuild Condition=" '$(PublishChiseledContainer)' == 'true' "
@@ -185,14 +185,14 @@
                DryRun=$(DryRun);
                _InitialContainerImageTags=$(_InitialContainerImageTags);
                _InitialContainerFamily=$(_InitialContainerFamily)">
-      <Output TaskParameter="TargetOutputs" ItemName="_Chiseled_TargetOutputs"/>
+      <Output TaskParameter="TargetOutputs" ItemName="_Chiseled_TargetOutputs" />
     </MSBuild>
 
     <ItemGroup>
-      <GeneratedContainers Include="@(_Regular_TargetOutputs);@(_Chiseled_TargetOutputs)" Condition="'%(Identity)' == 'GeneratedContainer'"/>
+      <GeneratedContainers Include="@(_Regular_TargetOutputs);@(_Chiseled_TargetOutputs)" Condition="'%(Identity)' == 'GeneratedContainer'" />
     </ItemGroup>
     <ItemGroup>
-      <GeneratedImages Include="@(_Regular_TargetOutputs);@(_Chiseled_TargetOutputs)" Condition="'%(Identity)' == 'GeneratedImage'"/>
+      <GeneratedImages Include="@(_Regular_TargetOutputs);@(_Chiseled_TargetOutputs)" Condition="'%(Identity)' == 'GeneratedImage'" />
     </ItemGroup>
   </Target>
 </Project>

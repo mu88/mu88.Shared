@@ -47,33 +47,33 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="\"/>
-    <None Include="../../LICENSE.md" Pack="true" PackagePath="\"/>
-    <None Include="../../CHANGELOG.md" Pack="true" PackagePath="\"/>
-    <None Include="../../icon.jpg" Pack="true" PackagePath="\"/>
-    <None Include="mu88.Shared.props" Pack="true" PackagePath="\build"/>
-    <None Include="mu88.Shared.props" Pack="true" PackagePath="\buildMultiTargeting"/>
-    <None Include="mu88.Shared.props" Pack="true" PackagePath="\buildTransitive"/>
-    <None Include="mu88.Shared.targets" Pack="true" PackagePath="\build"/>
-    <None Include="mu88.Shared.targets" Pack="true" PackagePath="\buildMultiTargeting"/>
-    <None Include="mu88.Shared.targets" Pack="true" PackagePath="\buildTransitive"/>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="../../LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="../../CHANGELOG.md" Pack="true" PackagePath="\" />
+    <None Include="../../icon.jpg" Pack="true" PackagePath="\" />
+    <None Include="mu88.Shared.props" Pack="true" PackagePath="\build" />
+    <None Include="mu88.Shared.props" Pack="true" PackagePath="\buildMultiTargeting" />
+    <None Include="mu88.Shared.props" Pack="true" PackagePath="\buildTransitive" />
+    <None Include="mu88.Shared.targets" Pack="true" PackagePath="\build" />
+    <None Include="mu88.Shared.targets" Pack="true" PackagePath="\buildMultiTargeting" />
+    <None Include="mu88.Shared.targets" Pack="true" PackagePath="\buildTransitive" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     <PackageReference Include="Microsoft.Sbom.Targets">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore"/>
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol"/>
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
-    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore"/>
-    <PackageReference Include="OpenTelemetry.Instrumentation.Process"/>
-    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime"/>
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Process" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Tests"/>
+    <InternalsVisibleTo Include="Tests" />
   </ItemGroup>
 
   <!--  See: https://yer.ac/blog/2019/09/05/dotnet-pack-project-reference-and-nuget-dependency/ -->
@@ -82,7 +82,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(OutputPath)/mu88.HealthCheck.runtimeconfig.json" Pack="True" PackageCopyToOutput="True" PackagePath="content;contentFiles\any\$(TargetFramework);"/>
+    <None Include="$(OutputPath)/mu88.HealthCheck.runtimeconfig.json" Pack="True" PackageCopyToOutput="True" PackagePath="content;contentFiles\any\$(TargetFramework);" />
     <ProjectReference Include="..\mu88.HealthCheck\mu88.HealthCheck.csproj" PrivateAssets="all">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>mu88.HealthChecker.dll</IncludeAssets>
@@ -91,7 +91,7 @@
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
   </Target>
 
@@ -104,7 +104,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <AdditionalDebugSymbols Include="$(OutputPath)/mu88.HealthCheck.pdb"/>
+      <AdditionalDebugSymbols Include="$(OutputPath)/mu88.HealthCheck.pdb" />
     </ItemGroup>
 
     <Message Text="Unzipping symbol package to '$(TemporarySymbolPackageModificationDirectory)'..." Importance="high" />

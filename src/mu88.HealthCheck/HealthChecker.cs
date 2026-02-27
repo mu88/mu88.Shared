@@ -19,7 +19,7 @@ internal sealed class HealthChecker
     {
         _httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
-        if (args.Length == 1 && Uri.TryCreate(args[0], UriKind.RelativeOrAbsolute, out Uri? uri))
+        if (args.Length == 1 && Uri.TryCreate(args[0], UriKind.RelativeOrAbsolute, out var uri))
         {
             var response = await _httpClient.GetAsync(uri);
             if (response.IsSuccessStatusCode && string.Equals(await response.Content.ReadAsStringAsync(), "Healthy", StringComparison.Ordinal))

@@ -1,7 +1,8 @@
 # mu88.Shared
+
 ![Combine CI / Release](https://github.com/mu88/mu88.Shared/actions/workflows/CI_CD.yml/badge.svg)
 [![NuGet version](https://img.shields.io/nuget/v/mu88.Shared)](https://www.nuget.org/packages/mu88.Shared/)
-[![NuGet downloads](https://img.shields.io/nuget/dt/mu88.Shared)](https://www.nuget.org/packages/mu88.Shared/)  
+[![NuGet downloads](https://img.shields.io/nuget/dt/mu88.Shared)](https://www.nuget.org/packages/mu88.Shared/)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_mu88.Shared&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mu88_mu88.Shared)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_mu88.Shared&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mu88_mu88.Shared)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_mu88.Shared&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=mu88_mu88.Shared)
@@ -11,6 +12,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mu88_mu88.Shared&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mu88_mu88.Shared)
 
 ## General
+
 This repo contains the code of the NuGet package [`mu88.Shared`](https://www.nuget.org/packages/mu88.Shared/), providing the following features:
 
 - Add and configure OpenTelemetry logs, metrics and traces
@@ -24,8 +26,11 @@ This repo contains the code of the NuGet package [`mu88.Shared`](https://www.nug
 I use this NuGet package to share features and configurations between different .NET apps, hence avoiding the need to implement it repeatedly.
 
 ## Functionality details
+
 ### OpenTelemetry
+
 By calling the extension method `ConfigureOpenTelemetryMetrics` on an instance of `Microsoft.Extensions.Hosting.IHostApplicationBuilder`, the following OpenTelemetry features will be enabled:
+
 - Metrics
   - ASP.NET Core (e.g. request duration) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#metrics)
   - .NET process information (e.g. process memory) → [see here](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/tree/main/src/OpenTelemetry.Instrumentation.Process#metrics)
@@ -39,6 +44,7 @@ By calling the extension method `ConfigureOpenTelemetryMetrics` on an instance o
 To export these data, the .NET configuration parameter `OTEL_EXPORTER_OTLP_ENDPOINT` for the OpenTelemetry endpoint receiving the exported metrics must be configured, e.g. via an environment variable. [See the official OpenTelemetry docs for more information](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint).
 
 ### Health check tool
+
 As the [GitHub issue "Consider defining a helper "health check" utility for distroless scenarios"](https://github.com/dotnet/dotnet-docker/issues/4300) describes, it is not possible to use the `HEALTHCHECK` instruction in a Docker scenario when using a distroless image as there is neither a shell nor a tool like `curl`. To overcome this limitation, I created a minimalistic health check tool that can be used in .NET apps (inspired by [this comment](https://github.com/dotnet/dotnet-docker/issues/4300#issuecomment-2546036016)).
 
 The tool is a simple `HttpClient` that sends a `GET` request to a specified URL and checks if the response status code is `200 OK` and the response body contains a specified string (`Healthy`). If the check fails, the tool will exit with a non-zero exit code, which can be used in a Dockerfile's `HEALTHCHECK` instruction.
@@ -48,6 +54,7 @@ To successfully run this tool it in a Docker container, .NET requires it to prov
 NuGet recommends to not ship multiple executables in a single NuGet package. However, shipping the tool as a separate NuGet package would require the consuming .NET project to reference two packages, which I wanted to avoid. Therefore, I decided to include the tool in this package. Unfortunately, some ugly MSBuild logic is required to copy all the necessary bits and pieces to the output directory of the consuming .NET project. If you have a better idea on how to solve this, please let me know!
 
 #### Usage
+
 To use the health check tool in a `docker-compose.yml` file, you can add the following service definition:
 
 ```yaml
