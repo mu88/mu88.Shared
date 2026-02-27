@@ -19,14 +19,16 @@ public class SharedTargetsTests
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
         buildParameters.Add("DryRun", "true");
-        var arguments =
-            $"publish {testProjectFile} -t:PublishContainersForMultipleFamilies -p:DoNotApplyGitHubScope=true {string.Join(' ', buildParameters.Select(kvp => $"-p:{kvp.Key}=\"{kvp.Value}\""))}";
+        IEnumerable<string> arguments = ["publish", testProjectFile, "-t:PublishContainersForMultipleFamilies", "-p:DoNotApplyGitHubScope=true"];
 
         // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, false, CancellationToken.None);
+        var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet",
+            arguments.Concat(buildParameters.Select(kvp => $"-p:{kvp.Key}={kvp.Value}")),
+            false,
+            CancellationToken.None);
 
         // Assert
-        outputLines.Should().ContainMatch($"*{expectedErrorMessage}*");
+        standardOutput.Should().Match($"*{expectedErrorMessage}*");
     }
 
     [TestCase("-p:ContainerRegistry=ghcr.io", "ghcr.io/dummyaspnetcoreproject")]
@@ -36,13 +38,23 @@ public class SharedTargetsTests
         // Arrange
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments =
-            $"publish {testProjectFile} -t:PublishContainersForMultipleFamilies -p:IsRelease=false -p:ReleaseVersion=dev -p:DoNotApplyGitHubScope=true {buildArguments} -p:DryRun=true -getProperty:ComputedFullyQualifiedImageName";
+        IEnumerable<string> arguments =
+        [
+            "publish",
+            testProjectFile,
+            "-t:PublishContainersForMultipleFamilies",
+            "-p:IsRelease=false",
+            "-p:ReleaseVersion=dev",
+            "-p:DoNotApplyGitHubScope=true",
+            buildArguments,
+            "-p:DryRun=true",
+            "-getProperty:ComputedFullyQualifiedImageName"
+        ];
 
         // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
-        outputLines.Should().NotBeNull();
-        outputLines.Should().HaveCount(1).And.Subject.Single().Should().Be(expectedFullyQualifiedImageName);
+        var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+        standardOutput.Should().NotBeNull();
+        standardOutput.Should().Be(expectedFullyQualifiedImageName);
     }
 
     [Test]
@@ -51,13 +63,16 @@ public class SharedTargetsTests
         // Arrange
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments = $"msbuild {testProjectFile} -t:PrecomputeContainerRepository -p:DoNotApplyGitHubScope=true -getProperty:ComputedContainerRepository";
+        IEnumerable<string> arguments =
+        [
+            "msbuild", testProjectFile, "-t:PrecomputeContainerRepository", "-p:DoNotApplyGitHubScope=true", "-getProperty:ComputedContainerRepository"
+        ];
 
         // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+        var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
 
         // Assert
-        outputLines.Should().HaveCount(1).And.ContainMatch("dummyaspnetcoreproject");
+        standardOutput.Should().BeEquivalentTo("dummyaspnetcoreproject");
     }
 
     [Test]
@@ -66,14 +81,21 @@ public class SharedTargetsTests
         // Arrange
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
-        var arguments =
-            $"msbuild {testProjectFile} -t:PrecomputeContainerRepository -p:DoNotApplyGitHubScope=true -p:ContainerRepository=\"me/test\" -getProperty:ComputedContainerRepository";
+        IEnumerable<string> arguments =
+        [
+            "msbuild",
+            testProjectFile,
+            "-t:PrecomputeContainerRepository",
+            "-p:DoNotApplyGitHubScope=true",
+            "-p:ContainerRepository=\"me/test\"",
+            "-getProperty:ComputedContainerRepository"
+        ];
 
         // Act
-        var outputLines = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+        var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
 
         // Assert
-        outputLines.Should().HaveCount(1).And.ContainMatch("me/test");
+        standardOutput.Should().Match("me/test");
     }
 
     [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1010:Opening square brackets should be spaced correctly", Justification = "False positive")]
