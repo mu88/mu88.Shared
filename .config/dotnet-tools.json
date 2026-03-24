@@ -14,6 +14,13 @@
         "dotnet-sonarscanner"
       ],
       "rollForward": false
+    },
+    "dotnet-coverage": {
+      "version": "18.5.2",
+      "commands": [
+        "dotnet-coverage"
+      ],
+      "rollForward": false
     }
   }
 }

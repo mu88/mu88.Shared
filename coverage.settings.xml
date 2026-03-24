@@ -1,0 +1,10 @@
+<Configuration>
+    <CodeCoverage>
+        <ModulePaths>
+            <Include>
+                <ModulePath>.*mu88\.Shared\.dll$</ModulePath>
+                <ModulePath>.*mu88\.HealthCheck\.dll$</ModulePath>
+            </Include>
+        </ModulePaths>
+    </CodeCoverage>
+</Configuration>
