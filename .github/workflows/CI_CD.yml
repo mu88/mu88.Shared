@@ -14,7 +14,7 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/common/.github/workflows/ci-cd.yml@74ae161be67791a743a890c0a0ee2a2088ef1042
+    uses: mu88/common/.github/workflows/ci-cd.yml@b2b64ff794f717b127ca29a51803998e25453854
     with:
       sonar-key: 'mu88_mu88.Shared'
     secrets:
