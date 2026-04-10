@@ -58,8 +58,9 @@
 
   <Target Name="UpdateContainerBaseImage" AfterTargets="ComputeContainerBaseImage">
     <PropertyGroup Condition=" '$(CustomContainerBaseImageVersion)' != '' ">
+      <_ComputedContainerFamily>$([System.Text.RegularExpressions.Regex]::Match("$(ContainerBaseImage)", ":[^-]+-(.+)$").Groups[1].Value)</_ComputedContainerFamily>
       <_ContainerBaseImageTag>$(CustomContainerBaseImageVersion)</_ContainerBaseImageTag>
-      <_ContainerBaseImageTag Condition=" '$(ContainerFamily)' != '' ">$(CustomContainerBaseImageVersion)-$(ContainerFamily)</_ContainerBaseImageTag>
+      <_ContainerBaseImageTag Condition=" '$(_ComputedContainerFamily)' != '' ">$(CustomContainerBaseImageVersion)-$(_ComputedContainerFamily)</_ContainerBaseImageTag>
       <ContainerBaseImage>$([System.Text.RegularExpressions.Regex]::Replace("$(ContainerBaseImage)", "^(.*):.*$", "$1:$(_ContainerBaseImageTag)", "System.Text.RegularExpressions.RegexOptions.ECMAScript"))</ContainerBaseImage>
     </PropertyGroup>
   </Target>
@@ -102,9 +103,7 @@
     <Error Condition=" '$(ReleaseVersion)' == '' " Text="ReleaseVersion property must be set (e.g., '1.2.3')" />
 
     <PropertyGroup>
-      <!-- See https://github.com/dotnet/sdk/issues/52160 -->
       <ContainerFamily Condition=" '$(_InitialContainerFamily)' == '' ">noble-chiseled</ContainerFamily>
-      <ContainerFamily Condition=" '$(_InitialContainerFamily)' == '' and '$(InvariantGlobalization)' == 'false' ">$(ContainerFamily)-extra</ContainerFamily>
       <_ChiseledSuffix>-chiseled</_ChiseledSuffix>
     </PropertyGroup>
 

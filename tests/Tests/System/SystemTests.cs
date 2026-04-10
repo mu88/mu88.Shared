@@ -213,7 +213,7 @@ public class SystemTests
         await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }, { "InvariantGlobalization", "true" }
         };
 
         // Act
