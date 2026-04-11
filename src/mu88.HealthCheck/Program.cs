@@ -9,6 +9,6 @@ public class Program
     public static async Task<int> Main(string[] args)
     {
         using var httpClient = new HttpClient();
-        return await new HealthChecker(httpClient).CheckHealthAsync(args);
+        return await new HealthChecker(httpClient).CheckHealthAsync(args, CancellationToken.None);
     }
 }

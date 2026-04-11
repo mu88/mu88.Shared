@@ -1,6 +1,6 @@
 ﻿namespace mu88.Shared.Settings;
 
-public class Mu88SharedOptions
+internal sealed class Mu88SharedOptions
 {
     public const string SectionName = "mu88Shared";
 

@@ -13,7 +13,7 @@ public class HealthCheckerTests
     public async Task HealthChecker_ShouldIndicateSuccess_WhenAppIsHealthy()
     {
         // Arrange
-        var webApplicationFactory = new WebApplicationFactory<Program>();
+        await using var webApplicationFactory = new WebApplicationFactory<Program>();
         using var httpClient = webApplicationFactory.CreateClient();
         var healthChecker = new HealthChecker(httpClient);
 
@@ -45,7 +45,7 @@ public class HealthCheckerTests
     public async Task HealthChecker_ShouldIndicateFailure_WhenWrongHealthCheckEndpointIsUsed()
     {
         // Arrange
-        var webApplicationFactory = new WebApplicationFactory<Program>();
+        await using var webApplicationFactory = new WebApplicationFactory<Program>();
         using var httpClient = webApplicationFactory.CreateClient();
         var healthChecker = new HealthChecker(httpClient);
 
@@ -62,7 +62,7 @@ public class HealthCheckerTests
     public async Task HealthChecker_ShouldThrowArgumentException_WhenUriIsInvalid()
     {
         // Arrange
-        var webApplicationFactory = new WebApplicationFactory<Program>();
+        await using var webApplicationFactory = new WebApplicationFactory<Program>();
         using var httpClient = webApplicationFactory.CreateClient();
         var healthChecker = new HealthChecker(httpClient);
 

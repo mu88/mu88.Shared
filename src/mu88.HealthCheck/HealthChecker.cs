@@ -15,14 +15,14 @@ internal sealed class HealthChecker
 
     public HealthChecker(HttpClient httpClient) => _httpClient = httpClient;
 
-    public async Task<int> CheckHealthAsync(string[] args)
+    public async Task<int> CheckHealthAsync(string[] args, CancellationToken cancellationToken = default)
     {
         _httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
         if (args.Length == 1 && Uri.TryCreate(args[0], UriKind.RelativeOrAbsolute, out var uri))
         {
-            var response = await _httpClient.GetAsync(uri);
-            if (response.IsSuccessStatusCode && string.Equals(await response.Content.ReadAsStringAsync(), "Healthy", StringComparison.Ordinal))
+            var response = await _httpClient.GetAsync(uri, cancellationToken);
+            if (response.IsSuccessStatusCode && string.Equals(await response.Content.ReadAsStringAsync(cancellationToken), "Healthy", StringComparison.Ordinal))
             {
                 return 0;
             }

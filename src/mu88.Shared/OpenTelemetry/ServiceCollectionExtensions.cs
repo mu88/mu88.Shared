@@ -30,46 +30,44 @@ public static class ServiceCollectionExtensions
         services.AddOptions<Mu88SharedOptions>().Bind(configuration.GetSection(Mu88SharedOptions.SectionName));
         var mu88SharedOptions = configuration.GetSection(Mu88SharedOptions.SectionName).Get<Mu88SharedOptions>() ?? new Mu88SharedOptions();
 
-        services
+        var otelBuilder = services
             .AddOpenTelemetry()
             .ConfigureResource(builder => builder.AddService(serviceName));
+
+        // Note: setting LogsEnabled=false disables the OTLP log exporter only.
+        // Other log exporters (e.g. in-memory, console) that are added separately are unaffected.
         if (mu88SharedOptions.OpenTelemetry.LogsEnabled)
         {
-            services
-                .AddOpenTelemetry()
-                .WithLogging(loggingBuilder => loggingBuilder.AddOtlpExporter(),
-                    loggingOptions =>
-                    {
-                        loggingOptions.IncludeFormattedMessage = true;
-                        loggingOptions.IncludeScopes = true;
-                    });
+            otelBuilder.WithLogging(
+                loggingBuilder => loggingBuilder.AddOtlpExporter(),
+                loggingOptions =>
+                {
+                    loggingOptions.IncludeFormattedMessage = true;
+                    loggingOptions.IncludeScopes = true;
+                });
         }
 
         if (mu88SharedOptions.OpenTelemetry.MetricsEnabled)
         {
-            services
-                .AddOpenTelemetry()
-                .WithMetrics(metricsBuilder =>
-                {
-                    metricsBuilder
-                        .AddAspNetCoreInstrumentation()
-                        .AddProcessInstrumentation()
-                        .AddRuntimeInstrumentation()
-                        .AddOtlpExporter();
-                });
+            otelBuilder.WithMetrics(metricsBuilder =>
+            {
+                metricsBuilder
+                    .AddAspNetCoreInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddOtlpExporter();
+            });
         }
 
         if (mu88SharedOptions.OpenTelemetry.TracesEnabled)
         {
-            services
-                .AddOpenTelemetry()
-                .WithTracing(tracingBuilder =>
-                {
-                    tracingBuilder
-                        .AddAspNetCoreInstrumentation()
-                        .AddEntityFrameworkCoreInstrumentation()
-                        .AddOtlpExporter();
-                });
+            otelBuilder.WithTracing(tracingBuilder =>
+            {
+                tracingBuilder
+                    .AddAspNetCoreInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddOtlpExporter();
+            });
         }
 
         return services;

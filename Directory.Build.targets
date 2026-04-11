@@ -1,0 +1,3 @@
+<Project>
+  <Import Project="src/mu88.Shared/mu88.Shared.targets" />
+</Project>

@@ -4,7 +4,6 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AspNetCoreAnalyzers" Version="0.3.0" />
     <PackageVersion Include="CliWrap" Version="3.10.1" />
     <PackageVersion Include="Docker.DotNet" Version="3.125.15" />
     <PackageVersion Include="FluentAssertions" Version="8.9.0" />

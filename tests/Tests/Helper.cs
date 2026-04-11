@@ -15,6 +15,6 @@ public static class Helper
         buildResult.IsSuccess.Should().Be(toolSucceeded);
         Console.WriteLine(buildResult.StandardOutput);
 
-        return buildResult.StandardOutput.TrimEnd(Environment.NewLine).ToString();
+        return buildResult.StandardOutput.TrimEnd(Environment.NewLine.ToCharArray());
     }
 }

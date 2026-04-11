@@ -1,6 +1,6 @@
 ﻿namespace mu88.Shared.Settings;
 
-public class OpenTelemetryOptions
+internal sealed class OpenTelemetryOptions
 {
     public bool MetricsEnabled { get; set; } = true;
 

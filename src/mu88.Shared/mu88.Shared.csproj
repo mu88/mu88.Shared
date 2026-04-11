@@ -29,11 +29,6 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <!--    See: https://github.com/clairernovotny/DeterministicBuilds?tab=readme-ov-file#deterministic-builds-->
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="IDisposableAnalyzers">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -85,7 +80,6 @@
     <None Include="$(OutputPath)/mu88.HealthCheck.runtimeconfig.json" Pack="True" PackageCopyToOutput="True" PackagePath="content;contentFiles\any\$(TargetFramework);" />
     <ProjectReference Include="..\mu88.HealthCheck\mu88.HealthCheck.csproj" PrivateAssets="all">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>mu88.HealthChecker.dll</IncludeAssets>
     </ProjectReference>
   </ItemGroup>
 

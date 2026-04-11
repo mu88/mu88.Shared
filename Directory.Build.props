@@ -1,8 +1,11 @@
 <Project>
   <Import Project="src/mu88.Shared/mu88.Shared.props" />
-  <Import Project="src/mu88.Shared/mu88.Shared.targets" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>8.0.0</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <!--    See: https://github.com/clairernovotny/DeterministicBuilds?tab=readme-ov-file#deterministic-builds-->
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 </Project>
