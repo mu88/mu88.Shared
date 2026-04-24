@@ -1,5 +1,37 @@
 
 
+<a name="8.1.0"></a>
+## [8.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.1.0) (2026-04-24)
+
+### ✨ Features
+
+* migrate code coverage from coverlet to dotnet-coverage ([c1526f2](https://www.github.com/mu88/mu88.Shared/commit/c1526f2b74833ed60e2e94742d3eb87a317e5bfd))
+
+### ♻️ Refactors
+
+* apply code review findings ([a08d483](https://www.github.com/mu88/mu88.Shared/commit/a08d48354a93730aa8fd5e424b68eaca240a3283))
+
+### ✅ Tests
+
+* simplify build process by using CliWrap ([07ef8e5](https://www.github.com/mu88/mu88.Shared/commit/07ef8e520c2dd3ef65779b7f871f13f461e9e842))
+
+### 🔧 Chores
+
+* apply new code style ([cb3d6ef](https://www.github.com/mu88/mu88.Shared/commit/cb3d6efb74540a938e0f5857d96ed3e29b6cf0fd))
+* remove workaround for dotnet/sdk[#52160](https://www.github.com/mu88/mu88.Shared/issues/52160) ([8e31ebd](https://www.github.com/mu88/mu88.Shared/commit/8e31ebd417a57cabc056dd4f7396c8588d1bc858))
+* **deps:** update all dependencies ([4afbaab](https://www.github.com/mu88/mu88.Shared/commit/4afbaab561f22e21a6ed8c9259c5ae1a51c4dbce))
+* **deps:** update all dependencies ([38e6d6a](https://www.github.com/mu88/mu88.Shared/commit/38e6d6a1897d84ad0db5c9db98fec4e41d224a0d))
+* **deps:** update all dependencies ([84cab7a](https://www.github.com/mu88/mu88.Shared/commit/84cab7af1554cf9decf5dc1fc88021cf6133cc0b))
+* **deps:** update all dependencies ([b2d7d51](https://www.github.com/mu88/mu88.Shared/commit/b2d7d51e0d445406b9a11e37e1e38a0b3d4b5db1))
+* **deps:** update all dependencies ([d2fc4cf](https://www.github.com/mu88/mu88.Shared/commit/d2fc4cf3a7f1cb7682f231b4988064e3da8b2838))
+* **deps:** update all dependencies ([b3c59fa](https://www.github.com/mu88/mu88.Shared/commit/b3c59fa3f8bd27ca4000fe9116053baa9ff7b6e5))
+* **deps:** update all dependencies ([078abe9](https://www.github.com/mu88/mu88.Shared/commit/078abe9a82ef104ec60fff1775fab51dc0cbafc4))
+* **deps:** update dependency opentelemetry.exporter.opentelemetryprotocol to 1.15.2 [security] ([3a8a82f](https://www.github.com/mu88/mu88.Shared/commit/3a8a82fbfb95355fee7a6e1ea485e61ee308ecd0))
+* **deps:** update dependency opentelemetry.exporter.opentelemetryprotocol to 1.15.3 [security] ([f188eaf](https://www.github.com/mu88/mu88.Shared/commit/f188eaff01d3801557f7ba28be0d282655f0bd56))
+* **deps:** update mu88/common digest to 8aa4af2 ([7b4cafc](https://www.github.com/mu88/mu88.Shared/commit/7b4cafc2ec89aa37229879c344895c620d8588f4))
+* **deps:** update mu88/common digest to eab0eb3 ([dd0f4f4](https://www.github.com/mu88/mu88.Shared/commit/dd0f4f471e5607fdb04bd8c3549c23732adef716))
+* **dev:** fix broken DotSettings links ([d9ee9ba](https://www.github.com/mu88/mu88.Shared/commit/d9ee9badd9ecba3fcb2c2375e581c84fc1a2bcd5))
+
 <a name="8.0.0"></a>
 ## [8.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.0.0) (2026-02-20)
 
