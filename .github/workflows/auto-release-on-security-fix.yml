@@ -10,9 +10,9 @@ jobs:
     name: 'Create release for security fix'
     runs-on: ubuntu-latest
 
-    # Only trigger for Renovate security commits, never for the release commit itself
+    # Only trigger for mu88-bot security commits, never for the release commit itself
     if: |
-      github.actor == 'renovate[bot]' &&
+      github.actor == 'mu88-bot[bot]' &&
       contains(github.event.head_commit.message, '[security]') &&
       !startsWith(github.event.head_commit.message, 'chore(release)')
 
@@ -38,10 +38,21 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Get bot user identity
+        id: bot-identity
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          bot_slug="${{ steps.app-token.outputs.app-slug }}"
+          bot_id=$(gh api "/users/${bot_slug}%5Bbot%5D" --jq .id)
+          bot_login=$(gh api "/users/${bot_slug}%5Bbot%5D" --jq .login)
+          echo "name=$bot_login" >> "$GITHUB_OUTPUT"
+          echo "email=${bot_id}+${bot_login}@users.noreply.github.com" >> "$GITHUB_OUTPUT"
+
       - name: Configure git identity for mu88-bot
         run: |
-          git config user.name "mu88-bot[bot]"
-          git config user.email "3498920+mu88-bot[bot]@users.noreply.github.com"
+          git config user.name "${{ steps.bot-identity.outputs.name }}"
+          git config user.email "${{ steps.bot-identity.outputs.email }}"
 
       - name: Restore .NET tools
         run: dotnet tool restore
