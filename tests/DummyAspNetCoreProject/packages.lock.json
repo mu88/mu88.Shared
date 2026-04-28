@@ -41,9 +41,9 @@
         "type": "Project",
         "dependencies": {
           "IDisposableAnalyzers": "[4.0.8, )",
-          "Meziantou.Analyzer": "[3.0.44, )",
+          "Meziantou.Analyzer": "[3.0.48, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.15.3, )",
-          "OpenTelemetry.Extensions.Hosting": "[1.15.1, )",
+          "OpenTelemetry.Extensions.Hosting": "[1.15.2, )",
           "OpenTelemetry.Instrumentation.AspNetCore": "[1.15.1, )",
           "OpenTelemetry.Instrumentation.EntityFrameworkCore": "[1.0.0-beta.12, )",
           "OpenTelemetry.Instrumentation.Process": "[0.5.0-beta.7, )",
@@ -59,9 +59,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "CentralTransitive",
-        "requested": "[3.0.44, )",
-        "resolved": "3.0.44",
-        "contentHash": "lUecKj+n4OtXMKzV5lPqIBgE22+9qTdAovT9nctyVSYfAr82UKuPPSS1XooSftwES4Cj8LULpEp7mamDlburYA=="
+        "requested": "[3.0.48, )",
+        "resolved": "3.0.48",
+        "contentHash": "z+XqbAzJPBqTjn9NsLLcVgiArxmu+B2vx4GmSVCilnfrWQEtP9h4GiyiJy5Qg8/MbmJS6hSsMYSVY8k5wz9iEw=="
       },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "CentralTransitive",
@@ -74,11 +74,11 @@
       },
       "OpenTelemetry.Extensions.Hosting": {
         "type": "CentralTransitive",
-        "requested": "[1.15.1, )",
-        "resolved": "1.15.1",
-        "contentHash": "/mN9I16P8miDSHogFC0OFyPzUvYXibk/rLFLXW3Io50IN+XEQx7E6dSyUdMRdY+NKmOCo/oS5ICXkjdoFrwq2A==",
+        "requested": "[1.15.2, )",
+        "resolved": "1.15.2",
+        "contentHash": "T2nEP/lABOab8w8espx5biYGghw8errNlhhMLYmoXEhGT6EGB4CNhZInJPC+tOvlGUGFe54NM3TdSATxebwJ8g==",
         "dependencies": {
-          "OpenTelemetry": "1.15.1"
+          "OpenTelemetry": "1.15.2"
         }
       },
       "OpenTelemetry.Instrumentation.AspNetCore": {

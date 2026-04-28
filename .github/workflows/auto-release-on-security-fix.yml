@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Generate mu88-bot app token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.MU88_BOT_APP_ID }}
