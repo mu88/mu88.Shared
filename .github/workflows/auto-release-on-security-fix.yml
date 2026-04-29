@@ -20,34 +20,23 @@ jobs:
       contents: write
 
     steps:
-      - name: Generate mu88-bot app token
-        uses: actions/create-github-app-token@v3
-        id: app-token
+      - name: Get bot user identity
+        uses: mu88/common/.github/actions/get-bot-identity@22e167e9c593b61161fc3e00f045c5eb8a8cbaa2
+        id: bot-identity
         with:
-          app-id: ${{ vars.MU88_BOT_APP_ID }}
+          client-id: ${{ vars.MU88_BOT_APP_ID }}
           private-key: ${{ secrets.MU88_BOT_APP_PRIVATE_KEY }}
 
       - name: Check out code
         uses: actions/checkout@v6
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.bot-identity.outputs.token }}
           fetch-depth: 0
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
-
-      - name: Get bot user identity
-        id: bot-identity
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          bot_slug="${{ steps.app-token.outputs.app-slug }}"
-          bot_id=$(gh api "/users/${bot_slug}%5Bbot%5D" --jq .id)
-          bot_login=$(gh api "/users/${bot_slug}%5Bbot%5D" --jq .login)
-          echo "name=$bot_login" >> "$GITHUB_OUTPUT"
-          echo "email=${bot_id}+${bot_login}@users.noreply.github.com" >> "$GITHUB_OUTPUT"
 
       - name: Configure git identity for mu88-bot
         run: |
