@@ -30,7 +30,7 @@ public class SystemTests
         _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(1));
         _cancellationToken = _cancellationTokenSource.Token;
         _tempDirectory = Directory.CreateTempSubdirectory("mu88_Shared_SystemTests_");
-        _dockerClient = new DockerClientConfiguration().CreateClient();
+        _dockerClient = new DockerClientBuilder().Build();
         _tempTestProjectDirectory = Directory.CreateDirectory(Path.Combine(_tempDirectory.FullName, "DummyAspNetCoreProjectViaNuGet"));
         _tempNuGetDirectory = Directory.CreateDirectory(Path.Combine(_tempDirectory.FullName, "NuGet"));
         _tempVersion = GenerateVersion();
