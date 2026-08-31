@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using mu88.Shared.OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -92,6 +93,57 @@ public class ServiceCollectionExtensionsTests
     }
 
     [Test]
+    public async Task WebApp_ShouldNotExposeHealthCheckTraces()
+    {
+        // Arrange
+        var traces = new Collection<Activity>();
+        var customWebApplicationFactory = new CustomWebApplicationFactory([], [], traces);
+        using var httpClient = customWebApplicationFactory.CreateClient();
+
+        // Act
+        (await httpClient.GetAsync("healthz")).Should().Be200Ok();
+        await customWebApplicationFactory.DisposeAsync();
+        await Task.Delay(TimeSpan.FromMilliseconds(10000));
+
+        // Assert
+        traces.Should().NotContain(activity => activity.DisplayName.Contains("/healthz"));
+    }
+
+    [Test]
+    public async Task WebApp_ShouldExposeHealthCheckMetrics()
+    {
+        // Arrange
+        var metrics = new Collection<Metric>();
+        var customWebApplicationFactory = new CustomWebApplicationFactory(
+            [],
+            metrics,
+            [],
+            configureServices: services =>
+            {
+                services.AddHealthChecks().AddCheck(
+                    "test-health-check",
+                    () => HealthCheckResult.Healthy());
+            });
+        _ = customWebApplicationFactory.CreateClient();
+
+        // Act
+        var publisher = customWebApplicationFactory.Services.GetRequiredService<IHealthCheckPublisher>();
+        var healthCheckService = customWebApplicationFactory.Services.GetRequiredService<HealthCheckService>();
+        var meterProvider = customWebApplicationFactory.Services.GetRequiredService<MeterProvider>();
+        var report = await healthCheckService.CheckHealthAsync();
+        await publisher.PublishAsync(report, CancellationToken.None);
+        meterProvider.ForceFlush();
+        await customWebApplicationFactory.DisposeAsync();
+
+        // Assert
+        metrics
+            .Any(metric =>
+                string.Equals(metric.Name, "dotnet.health_check.reports", StringComparison.Ordinal)
+                || string.Equals(metric.Name, "dotnet.health_check.unhealthy_checks", StringComparison.Ordinal))
+            .Should().BeTrue();
+    }
+
+    [Test]
     public async Task WebApp_ShouldNotExposeTraces_WhenDisabledViaConfig()
     {
         // Arrange
@@ -116,7 +168,8 @@ public class ServiceCollectionExtensionsTests
         ICollection<LogRecord> logs,
         ICollection<Metric> metrics,
         ICollection<Activity> traces,
-        IEnumerable<KeyValuePair<string, string?>>? configOptions = null)
+        IEnumerable<KeyValuePair<string, string?>>? configOptions = null,
+        Action<IServiceCollection>? configureServices = null)
         : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -126,6 +179,7 @@ public class ServiceCollectionExtensionsTests
                     var configurationManager = new ConfigurationManager();
                     configurationManager.AddInMemoryCollection(configOptions);
                     services.ConfigureOpenTelemetry("test-application", configurationManager);
+                    configureServices?.Invoke(services);
                     services
                         .AddOpenTelemetry()
                         .WithMetrics(metricsBuilder => metricsBuilder.AddInMemoryExporter(metrics))

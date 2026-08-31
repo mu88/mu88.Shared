@@ -541,7 +541,8 @@ public class SystemTests
         DirectoryInfo tempTestProjectDirectory,
         string nugetVersion,
         CancellationToken cancellationToken)
-        => await WaitUntilDotnetToolSucceededAsync([
+    {
+        await WaitUntilDotnetToolSucceededAsync([
                 "add",
                 $"{GetTestProjectFilePath(tempTestProjectDirectory)}",
                 "package",
@@ -552,6 +553,12 @@ public class SystemTests
                 $"{tempNugetDirectory.FullName}"
             ],
             cancellationToken);
+        await WaitUntilDotnetToolSucceededAsync([
+                "restore",
+                $"{GetTestProjectFilePath(tempTestProjectDirectory)}"
+            ],
+            cancellationToken);
+    }
 
     private static async Task<string> BuildDockerImageOfAppAsync(
         DirectoryInfo tempTestProjectDirectory,

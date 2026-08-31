@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using mu88.Shared.Settings;
+using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -49,10 +50,13 @@ public static class ServiceCollectionExtensions
 
         if (mu88SharedOptions.OpenTelemetry.MetricsEnabled)
         {
+            services.AddTelemetryHealthCheckPublisher();
+
             otelBuilder.WithMetrics(metricsBuilder =>
             {
                 metricsBuilder
                     .AddAspNetCoreInstrumentation()
+                    .AddMeter("Microsoft.Extensions.Diagnostics.HealthChecks")
                     .AddProcessInstrumentation()
                     .AddRuntimeInstrumentation()
                     .AddOtlpExporter();
@@ -61,6 +65,9 @@ public static class ServiceCollectionExtensions
 
         if (mu88SharedOptions.OpenTelemetry.TracesEnabled)
         {
+            services.Configure<AspNetCoreTraceInstrumentationOptions>(
+                options => options.Filter = httpContext => httpContext.Request.Path != "/healthz");
+
             otelBuilder.WithTracing(tracingBuilder =>
             {
                 tracingBuilder
