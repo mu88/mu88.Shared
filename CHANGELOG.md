@@ -1,5 +1,24 @@
 
 
+<a name="8.2.0"></a>
+## [8.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.2.0) (2026-08-31)
+
+### ✨ Features
+
+* exclude health checks from traces and emit health metrics ([da8a326](https://www.github.com/mu88/mu88.Shared/commit/da8a326145cc73e662295f9d95a860f2df5ee725))
+* **release:** auto-release on Renovate security fix via mu88-bot ([104fd4d](https://www.github.com/mu88/mu88.Shared/commit/104fd4d1ab60c4a87bcb7c7f3ff9fbf96b14f599))
+
+### 🔧 Chores
+
+* **deps:** update all .net ([4611cf6](https://www.github.com/mu88/mu88.Shared/commit/4611cf66e27a1935fefdc627d7e35468f1016ec9))
+* **deps:** update all dependencies ([a7f6cd8](https://www.github.com/mu88/mu88.Shared/commit/a7f6cd831adac191a19fab9394cf9019f51148ba))
+* **deps:** update all dependencies ([9d7ef27](https://www.github.com/mu88/mu88.Shared/commit/9d7ef271eb4d4c20779d2be3a1d5476314d4c4e3))
+* **deps:** update all dependencies ([eddc40a](https://www.github.com/mu88/mu88.Shared/commit/eddc40a063aad5b4d26bf6b5bd18d10063e916ef))
+* **deps:** update all dependencies ([5e4b4e0](https://www.github.com/mu88/mu88.Shared/commit/5e4b4e03fd294bba99e4493b6aef5d19adb88611))
+* **deps:** update all dependencies ([b1fc59a](https://www.github.com/mu88/mu88.Shared/commit/b1fc59a2fd7844285ad7f2f66b20cbeba63c52a6))
+* **deps:** update all dependencies to 10.0.6 ([d3f1217](https://www.github.com/mu88/mu88.Shared/commit/d3f12174c6e46e05ab9dd2366b4bae06469d45bc))
+* **deps:** update all dependencies to v18.8.0 ([e0e4e40](https://www.github.com/mu88/mu88.Shared/commit/e0e4e402f316946af8105311431efb7139d81331))
+
 <a name="8.1.0"></a>
 ## [8.1.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.1.0) (2026-04-24)
 
