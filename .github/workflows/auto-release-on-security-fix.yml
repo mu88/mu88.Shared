@@ -28,13 +28,13 @@ jobs:
           private-key: ${{ secrets.MU88_BOT_APP_PRIVATE_KEY }}
 
       - name: Check out code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ steps.bot-identity.outputs.token }}
           fetch-depth: 0
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
