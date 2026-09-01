@@ -27,8 +27,8 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         (await httpClient.GetAsync("hello")).Should().Be200Ok(); // trigger metrics creation
+        customWebApplicationFactory.Services.GetRequiredService<MeterProvider>().ForceFlush();
         await customWebApplicationFactory.DisposeAsync();
-        await Task.Delay(TimeSpan.FromMilliseconds(10000));
 
         // Assert
         metrics.Should().Contain(m => m.Name == "http.server.request.duration");
@@ -48,8 +48,9 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         (await httpClient.GetAsync("hello")).Should().Be200Ok(); // trigger metrics creation
+        customWebApplicationFactory.Services.GetRequiredService<LoggerProvider>().ForceFlush();
+        customWebApplicationFactory.Services.GetRequiredService<TracerProvider>().ForceFlush();
         await customWebApplicationFactory.DisposeAsync();
-        await Task.Delay(TimeSpan.FromMilliseconds(10000));
 
         // Assert
         logs.Should().NotBeEmpty();
@@ -67,8 +68,8 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         (await httpClient.GetAsync("hello")).Should().Be200Ok(); // trigger logs creation
+        customWebApplicationFactory.Services.GetRequiredService<LoggerProvider>().ForceFlush();
         await customWebApplicationFactory.DisposeAsync();
-        await Task.Delay(TimeSpan.FromMilliseconds(10000));
 
         // Assert
         logs.Should().NotBeEmpty();
@@ -85,8 +86,8 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         (await httpClient.GetAsync("hello")).Should().Be200Ok(); // trigger traces creation
+        customWebApplicationFactory.Services.GetRequiredService<TracerProvider>().ForceFlush();
         await customWebApplicationFactory.DisposeAsync();
-        await Task.Delay(TimeSpan.FromMilliseconds(10000));
 
         // Assert
         traces.Should().ContainSingle(a => a.DisplayName.Contains("/hello"));
@@ -155,8 +156,9 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         (await httpClient.GetAsync("hello")).Should().Be200Ok(); // trigger traces creation
+        customWebApplicationFactory.Services.GetRequiredService<LoggerProvider>().ForceFlush();
+        customWebApplicationFactory.Services.GetRequiredService<MeterProvider>().ForceFlush();
         await customWebApplicationFactory.DisposeAsync();
-        await Task.Delay(TimeSpan.FromMilliseconds(10000));
 
         // Assert
         logs.Should().NotBeEmpty();
