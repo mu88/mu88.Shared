@@ -1,5 +1,16 @@
 
 
+<a name="8.3.0"></a>
+## [8.3.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.3.0) (2026-09-01)
+
+### ✨ Features
+
+* instrument outgoing HttpClient calls and suppress OTLP exporter HttpClient log noise ([6bbb8f5](https://www.github.com/mu88/mu88.Shared/commit/6bbb8f5c466e12be12533765145315544c3faa21))
+
+### 🐛 Bug Fixes
+
+* replace fixed OTel export delay with ForceFlush in integration tests ([5ca32b6](https://www.github.com/mu88/mu88.Shared/commit/5ca32b6be312e3aef9311b3254ebcf5225196a49))
+
 <a name="8.2.0"></a>
 ## [8.2.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.2.0) (2026-08-31)
 
