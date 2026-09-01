@@ -1,5 +1,12 @@
 
 
+<a name="8.4.0"></a>
+## [8.4.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.4.0) (2026-09-01)
+
+### ✨ Features
+
+* propagate ReleaseVersion into MSBuild Version and OTel service.version ([bb52e09](https://www.github.com/mu88/mu88.Shared/commit/bb52e097080cff5b666c357f8a8a1e33ee4dcb51))
+
 <a name="8.3.0"></a>
 ## [8.3.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.3.0) (2026-09-01)
 
