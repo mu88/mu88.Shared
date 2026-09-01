@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -182,6 +183,27 @@ public class SystemTests
     }
 
     [Test]
+    public async Task PublishRegularContainer_ShouldSetAssemblyVersionFromReleaseVersion()
+    {
+        // Arrange
+        CopyTestProject(_tempTestProjectDirectory);
+        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
+        {
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
+        };
+
+        // Act
+        await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
+
+        // Assert
+        var publishedAssemblyPath = Path.Combine(_tempTestProjectDirectory.FullName, "bin", "Release", "net10.0", "linux-x64", "publish", "DummyAspNetCoreProjectViaNuGet.dll");
+        File.Exists(publishedAssemblyPath).Should().BeTrue("the container publish should produce a published assembly at the expected location");
+        FileVersionInfo.GetVersionInfo(publishedAssemblyPath).ProductVersion.Should().StartWith(_tempVersion, "the ReleaseVersion should flow into the assembly's InformationalVersion");
+    }
+
+    [Test]
     public async Task PublishRegularContainer_ShouldUseCustomContainerBaseImageVersion()
     {
         // Arrange
@@ -264,9 +286,13 @@ public class SystemTests
         CopyTestProject(_tempTestProjectDirectory);
         await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
         await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+
+        // ReleaseVersion must be a valid SemVer string (not just an arbitrary marker) and distinct from
+        // _tempVersion: mu88.Shared.targets now also sets the assembly's Version from ReleaseVersion, and
+        // an invalid version string like the previous "SomethingElse" fails GenerateAssemblyInfo with NETSDK1018.
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishRegularContainer", "true" }, { "ReleaseVersion", "SomethingElse" }, { "IsRelease", "true" }, { "ContainerImageTags", _tempVersion }
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", "9.9.9-not-the-tag" }, { "IsRelease", "true" }, { "ContainerImageTags", _tempVersion }
         };
 
         // Act
@@ -284,9 +310,11 @@ public class SystemTests
         CopyTestProject(_tempTestProjectDirectory);
         await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
         await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+
+        // See the comment in the previous test for why this must be a valid SemVer string.
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", "SomethingElse" }, { "IsRelease", "true" }, { "ContainerImageTags", _tempVersion }
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", "9.9.9-not-the-tag" }, { "IsRelease", "true" }, { "ContainerImageTags", _tempVersion }
         };
 
         // Act

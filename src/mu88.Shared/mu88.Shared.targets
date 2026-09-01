@@ -11,6 +11,11 @@
     <ContainerVendor Condition=" '$(ContainerVendor)' == '' ">$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
     <ContainerVersion Condition=" '$(ContainerVersion)' == '' ">$(ReleaseVersion)</ContainerVersion>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(ReleaseVersion)' != '' ">
+    <Version>$(ReleaseVersion)</Version>
+  </PropertyGroup>
+
   <ItemGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' and '$(DoNotApplyGitHubScope)' != 'true' ">
     <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/blob/$(GITHUB_SHA)/CHANGELOG.md" />
     <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
@@ -83,6 +88,9 @@
 
     <Message Condition=" '$(_InitialContainerImageTags)' == '' " Text="Publishing regular container image with tags: $(ContainerImageTags)" Importance="High" />
 
+    <!-- Version is already set to ReleaseVersion via the top-level PropertyGroup above, before this project
+         was first evaluated/built, so the compiled assembly's Version/AssemblyVersion/InformationalVersion
+         metadata is already consistent with ReleaseVersion. No need to pass it again here. -->
     <MSBuild Condition=" '$(DryRun)' != 'true' "
              Projects="$(MSBuildProjectFile)"
              Targets="PublishContainer"

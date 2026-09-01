@@ -19,7 +19,7 @@ public class SharedTargetsTests
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
         buildParameters.Add("DryRun", "true");
-        IEnumerable<string> arguments = ["publish", testProjectFile, "-t:PublishContainersForMultipleFamilies", "-p:DoNotApplyGitHubScope=true"];
+        IEnumerable<string> arguments = ["publish", testProjectFile, "-t:PublishContainersForMultipleFamilies", "-p:DoNotApplyGitHubScope=true", "--no-restore"];
 
         // Act
         var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet",
@@ -44,10 +44,11 @@ public class SharedTargetsTests
             testProjectFile,
             "-t:PublishContainersForMultipleFamilies",
             "-p:IsRelease=false",
-            "-p:ReleaseVersion=dev",
+            "-p:ReleaseVersion=1.2.3-dev",
             "-p:DoNotApplyGitHubScope=true",
             buildArguments,
             "-p:DryRun=true",
+            "--no-restore",
             "-getProperty:ComputedFullyQualifiedImageName"
         ];
 
@@ -98,6 +99,39 @@ public class SharedTargetsTests
         standardOutput.Should().Match("me/test");
     }
 
+    [Test]
+    public async Task Version_ShouldBeSetFromReleaseVersion_WhenReleaseVersionIsSet()
+    {
+        // Arrange
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
+        IEnumerable<string> arguments =
+        [
+            "msbuild", testProjectFile, "-p:DoNotApplyGitHubScope=true", "-p:ReleaseVersion=1.2.3-test", "-getProperty:Version"
+        ];
+
+        // Act
+        var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+
+        // Assert
+        standardOutput.Should().Be("1.2.3-test");
+    }
+
+    [Test]
+    public async Task Version_ShouldKeepProjectDefault_WhenReleaseVersionIsNotSet()
+    {
+        // Arrange
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var testProjectFile = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProject", "DummyAspNetCoreProject.csproj");
+        IEnumerable<string> arguments = ["msbuild", testProjectFile, "-p:DoNotApplyGitHubScope=true", "-getProperty:Version"];
+
+        // Act
+        var standardOutput = await Helper.WaitUntilToolFinishedAsync("dotnet", arguments, true, CancellationToken.None);
+
+        // Assert
+        standardOutput.Should().NotBe("1.2.3-test");
+    }
+
     [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1010:Opening square brackets should be spaced correctly", Justification = "False positive")]
     [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1513:Closing brace should be followed by blank line", Justification = "False positive")]
     private static object[] Cases_PublishContainersForMultipleFamilies_ShouldFail_WhenPropertiesAreInvalidOrMissing()
@@ -124,13 +158,13 @@ public class SharedTargetsTests
                 "IsRelease property must be set ('true' or 'false')",
                 new Dictionary<string, string>(StringComparer.Ordinal)
                 {
-                    { "PublishChiseledContainer", "true" }, { "IsRelease", string.Empty }, { "ReleaseVersion", "dev" }
+                    { "PublishChiseledContainer", "true" }, { "IsRelease", string.Empty }, { "ReleaseVersion", "1.2.3-dev" }
                 }
             },
             new object[]
             {
                 "IsRelease property must be set ('true' or 'false')",
-                new Dictionary<string, string>(StringComparer.Ordinal) { { "PublishRegularContainer", "true" }, { "IsRelease", string.Empty }, { "ReleaseVersion", "dev" } }
+                new Dictionary<string, string>(StringComparer.Ordinal) { { "PublishRegularContainer", "true" }, { "IsRelease", string.Empty }, { "ReleaseVersion", "1.2.3-dev" } }
             },
             new object[]
             {

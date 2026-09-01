@@ -10,8 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using mu88.Shared.OpenTelemetry;
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 namespace Tests.Integration;
@@ -189,12 +191,43 @@ public class ServiceCollectionExtensionsTests
         traces.Should().BeEmpty();
     }
 
+    [Test]
+    public async Task WebApp_ShouldExposeServiceVersion_WhenServiceVersionIsProvided()
+    {
+        // Arrange
+        var customWebApplicationFactory = new CustomWebApplicationFactory([], [], [], serviceVersion: "1.2.3-test");
+        using var httpClient = customWebApplicationFactory.CreateClient();
+
+        // Act
+        var resource = customWebApplicationFactory.Services.GetRequiredService<TracerProvider>().GetResource();
+        await customWebApplicationFactory.DisposeAsync();
+
+        // Assert
+        resource.Attributes.Should().Contain(attribute => attribute.Key == "service.version" && Equals(attribute.Value, "1.2.3-test"));
+    }
+
+    [Test]
+    public async Task WebApp_ShouldNotExposeServiceVersion_WhenServiceVersionIsNotProvided()
+    {
+        // Arrange
+        var customWebApplicationFactory = new CustomWebApplicationFactory([], [], []);
+        using var httpClient = customWebApplicationFactory.CreateClient();
+
+        // Act
+        var resource = customWebApplicationFactory.Services.GetRequiredService<TracerProvider>().GetResource();
+        await customWebApplicationFactory.DisposeAsync();
+
+        // Assert
+        resource.Attributes.Should().NotContain(attribute => attribute.Key == "service.version");
+    }
+
     private class CustomWebApplicationFactory(
         ICollection<LogRecord> logs,
         ICollection<Metric> metrics,
         ICollection<Activity> traces,
         IEnumerable<KeyValuePair<string, string?>>? configOptions = null,
-        Action<IServiceCollection>? configureServices = null)
+        Action<IServiceCollection>? configureServices = null,
+        string? serviceVersion = null)
         : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -203,7 +236,7 @@ public class ServiceCollectionExtensionsTests
                 {
                     var configurationManager = new ConfigurationManager();
                     configurationManager.AddInMemoryCollection(configOptions);
-                    services.ConfigureOpenTelemetry("test-application", configurationManager);
+                    services.ConfigureOpenTelemetry("test-application", configurationManager, serviceVersion);
                     configureServices?.Invoke(services);
                     services
                         .AddOpenTelemetry()

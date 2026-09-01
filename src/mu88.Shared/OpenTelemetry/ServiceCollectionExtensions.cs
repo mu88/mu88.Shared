@@ -21,20 +21,28 @@ public static class ServiceCollectionExtensions
     /// </param>
     /// <param name="serviceName">The name of the service so that it can be identified (e.g. the application name).</param>
     /// <param name="configuration">The configuration instance from which the OpenTelemetry settings will be read.</param>
+    /// <param name="serviceVersion">
+    ///     The version of the service (e.g. the app's informational version) to be published as the
+    ///     <c>service.version</c> resource attribute. Optional; when omitted, no version attribute is added.
+    /// </param>
     /// <returns>The provided <paramref name="services" /> with configured OpenTelemetry features.</returns>
     /// <remarks>
     ///     Don't forget to set the .NET configuration parameter <c>OTEL_EXPORTER_OTLP_ENDPOINT</c> for the OpenTelemetry
     ///     endpoint receiving the exported logs, metrics and traces.
     /// </remarks>
     // ReSharper disable once UnusedMember.Global - reviewed mu88: public API
-    public static IServiceCollection ConfigureOpenTelemetry(this IServiceCollection services, string serviceName, IConfigurationManager configuration)
+    public static IServiceCollection ConfigureOpenTelemetry(
+        this IServiceCollection services,
+        string serviceName,
+        IConfigurationManager configuration,
+        string? serviceVersion = null)
     {
         services.AddOptions<Mu88SharedOptions>().Bind(configuration.GetSection(Mu88SharedOptions.SectionName));
         var mu88SharedOptions = configuration.GetSection(Mu88SharedOptions.SectionName).Get<Mu88SharedOptions>() ?? new Mu88SharedOptions();
 
         var otelBuilder = services
             .AddOpenTelemetry()
-            .ConfigureResource(builder => builder.AddService(serviceName));
+            .ConfigureResource(builder => builder.AddService(serviceName, serviceVersion: serviceVersion));
 
         // Note: setting LogsEnabled=false disables the OTLP log exporter only.
         // Other log exporters (e.g. in-memory, console) that are added separately are unaffected.
