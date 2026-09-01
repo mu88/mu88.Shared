@@ -1,5 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -91,6 +94,26 @@ public class ServiceCollectionExtensionsTests
 
         // Assert
         traces.Should().ContainSingle(a => a.DisplayName.Contains("/hello"));
+    }
+
+    [Test]
+    public async Task WebApp_ShouldExposeHttpClientTraces()
+    {
+        // Arrange
+        var traces = new Collection<Activity>();
+        using var loopbackServer = new LoopbackHttpServer();
+        var customWebApplicationFactory = new CustomWebApplicationFactory([], [], traces);
+        using var httpClient = customWebApplicationFactory.CreateClient();
+
+        // Act
+        var serveTask = loopbackServer.ServeSingleOkResponseAsync();
+        (await httpClient.GetAsync($"call-external?url={Uri.EscapeDataString(loopbackServer.Url)}")).Should().Be200Ok(); // trigger outgoing HttpClient call
+        await serveTask;
+        customWebApplicationFactory.Services.GetRequiredService<TracerProvider>().ForceFlush();
+        await customWebApplicationFactory.DisposeAsync();
+
+        // Assert
+        traces.Should().Contain(activity => activity.Source.Name == "System.Net.Http");
     }
 
     [Test]
@@ -188,5 +211,44 @@ public class ServiceCollectionExtensionsTests
                         .WithLogging(loggingBuilder => loggingBuilder.AddInMemoryExporter(logs))
                         .WithTracing(tracingBuilder => tracingBuilder.AddInMemoryExporter(traces));
                 });
+    }
+
+    /// <summary>
+    ///     A minimal, real (loopback-only) HTTP server used to trigger genuine outgoing HttpClient network activity.
+    ///     A mocked <see cref="System.Net.Http.HttpMessageHandler" /> (e.g. via a test double) would bypass the
+    ///     framework's own <c>SocketsHttpHandler</c>, which is where the "System.Net.Http" trace activity is created,
+    ///     so a real loopback call is required to reliably verify HttpClient trace instrumentation end-to-end.
+    /// </summary>
+    private sealed class LoopbackHttpServer : IDisposable
+    {
+        private readonly HttpListener _listener = new();
+
+        public LoopbackHttpServer()
+        {
+            var port = GetFreeTcpPort();
+            Url = $"http://127.0.0.1:{port.ToString(CultureInfo.InvariantCulture)}/ping/";
+            _listener.Prefixes.Add(Url);
+            _listener.Start();
+        }
+
+        public string Url { get; }
+
+        public void Dispose() => _listener.Close();
+
+        public async Task ServeSingleOkResponseAsync()
+        {
+            var context = await _listener.GetContextAsync();
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+            context.Response.Close();
+        }
+
+        private static int GetFreeTcpPort()
+        {
+            var tcpListener = new TcpListener(IPAddress.Loopback, 0);
+            tcpListener.Start();
+            var port = ((IPEndPoint)tcpListener.LocalEndpoint).Port;
+            tcpListener.Stop();
+            return port;
+        }
     }
 }

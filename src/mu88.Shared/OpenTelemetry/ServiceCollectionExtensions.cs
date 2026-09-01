@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using mu88.Shared.Settings;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Logs;
@@ -46,6 +47,8 @@ public static class ServiceCollectionExtensions
                     loggingOptions.IncludeFormattedMessage = true;
                     loggingOptions.IncludeScopes = true;
                 });
+
+            services.SuppressOtlpExporterHttpClientLogNoise("OtlpLogExporter");
         }
 
         if (mu88SharedOptions.OpenTelemetry.MetricsEnabled)
@@ -61,6 +64,8 @@ public static class ServiceCollectionExtensions
                     .AddRuntimeInstrumentation()
                     .AddOtlpExporter();
             });
+
+            services.SuppressOtlpExporterHttpClientLogNoise("OtlpMetricExporter");
         }
 
         if (mu88SharedOptions.OpenTelemetry.TracesEnabled)
@@ -72,11 +77,24 @@ public static class ServiceCollectionExtensions
             {
                 tracingBuilder
                     .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
                     .AddEntityFrameworkCoreInstrumentation()
                     .AddOtlpExporter();
             });
+
+            services.SuppressOtlpExporterHttpClientLogNoise("OtlpTraceExporter");
         }
 
         return services;
     }
+
+    /// <summary>
+    ///     When using the OTLP exporter's HTTP/protobuf protocol, OpenTelemetry resolves the exporter's HttpClient via
+    ///     IHttpClientFactory under a well-known name (e.g. "OtlpTraceExporter"). By default, that
+    ///     IHttpClientFactory-created HttpClient logs its own request/response lifecycle under the ILogger category
+    ///     "System.Net.Http.HttpClient.{name}.*", which creates noisy, low-value log entries about the export
+    ///     mechanism itself. This suppresses that specific category down to Warning, leaving actual errors visible.
+    /// </summary>
+    private static void SuppressOtlpExporterHttpClientLogNoise(this IServiceCollection services, string otlpExporterHttpClientName) =>
+        services.AddLogging(logging => logging.AddFilter($"System.Net.Http.HttpClient.{otlpExporterHttpClientName}", LogLevel.Warning));
 }
