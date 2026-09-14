@@ -646,7 +646,7 @@
         "type": "Project",
         "dependencies": {
           "IDisposableAnalyzers": "[4.0.8, )",
-          "Meziantou.Analyzer": "[3.0.195, )",
+          "Meziantou.Analyzer": "[3.0.196, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[10.9.0, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
@@ -667,9 +667,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "CentralTransitive",
-        "requested": "[3.0.195, )",
-        "resolved": "3.0.195",
-        "contentHash": "+OzBSeXP1nXzQiLOIvZp6G9ldu8QkCTZjyVBAbn7dEBnEeWvDLUW1Py61cQ12OsYf45YpZ6Pel1rQ+cedWQR2Q=="
+        "requested": "[3.0.196, )",
+        "resolved": "3.0.196",
+        "contentHash": "kHqYaDnJb7PEMM7o6XjZxcX8tX/ZTMXvYofaWfCBHK2wCUH5a+1PhM2nbTA46m+cqY8fIJrXLMpnTfaiwsJBDw=="
       },
       "Microsoft.AspNetCore.OpenApi": {
         "type": "CentralTransitive",
