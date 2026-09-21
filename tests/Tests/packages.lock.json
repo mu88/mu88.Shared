@@ -95,9 +95,9 @@
       },
       "Testcontainers": {
         "type": "Direct",
-        "requested": "[4.14.0, )",
-        "resolved": "4.14.0",
-        "contentHash": "ojuBi91xcMsR6vnFuNsQDWU9tlZlrtmqy95VPNWVVnh24GiwFL/WMnVmb6bRv8LqovtnKPJN9cpmH1k02Z4ZoA==",
+        "requested": "[4.15.0, )",
+        "resolved": "4.15.0",
+        "contentHash": "8tCZKMm++C/9dHIr8lsE1iDBIBmthbo2XlGFDr4gorT1vgZrJwU36fNkCGuX7h7V39rpQoTK/aG+FhJz3jhY3A==",
         "dependencies": {
           "Docker.DotNet.Enhanced": "4.3.3",
           "Docker.DotNet.Enhanced.X509": "4.3.3",
@@ -646,7 +646,7 @@
         "type": "Project",
         "dependencies": {
           "IDisposableAnalyzers": "[4.0.8, )",
-          "Meziantou.Analyzer": "[3.0.196, )",
+          "Meziantou.Analyzer": "[3.0.224, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[10.9.0, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
@@ -667,9 +667,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "CentralTransitive",
-        "requested": "[3.0.196, )",
-        "resolved": "3.0.196",
-        "contentHash": "kHqYaDnJb7PEMM7o6XjZxcX8tX/ZTMXvYofaWfCBHK2wCUH5a+1PhM2nbTA46m+cqY8fIJrXLMpnTfaiwsJBDw=="
+        "requested": "[3.0.224, )",
+        "resolved": "3.0.224",
+        "contentHash": "VJ1odmBzUroCdGdQq/sh17s5zPe9jHC2jFnMNQf4z4SUfbP7GKiC7iSKEBnsX3mfEAlGKdB0r9dQ/wm2EvMR/A=="
       },
       "Microsoft.AspNetCore.OpenApi": {
         "type": "CentralTransitive",
