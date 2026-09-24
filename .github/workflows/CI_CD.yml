@@ -26,6 +26,7 @@ jobs:
     needs: shared_ci_cd
 
     permissions:
+      attestations: write
       id-token: write  # enable GitHub OIDC token issuance for this job
 
     steps:
@@ -40,7 +41,39 @@ jobs:
           global-json-file: global.json
 
       - name: Pack .NET project and create NuGet package
-        run: dotnet pack src/mu88.Shared/mu88.Shared.csproj /p:Version=${{ needs.shared_ci_cd.outputs.version }}
+        id: package
+        shell: pwsh
+        run: |
+          $version = '${{ needs.shared_ci_cd.outputs.version }}'.Trim()
+          dotnet pack src/mu88.Shared/mu88.Shared.csproj "/p:Version=$version"
+          "path=src/mu88.Shared/bin/Release/mu88.Shared.$version.nupkg" >> $env:GITHUB_OUTPUT
+
+      - name: Attest NuGet package build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
+        with:
+          subject-path: ${{ steps.package.outputs.path }}
+
+      - name: Extract package SPDX SBOM
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $packagePath = "${{ steps.package.outputs.path }}"
+          $sbomPath = "_manifest/spdx_2.2/manifest.spdx.json"
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($packagePath)
+          try {
+            $entry = $archive.GetEntry($sbomPath) ?? (throw "The NuGet package does not contain '$sbomPath'.")
+            [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, "sbom.spdx.json", $true)
+          }
+          finally {
+            $archive.Dispose()
+          }
+
+      - name: Attest NuGet package SBOM
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: ${{ steps.package.outputs.path }}
+          predicate-type: https://spdx.dev/Document
+          predicate-path: sbom.spdx.json
 
       - name: NuGet login
         uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1
