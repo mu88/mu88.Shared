@@ -4,30 +4,30 @@
     "net10.0": {
       "Microsoft.AspNetCore.OpenApi": {
         "type": "Direct",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "R/1EATnPLU+gRfB6lwVkMcymmyAY5ppBBdRN/5lhNEiT3xP1sWccuSFkU/f1lQvN/WgRq5Vn8AhCdE3fqgsL/w==",
+        "requested": "[10.0.12, )",
+        "resolved": "10.0.12",
+        "contentHash": "7RnQ/UKn+kK3JDLmTpW+vVqNErWthGPAVAy1aIiBzv4ucQ6g9NFvOJUuT0PHcpvcJxGVxctMxj6t+NESWMrgHQ==",
         "dependencies": {
-          "Microsoft.OpenApi": "[2.7.5, 3.0.0)"
+          "Microsoft.OpenApi": "[2.12.0, 3.0.0)"
         }
       },
       "Microsoft.Extensions.Compliance.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.9.0",
-        "contentHash": "tuSqNuiJxlln43sZ8c1EDA4WXit1eX4foGadylXso3DnMVc+DtKfaNEwvHuiFXfPsEUZ6Z3GnF0Bfk9vvOsE4Q=="
+        "resolved": "10.10.0",
+        "contentHash": "Sh3ujDRJpCMNY4x+43ljCROt4qBOoWfsL8l816RPYZS1S+Tw277r5002rbB15Sh6hFcCT8mGYBO7NtpfSYrQ0Q=="
       },
       "Microsoft.Extensions.Telemetry.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.9.0",
-        "contentHash": "rCyM64XvBNi2IY/5noMVsJjt22zVmnI+8tGrb6JnPRW/75Nyv9Hi+7gkxb7zQcR0+2mzS1sAqPXz2PsdHZCqHg==",
+        "resolved": "10.10.0",
+        "contentHash": "I76SAZ95I5lYh4whVZvLpKhpvHI1o21FfGqiASU85GtIVA4ULv+TVIE5+swKhnC63+xI4XjCcIWa9LbyR3pFNw==",
         "dependencies": {
-          "Microsoft.Extensions.Compliance.Abstractions": "10.9.0"
+          "Microsoft.Extensions.Compliance.Abstractions": "10.10.0"
         }
       },
       "Microsoft.OpenApi": {
         "type": "Transitive",
-        "resolved": "2.7.5",
-        "contentHash": "0FA67RSnRM4tcBKqiqVu/HPdZ9+QOKbmeRjxRUGTCjPU4C0bmUhd97Dso7Yild5P7nOV6GxJ2xrK0Kv/O9xp0w=="
+        "resolved": "2.12.0",
+        "contentHash": "0xB/be+f6qYOhvQPUrVsLrau+fkowYv6gt9RIkajMhwT7sZnqtcA797yW3bS5kgSje+AQW4xZgyLnW641YFioQ=="
       },
       "OpenTelemetry": {
         "type": "Transitive",
@@ -55,7 +55,7 @@
         "dependencies": {
           "IDisposableAnalyzers": "[4.0.8, )",
           "Meziantou.Analyzer": "[3.0.257, )",
-          "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[10.9.0, )",
+          "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[10.10.0, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
           "OpenTelemetry.Extensions.Hosting": "[1.18.0, )",
           "OpenTelemetry.Instrumentation.AspNetCore": "[1.18.0, )",
@@ -80,11 +80,11 @@
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks.Common": {
         "type": "CentralTransitive",
-        "requested": "[10.9.0, )",
-        "resolved": "10.9.0",
-        "contentHash": "CyHixu/WT6Nc70pT0wAzOwoquzaly6EtDpPvXxP07vVE6VvV1TzufS52F4sBlcC7ZIiscRLNEmZQuCmBSge1Mw==",
+        "requested": "[10.10.0, )",
+        "resolved": "10.10.0",
+        "contentHash": "97obD8cZrodFXUiL4JlCLFy/0wkXW/+dNlPYNRTTdh57acIf9OAVmOr1X5ZjcMWn0U6SYONi20G0FEBogiVjbg==",
         "dependencies": {
-          "Microsoft.Extensions.Telemetry.Abstractions": "10.9.0"
+          "Microsoft.Extensions.Telemetry.Abstractions": "10.10.0"
         }
       },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
