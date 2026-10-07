@@ -1,5 +1,32 @@
 
 
+<a name="8.5.0"></a>
+## [8.5.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.5.0) (2026-10-07)
+
+### ✨ Features
+
+* add mu88.Shared.Testing package ([197568f](https://www.github.com/mu88/mu88.Shared/commit/197568fdb4085e037814496a4ab03fe931accde7))
+
+### 🔧 Chores
+
+* **deps:** update all .net ([8b8b522](https://www.github.com/mu88/mu88.Shared/commit/8b8b522fc605fda5b7a4250a2da54d5668538112))
+* **deps:** update all .net ([d3fc0a1](https://www.github.com/mu88/mu88.Shared/commit/d3fc0a1768c4e82ddcb1a91b4e7a42705bdfcab7))
+* **deps:** update all .net ([189b570](https://www.github.com/mu88/mu88.Shared/commit/189b570034479329af2b0fa57b5eabf360cb9588))
+* **deps:** update all dependencies ([3672c98](https://www.github.com/mu88/mu88.Shared/commit/3672c98157181ad3a818d853654a98b4c1cb7d93))
+* **deps:** update all dependencies ([f6fc15f](https://www.github.com/mu88/mu88.Shared/commit/f6fc15f4cbce874dd726ecde04ac36d881481cb1))
+* **deps:** update all dependencies ([60a7b9a](https://www.github.com/mu88/mu88.Shared/commit/60a7b9a00250a61f58620fb970b51d9abe558833))
+* **deps:** update all dependencies ([1a8f231](https://www.github.com/mu88/mu88.Shared/commit/1a8f2313c521bad4aa8f202e8c85866e94fe9835))
+* **deps:** update all dependencies ([7f2cd87](https://www.github.com/mu88/mu88.Shared/commit/7f2cd8791d2f39f9c8566ec416cccdc04570266e))
+* **deps:** update all dependencies ([2169fb9](https://www.github.com/mu88/mu88.Shared/commit/2169fb91b2854e365f6506c5e30dcd281b6ec437))
+* **deps:** update all dependencies ([5e8c695](https://www.github.com/mu88/mu88.Shared/commit/5e8c6953ee6a03e78b7c7375cf17e50c1782e62d))
+* **deps:** update all dependencies ([859d189](https://www.github.com/mu88/mu88.Shared/commit/859d1890503e6644bfa73e22a985ccd023b447f9))
+* **deps:** update mu88/common digest to 03ce929 ([452fd87](https://www.github.com/mu88/mu88.Shared/commit/452fd8738d81e503236936a871e88c48ebe20e5f))
+* **deps:** update mu88/common digest to 0d04e69 ([c654a4e](https://www.github.com/mu88/mu88.Shared/commit/c654a4e84ecd9d8f23666187a7d785d18cd0ae0e))
+* **deps:** update mu88/common digest to 309b9cb ([66e7f59](https://www.github.com/mu88/mu88.Shared/commit/66e7f590050a1a0e6b95565ec4dcf569b3c92fcc))
+* **deps:** update mu88/common digest to 349db23 ([be21f39](https://www.github.com/mu88/mu88.Shared/commit/be21f3956e282df524d669869a74485f71733344))
+* **deps:** update mu88/common digest to 88212c6 ([f0ec061](https://www.github.com/mu88/mu88.Shared/commit/f0ec061b964d225251f80fd1e7f3a56acb2dc73b))
+* **deps:** update mu88/common digest to fedc5a3 ([6d685eb](https://www.github.com/mu88/mu88.Shared/commit/6d685ebbd39f854a7e10cd61458c381e92ed7610))
+
 <a name="8.4.0"></a>
 ## [8.4.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.4.0) (2026-09-01)
 
