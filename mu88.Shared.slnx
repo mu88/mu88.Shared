@@ -18,4 +18,5 @@
   </Folder>
   <Project Path="src/mu88.HealthCheck/mu88.HealthCheck.csproj" />
   <Project Path="src/mu88.Shared/mu88.Shared.csproj" />
+  <Project Path="src/mu88.Shared.Testing/mu88.Shared.Testing.csproj" />
 </Solution>

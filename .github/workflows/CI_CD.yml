@@ -29,6 +29,14 @@ jobs:
       attestations: write
       id-token: write  # enable GitHub OIDC token issuance for this job
 
+    strategy:
+      matrix:
+        project:
+          - path: src/mu88.Shared/mu88.Shared.csproj
+            package-id: mu88.Shared
+          - path: src/mu88.Shared.Testing/mu88.Shared.Testing.csproj
+            package-id: mu88.Shared.Testing
+
     steps:
       - name: Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -45,8 +53,8 @@ jobs:
         shell: pwsh
         run: |
           $version = '${{ needs.shared_ci_cd.outputs.version }}'.Trim()
-          dotnet pack src/mu88.Shared/mu88.Shared.csproj "/p:Version=$version"
-          "path=src/mu88.Shared/bin/Release/mu88.Shared.$version.nupkg" >> $env:GITHUB_OUTPUT
+          dotnet pack ${{ matrix.project.path }} "/p:Version=$version"
+          "path=$(Split-Path '${{ matrix.project.path }}' -Parent)/bin/Release/${{ matrix.project.package-id }}.$version.nupkg" >> $env:GITHUB_OUTPUT
 
       - name: Attest NuGet package build provenance
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
@@ -83,6 +91,6 @@ jobs:
 
       - name: Publish NuGet package
         run: |
-          dotnet nuget push src/mu88.Shared/bin/Release/mu88.Shared.*.nupkg \
+          dotnet nuget push ${{ steps.package.outputs.path }} \
           --api-key ${{steps.login.outputs.NUGET_API_KEY}} \
           --source https://api.nuget.org/v3/index.json

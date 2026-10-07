@@ -9,6 +9,8 @@ using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentAssertions;
+using FluentAssertions.Web;
+using mu88.Shared.Testing.Assertions;
 using NUnit.Framework.Interfaces;
 
 namespace Tests.System;
@@ -79,9 +81,9 @@ public class SystemTests
     public async Task PublishContainer_ShouldEmitCustomMsBuildPropertyWithComputedImageName()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" },
@@ -109,9 +111,9 @@ public class SystemTests
     public async Task PublishContainer_ShouldEmitCustomMsBuildItemGroupWithGeneratedImages()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" },
@@ -157,9 +159,9 @@ public class SystemTests
     public async Task PublishContainer_ShouldEmitCustomMsBuildItemGroupWithGeneratedContainersProvidedByTheSDK()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" }, { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
@@ -186,9 +188,9 @@ public class SystemTests
     public async Task PublishRegularContainer_ShouldSetAssemblyVersionFromReleaseVersion()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
@@ -207,9 +209,9 @@ public class SystemTests
     public async Task PublishRegularContainer_ShouldUseCustomContainerBaseImageVersion()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }
@@ -230,9 +232,9 @@ public class SystemTests
     public async Task PublishChiseledContainer_ShouldUseCustomContainerBaseImageVersion()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }, { "InvariantGlobalization", "true" }
@@ -254,9 +256,9 @@ public class SystemTests
     public async Task PublishChiseledContainerWithExtra_ShouldUseCustomContainerBaseImageVersion()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" },
@@ -283,9 +285,9 @@ public class SystemTests
     {
         // Arrange
         _tempVersion = "1.0.0";
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
 
         // ReleaseVersion must be a valid SemVer string (not just an arbitrary marker) and distinct from
         // _tempVersion: mu88.Shared.targets now also sets the assembly's Version from ReleaseVersion, and
@@ -307,9 +309,9 @@ public class SystemTests
     {
         // Arrange
         _tempVersion = "1.0.0";
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
 
         // See the comment in the previous test for why this must be a valid SemVer string.
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
@@ -328,9 +330,9 @@ public class SystemTests
     public async Task PublishChiseledContainer_ShouldNotOverrideInitialContainerFamily()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "ContainerFamily", "alpine" }
@@ -352,9 +354,9 @@ public class SystemTests
     public async Task PublishRegularContainer()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
@@ -373,9 +375,9 @@ public class SystemTests
     [Test]
     public async Task PublishChiseledContainer()
     {
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
@@ -395,9 +397,9 @@ public class SystemTests
     public async Task PublishChiseledContainerWithExtra()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "InvariantGlobalization", "false" }
@@ -420,9 +422,9 @@ public class SystemTests
     public async Task PublishRegularAndChiseledContainer()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishChiseledContainer", "true" }, { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
@@ -444,9 +446,9 @@ public class SystemTests
     public async Task PublishContainer_ShouldSetContainerMetadata()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "ContainerDescription", "This is an awesome project" },
@@ -484,13 +486,14 @@ public class SystemTests
     }
 
     [Test]
+    [Category("Integration")] // Runs twice on purpose: proves mu88.HealthCheck.dll via real NuGet consumption (System job) and feeds Sonar coverage (Integration job).
     [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP014:Use a single instance of HttpClient", Justification = "Performance it not that critical here.")]
     public async Task AppRunningInDocker_ShouldBeHealthy()
     {
         // Arrange
-        CopyTestProject(_tempTestProjectDirectory);
-        await BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
-        await AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
+        NuGetTestProjectHelper.CopyTestProject(_tempTestProjectDirectory);
+        await NuGetTestProjectHelper.BuildNuGetPackageAsync(_tempNuGetDirectory, _tempVersion, _cancellationToken);
+        await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
             { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }
@@ -502,90 +505,13 @@ public class SystemTests
         // Act
         var healthCheckResponse = await httpClient.GetAsync("healthz", _cancellationToken);
         var appResponse = await httpClient.GetAsync("/hello", _cancellationToken);
-        var healthCheckToolResult = await _container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://127.0.0.1:8080/healthz"], _cancellationToken);
 
         // Assert
-        await LogsShouldNotContainWarningsAsync(_container, _cancellationToken);
-        await HealthCheckShouldBeHealthyAsync(healthCheckResponse, _cancellationToken);
-        await AppShouldRunAsync(appResponse, _cancellationToken);
-        healthCheckToolResult.ExitCode.Should().Be(0);
-    }
-
-    private static async Task AppShouldRunAsync(HttpResponseMessage appResponse, CancellationToken cancellationToken)
-    {
+        await _container.LogsShouldNotContainWarningsAsync(_cancellationToken);
+        await healthCheckResponse.HealthCheckShouldBeHealthyAsync(_cancellationToken);
         appResponse.Should().Be200Ok();
-        (await appResponse.Content.ReadAsStringAsync(cancellationToken)).Should().Contain("World");
-    }
-
-    private static async Task HealthCheckShouldBeHealthyAsync(HttpResponseMessage healthCheckResponse, CancellationToken cancellationToken)
-    {
-        healthCheckResponse.Should().Be200Ok();
-        (await healthCheckResponse.Content.ReadAsStringAsync(cancellationToken)).Should().Be("Healthy");
-    }
-
-    private static async Task LogsShouldNotContainWarningsAsync(IContainer container, CancellationToken cancellationToken)
-    {
-        (string Stdout, string Stderr) logValues = await container.GetLogsAsync(ct: cancellationToken);
-        Console.WriteLine($"Stderr:{Environment.NewLine}{logValues.Stderr}");
-        Console.WriteLine($"Stdout:{Environment.NewLine}{logValues.Stdout}");
-        logValues.Stdout.Should().NotContain("warn:");
-    }
-
-    private static void CopyTestProject(DirectoryInfo directory)
-    {
-        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
-        var testProjectPath = Path.Join(rootDirectory.FullName, "DummyAspNetCoreProjectViaNuGet");
-
-        // Create all the directories
-        foreach (var dirPath in Directory.GetDirectories(testProjectPath, "*", SearchOption.AllDirectories))
-        {
-            Directory.CreateDirectory(dirPath.Replace(testProjectPath, directory.FullName, StringComparison.Ordinal));
-        }
-
-        // Copy all the files & Replaces any files with the same name
-        foreach (var newPath in Directory.GetFiles(testProjectPath, "*.*", SearchOption.AllDirectories))
-        {
-            File.Copy(newPath, newPath.Replace(testProjectPath, directory.FullName, StringComparison.Ordinal), true);
-        }
-    }
-
-    private static async Task BuildNuGetPackageAsync(DirectoryInfo tempNugetDirectory, string nugetVersion, CancellationToken cancellationToken)
-    {
-        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
-        var projectFile = Path.Join(rootDirectory.FullName, "src", "mu88.Shared", "mu88.Shared.csproj");
-        await WaitUntilDotnetToolSucceededAsync([
-                "pack",
-                projectFile,
-                $"-p:Version={nugetVersion}",
-                "-p:GenerateSBOM=false",
-                "-o",
-                tempNugetDirectory.FullName
-            ],
-            cancellationToken);
-    }
-
-    private static async Task AddNuGetPackageToTestProjectAsync(
-        DirectoryInfo tempNugetDirectory,
-        DirectoryInfo tempTestProjectDirectory,
-        string nugetVersion,
-        CancellationToken cancellationToken)
-    {
-        await WaitUntilDotnetToolSucceededAsync([
-                "add",
-                $"{GetTestProjectFilePath(tempTestProjectDirectory)}",
-                "package",
-                "mu88.Shared",
-                "-v",
-                $"{nugetVersion}",
-                "-s",
-                $"{tempNugetDirectory.FullName}"
-            ],
-            cancellationToken);
-        await WaitUntilDotnetToolSucceededAsync([
-                "restore",
-                $"{GetTestProjectFilePath(tempTestProjectDirectory)}"
-            ],
-            cancellationToken);
+        (await appResponse.Content.ReadAsStringAsync(_cancellationToken)).Should().Contain("World");
+        await _container.HealthCheckToolShouldSucceedAsync("http://127.0.0.1:8080/healthz", _cancellationToken);
     }
 
     private static async Task<string> BuildDockerImageOfAppAsync(
@@ -605,7 +531,7 @@ public class SystemTests
         IEnumerable<string>? additionalArguments = null)
     {
         buildParameters.Add("ContainerRegistry", string.Empty); // image shall not be pushed
-        IEnumerable<string> arguments = ["publish", GetTestProjectFilePath(tempTestProjectDirectory), "-t:PublishContainersForMultipleFamilies"];
+        IEnumerable<string> arguments = ["publish", NuGetTestProjectHelper.GetTestProjectFilePath(tempTestProjectDirectory), "-t:PublishContainersForMultipleFamilies"];
         if (additionalArguments != null)
         {
             arguments = arguments.Concat(additionalArguments);
@@ -613,8 +539,6 @@ public class SystemTests
 
         return await WaitUntilDotnetToolSucceededAsync(arguments.Concat(buildParameters.Select(kvp => $"-p:{kvp.Key}={kvp.Value}")), cancellationToken);
     }
-
-    private static string GetTestProjectFilePath(DirectoryInfo tempTestProjectDirectory) => Path.Join(tempTestProjectDirectory.FullName, "DummyAspNetCoreProjectViaNuGet.csproj");
 
     private static async Task<IContainer> StartAppInContainersAsync(string containerImageTag, CancellationToken cancellationToken)
     {

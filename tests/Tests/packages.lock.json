@@ -198,6 +198,11 @@
           "Microsoft.Net.Http.Headers": "2.3.0"
         }
       },
+      "Microsoft.Bcl.AsyncInterfaces": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg=="
+      },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
         "resolved": "18.10.1",
@@ -627,6 +632,11 @@
           "Microsoft.Extensions.Logging.Abstractions": "8.0.3"
         }
       },
+      "System.ComponentModel.Annotations": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
+      },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
         "resolved": "10.0.12",
@@ -657,6 +667,22 @@
           "OpenTelemetry.Instrumentation.Process": "[0.5.0-beta.7, )",
           "OpenTelemetry.Instrumentation.Runtime": "[1.19.0, )",
           "StyleCop.Analyzers": "[1.1.118, )"
+        }
+      },
+      "mu88.shared.testing": {
+        "type": "Project",
+        "dependencies": {
+          "CliWrap": "[3.10.5, )",
+          "Docker.DotNet": "[3.125.15, )",
+          "FluentAssertions": "[8.11.0, )",
+          "FluentAssertions.Web.v8": "[2.0.3, )",
+          "IDisposableAnalyzers": "[4.0.8, )",
+          "Meziantou.Analyzer": "[3.0.266, )",
+          "Microsoft.Playwright": "[1.48.0, )",
+          "NUnit": "[4.6.1, )",
+          "StyleCop.Analyzers": "[1.1.118, )",
+          "Testcontainers": "[4.15.0, )",
+          "Testcontainers.Playwright": "[4.15.0, )"
         }
       },
       "IDisposableAnalyzers": {
@@ -705,6 +731,16 @@
           "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.12",
           "Microsoft.Extensions.FileProviders.Abstractions": "10.0.12",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.12"
+        }
+      },
+      "Microsoft.Playwright": {
+        "type": "CentralTransitive",
+        "requested": "[1.48.0, )",
+        "resolved": "1.48.0",
+        "contentHash": "u1/zX2/YzpNjkjKurOeLgXrqtQwDVdHMl1/kppxDst3NEg4htJHPVC2xs1dmV+f6P7t/BXlP14xbJ6E5I6tTXQ==",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+          "System.ComponentModel.Annotations": "5.0.0"
         }
       },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
@@ -779,6 +815,15 @@
         "requested": "[1.1.118, )",
         "resolved": "1.1.118",
         "contentHash": "Onx6ovGSqXSK07n/0eM3ZusiNdB6cIlJdabQhWGgJp3Vooy9AaLS/tigeybOJAobqbtggTamoWndz72JscZBvw=="
+      },
+      "Testcontainers.Playwright": {
+        "type": "CentralTransitive",
+        "requested": "[4.15.0, )",
+        "resolved": "4.15.0",
+        "contentHash": "3WOA3/nxQWvv2CV46zT90tm5tKNp4nG1m3fgsxofVtAAOBC9lMEikogzJsWyuHieqFhx3eKp4axBRH7Du8vK9A==",
+        "dependencies": {
+          "Testcontainers": "4.15.0"
+        }
       }
     }
   }

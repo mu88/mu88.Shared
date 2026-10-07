@@ -30,5 +30,7 @@
     <PackageVersion Include="RichardSzalay.MockHttp" Version="7.1.0" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageVersion Include="Testcontainers" Version="4.15.0" />
+    <PackageVersion Include="Testcontainers.Playwright" Version="4.15.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.48.0" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);IDISP001;IDISP004;MA0012;SA1010</NoWarn>
+    <NoWarn>$(NoWarn);IDISP001;IDISP004;IDISP013;MA0012;SA1010</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\mu88.HealthCheck\mu88.HealthCheck.csproj" />
+    <ProjectReference Include="..\..\src\mu88.Shared.Testing\mu88.Shared.Testing.csproj" />
     <ProjectReference Include="..\DummyAspNetCoreProject\DummyAspNetCoreProject.csproj" />
   </ItemGroup>
 

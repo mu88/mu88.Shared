@@ -72,3 +72,17 @@ services:
 ```
 
 As you can see, the health check tool is called with the URL of the health check endpoint of your app and instead of using `bash` or `curl`, the .NET runtime itself is used to run the health check tool. If the health check fails, the Docker container will be restarted after the specified number of retries.
+
+## mu88.Shared.Testing
+
+This repo also contains the code of a second, independent NuGet package, [`mu88.Shared.Testing`](https://www.nuget.org/packages/mu88.Shared.Testing/), bundling test infrastructure that was duplicated across several of my apps' system tests:
+
+- Resolve pinned Testcontainers image references from a (never-built) `Dockerfile`, so that Renovate's built-in "dockerfile" manager keeps image versions up to date without any custom configuration (`mu88.Shared.Testing.Testcontainers.TestcontainerImages`, adapted from testcontainers-dotnet's own internal `TestSession`/`DockerfileParser` helpers, see [testcontainers/testcontainers-dotnet#1782](https://github.com/testcontainers/testcontainers-dotnet/discussions/1782))
+- Start and connect to a Testcontainers-based Playwright browser instance (`mu88.Shared.Testing.Playwright.PlaywrightSession`)
+- Build an app's Docker image via `Microsoft.NET.Build.Containers` for use as the system-under-test (`mu88.Shared.Testing.Docker.DockerImageBuilder`)
+- Assert that a running app/container is healthy and free of warnings in its logs (`mu88.Shared.Testing.Assertions.SystemTestAssertions`)
+
+Unlike `mu88.Shared` itself, this package is only intended to be referenced from **test** projects, keeping Testcontainers/Playwright dependencies out of production code.
+
+It shares the same version number as `mu88.Shared` (one combined release cadence for this repo).
+
