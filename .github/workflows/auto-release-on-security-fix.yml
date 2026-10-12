@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Get bot user identity
-        uses: mu88/common/.github/actions/get-bot-identity@309b9cb3032fc1ca368e5c414baf4998c700e314 # main
+        uses: mu88/common/.github/actions/get-bot-identity@65acae25e1b1766100f2541fbc4c0f4dcecc4375 # main
         id: bot-identity
         with:
           client-id: ${{ vars.MU88_BOT_APP_ID }}
