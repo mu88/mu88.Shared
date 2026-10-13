@@ -1,5 +1,17 @@
 
 
+<a name="8.6.0"></a>
+## [8.6.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.6.0) (2026-10-13)
+
+### ✨ Features
+
+* **testing:** add PlaywrightImages.GetServerImageTag helper ([0fc98cb](https://www.github.com/mu88/mu88.Shared/commit/0fc98cb457200a1633e4d14ed5a4d50370ffac31))
+
+### 🔧 Chores
+
+* **deps:** update all dependencies ([27e6ba6](https://www.github.com/mu88/mu88.Shared/commit/27e6ba6e5c193005d7ba3f9deccd86d4a06076f7))
+* **deps:** update mu88/common digest to 2edcdac ([7991834](https://www.github.com/mu88/mu88.Shared/commit/7991834d6c4156c86089679b185d8d9504665f4d))
+
 <a name="8.5.0"></a>
 ## [8.5.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.5.0) (2026-10-07)
 
