@@ -54,7 +54,7 @@
         "type": "Project",
         "dependencies": {
           "IDisposableAnalyzers": "[4.0.8, )",
-          "Meziantou.Analyzer": "[3.0.294, )",
+          "Meziantou.Analyzer": "[3.0.299, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.Common": "[10.10.0, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.19.1, )",
           "OpenTelemetry.Extensions.Hosting": "[1.19.1, )",
@@ -74,9 +74,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "CentralTransitive",
-        "requested": "[3.0.294, )",
-        "resolved": "3.0.294",
-        "contentHash": "j78ENG75OozcuL0OPSIjvgLaYI4F5nS8mpK02PlXCCCXj8A4CAIfpKw27ZPvG4k8TweGqParV8Dwm2VAwBBmgg=="
+        "requested": "[3.0.299, )",
+        "resolved": "3.0.299",
+        "contentHash": "3PWTsYZnFFs49xDk6Y8+qy1jWe80+j9EhgzHrWo94MM711JsbCBqRptBJHhZmaueEJs6WNspJd+apIEqwyyjqg=="
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks.Common": {
         "type": "CentralTransitive",
