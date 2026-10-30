@@ -61,6 +61,7 @@ public static class DockerImageBuilder
         using var commandTask = Cli.Wrap("dotnet")
             .WithArguments(arguments.ToArray())
             .WithWorkingDirectory(workingDirectory)
+            .WithEnvironmentVariables(environment => environment.Set("MSBUILDDISABLENODEREUSE", "1"))
             .WithValidation(CommandResultValidation.None)
             .ExecuteBufferedAsync(cancellationToken);
         var result = await commandTask;
