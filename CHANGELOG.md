@@ -1,5 +1,19 @@
 
 
+<a name="8.6.1"></a>
+## [8.6.1](https://www.github.com/mu88/mu88.Shared/releases/tag/8.6.1) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* **testing:** prevent reused build workers from holding publish pipes open ([994961c](https://www.github.com/mu88/mu88.Shared/commit/994961c1f32c6c278f1c7ee1daeaac4b2b2b0306))
+
+### 🔧 Chores
+
+* **deps:** update all dependencies ([202cf9d](https://www.github.com/mu88/mu88.Shared/commit/202cf9d610c42131f116c0a743bbde533ad084fe))
+* **deps:** update all dependencies ([fcf9a9a](https://www.github.com/mu88/mu88.Shared/commit/fcf9a9a4ab2f82c0d42d0b5342ffa471e3ceb25d))
+* **deps:** update mu88/common digest to 74c30dc ([d8e395b](https://www.github.com/mu88/mu88.Shared/commit/d8e395b94f66fb0151af42270624346e9796f51c))
+* **deps:** update mu88/common digest to b59f07c ([edb7772](https://www.github.com/mu88/mu88.Shared/commit/edb7772b97798402a08631fcaff4a56b67b2dbe0))
+
 <a name="8.6.0"></a>
 ## [8.6.0](https://www.github.com/mu88/mu88.Shared/releases/tag/8.6.0) (2026-10-13)
 
