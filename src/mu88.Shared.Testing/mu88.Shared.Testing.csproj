@@ -53,6 +53,8 @@
     <PackageReference Include="Docker.DotNet" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Web.v8" />
+    <!-- Temporary GHSA-6527-9fp8-r4x6 pin; remove once FluentAssertions.Web.v8 and HttpMessageFormatter require WebUtilities >= 2.3.14. -->
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="Testcontainers" />
     <PackageReference Include="Testcontainers.Playwright" />
