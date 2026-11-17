@@ -21,11 +21,12 @@ jobs:
 
     steps:
       - name: Get bot user identity
-        uses: mu88/common/.github/actions/get-bot-identity@bf4949c266f27024a696728c0523958f8e1b90c3 # main
+        uses: mu88/common/.github/actions/get-bot-identity@86a394ee40f434d5ff90f9616155c0ef93965a12 # main
         id: bot-identity
         with:
           client-id: ${{ vars.MU88_BOT_APP_ID }}
           private-key: ${{ secrets.MU88_BOT_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
 
       - name: Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
