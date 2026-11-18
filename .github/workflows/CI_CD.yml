@@ -7,7 +7,28 @@ on:
       - '**'
 
 jobs:
+  temporary_security_pin_guard:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
+
+      - name: Enforce temporary package pins
+        uses: mu88/common/.github/actions/check-temporary-package-pins@e57ec8c3701c987baad7d392a4e4b3d0b9e15482 # main
+        with:
+          solution-path: mu88.Shared.slnx
+
   shared_ci_cd:
+    needs: temporary_security_pin_guard
     permissions:
       contents: read
       packages: write
