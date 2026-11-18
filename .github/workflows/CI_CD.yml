@@ -7,35 +7,14 @@ on:
       - '**'
 
 jobs:
-  temporary_security_pin_guard:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
-        with:
-          global-json-file: global.json
-
-      - name: Enforce temporary package pins
-        uses: mu88/common/.github/actions/check-temporary-package-pins@e57ec8c3701c987baad7d392a4e4b3d0b9e15482 # main
-        with:
-          solution-path: mu88.Shared.slnx
-
   shared_ci_cd:
-    needs: temporary_security_pin_guard
     permissions:
       contents: read
       packages: write
       attestations: write
       id-token: write
 
-    uses: mu88/common/.github/workflows/ci-cd.yml@bf4949c266f27024a696728c0523958f8e1b90c3 # main
+    uses: mu88/common/.github/workflows/ci-cd.yml@4b0f537de7133b6d169a85d780e108d3cd5493bc # feature/ai-centralize-pin-guard
     with:
       sonar-key: 'mu88_mu88.Shared'
     secrets:
