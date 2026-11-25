@@ -33,7 +33,7 @@ internal sealed partial class DockerfileParser
 
         var lines = File.ReadAllLines(_filePath)
             .Select(line => line.Trim())
-            .Where(line => !string.IsNullOrEmpty(line) && !line.StartsWith('#'))
+            .Where(line => !string.IsNullOrEmpty(line) && line[0] != '#')
             .ToArray();
 
         var fromMatches = lines
