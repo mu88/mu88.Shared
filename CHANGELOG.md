@@ -1,5 +1,39 @@
 
 
+<a name="9.0.0"></a>
+## [9.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/9.0.0) (2026-11-25)
+
+### ✨ Features
+
+* upgrade to .NET 11 ([62e8e57](https://www.github.com/mu88/mu88.Shared/commit/62e8e57813ac3da621b8f8d8f8022d4862701624))
+
+### 🐛 Bug Fixes
+
+* **actions:** restrict security release permissions ([c1a1f11](https://www.github.com/mu88/mu88.Shared/commit/c1a1f11c2e16a74bc0c595cec1fbfd5fe5b45cd8))
+* **actions:** restrict security release token ([e934a7c](https://www.github.com/mu88/mu88.Shared/commit/e934a7c3b58316c1c2fafbabcee969cef3ad2b1b))
+* **security:** pin vulnerable test dependency ([3aa6e9c](https://www.github.com/mu88/mu88.Shared/commit/3aa6e9c58027bf809353731935b589ec39b9a763))
+
+### ♻️ Refactors
+
+* **ci:** use centralized pin guard ([17a2162](https://www.github.com/mu88/mu88.Shared/commit/17a21629c1bfd8841a9b5e6237c7432a22d31689))
+
+### 🔧 Chores
+
+* **ci:** track the shared workflow on main ([d436dc8](https://www.github.com/mu88/mu88.Shared/commit/d436dc8acde7d034e86c990aa2390b1790885836))
+* **deps:** update all .net ([1b3796d](https://www.github.com/mu88/mu88.Shared/commit/1b3796d91b84c11acd92b898cf7e89df32418e7b))
+* **deps:** update all .net ([7be1a22](https://www.github.com/mu88/mu88.Shared/commit/7be1a2212c524610d179e661ea5f0fc440c684e5))
+* **deps:** update all dependencies ([568ee7e](https://www.github.com/mu88/mu88.Shared/commit/568ee7e248b3d5585e1a2a33d144e6edcdb3f887))
+* **deps:** update all dependencies ([d7f9492](https://www.github.com/mu88/mu88.Shared/commit/d7f94925db56a25c86fe1eb91e8cc8c1b2af72ce))
+* **deps:** update all dependencies ([854c66e](https://www.github.com/mu88/mu88.Shared/commit/854c66e5499a8e6e8083153bf2d576f79f0bb853))
+* **deps:** update dependency dotnet-coverage to v18.12.0 ([32010f9](https://www.github.com/mu88/mu88.Shared/commit/32010f9b0fbec93c0ec4eb4799bd14d0a62bb51c))
+* **deps:** update mu88/common digest to 64260e9 ([1c9d95f](https://www.github.com/mu88/mu88.Shared/commit/1c9d95f3536bfcfd5c6aa1984e928040f2bfca0a))
+* **deps:** update mu88/common digest to 9a7d93f ([a4707da](https://www.github.com/mu88/mu88.Shared/commit/a4707da7f53ec889659484a00e4aed52914f22ac))
+* **deps:** update mu88/common digest to bf4949c ([f68a8c0](https://www.github.com/mu88/mu88.Shared/commit/f68a8c0ed1459f9decb64ef48381102666064dbf))
+
+### Breaking Changes
+
+* upgrade to .NET 11 ([62e8e57](https://www.github.com/mu88/mu88.Shared/commit/62e8e57813ac3da621b8f8d8f8022d4862701624))
+
 <a name="8.6.1"></a>
 ## [8.6.1](https://www.github.com/mu88/mu88.Shared/releases/tag/8.6.1) (2026-10-30)
 
