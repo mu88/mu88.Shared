@@ -111,7 +111,7 @@
     <Error Condition=" '$(ReleaseVersion)' == '' " Text="ReleaseVersion property must be set (e.g., '1.2.3')" />
 
     <PropertyGroup>
-      <ContainerFamily Condition=" '$(_InitialContainerFamily)' == '' ">noble-chiseled</ContainerFamily>
+      <ContainerFamily Condition=" '$(_InitialContainerFamily)' == '' ">resolute-chiseled</ContainerFamily>
       <_ChiseledSuffix>-chiseled</_ChiseledSuffix>
     </PropertyGroup>
 

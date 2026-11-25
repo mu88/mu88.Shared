@@ -200,7 +200,7 @@ public class SystemTests
         await BuildDockerImageOfAppAsync(_tempTestProjectDirectory, buildParameters, _cancellationToken);
 
         // Assert
-        var publishedAssemblyPath = Path.Combine(_tempTestProjectDirectory.FullName, "bin", "Release", "net10.0", "linux-x64", "publish", "DummyAspNetCoreProjectViaNuGet.dll");
+        var publishedAssemblyPath = Path.Combine(_tempTestProjectDirectory.FullName, "bin", "Release", "net11.0", "linux-x64", "publish", "DummyAspNetCoreProjectViaNuGet.dll");
         File.Exists(publishedAssemblyPath).Should().BeTrue("the container publish should produce a published assembly at the expected location");
         FileVersionInfo.GetVersionInfo(publishedAssemblyPath).ProductVersion.Should().StartWith(_tempVersion, "the ReleaseVersion should flow into the assembly's InformationalVersion");
     }
@@ -214,7 +214,7 @@ public class SystemTests
         await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }
+            { "PublishRegularContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "11.0.0" }
         };
 
         // Act
@@ -225,7 +225,7 @@ public class SystemTests
             .SingleOrDefault(image
                 => image.RepoTags.Contains($"me/test:{_tempVersion}", StringComparer.Ordinal) && image.RepoTags.Contains("me/test:latest", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
-        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11");
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:11.0.0");
     }
 
     [Test]
@@ -237,7 +237,7 @@ public class SystemTests
         await NuGetTestProjectHelper.AddNuGetPackageToTestProjectAsync(_tempNuGetDirectory, _tempTestProjectDirectory, _tempVersion, _cancellationToken);
         Dictionary<string, string> buildParameters = new(StringComparer.Ordinal)
         {
-            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "9.0.11" }, { "InvariantGlobalization", "true" }
+            { "PublishChiseledContainer", "true" }, { "ReleaseVersion", _tempVersion }, { "IsRelease", "true" }, { "CustomContainerBaseImageVersion", "11.0.0" }, { "InvariantGlobalization", "true" }
         };
 
         // Act
@@ -249,7 +249,7 @@ public class SystemTests
                 => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
                 image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
-        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled");
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:11.0.0-resolute-chiseled");
     }
 
     [Test]
@@ -265,7 +265,7 @@ public class SystemTests
             { "InvariantGlobalization", "false" },
             { "ReleaseVersion", _tempVersion },
             { "IsRelease", "true" },
-            { "CustomContainerBaseImageVersion", "9.0.11" }
+            { "CustomContainerBaseImageVersion", "11.0.0" }
         };
 
         // Act
@@ -277,7 +277,7 @@ public class SystemTests
                 => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
                 image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
-        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:9.0.11-noble-chiseled-extra");
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Be("mcr.microsoft.com/dotnet/aspnet:11.0.0-resolute-chiseled-extra");
     }
 
     [Test]
@@ -415,7 +415,7 @@ public class SystemTests
                 => image.RepoTags.Contains($"me/test:{_tempVersion}-chiseled", StringComparer.Ordinal) &&
                 image.RepoTags.Contains("me/test:latest-chiseled", StringComparer.Ordinal));
         dockerImage.Should().NotBeNull();
-        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-noble-chiseled-extra");
+        dockerImage.Labels.Should().ContainKey("org.opencontainers.image.base.name").WhoseValue.Should().Match("mcr.microsoft.com/dotnet/aspnet:*-resolute-chiseled-extra");
     }
 
     [Test]
