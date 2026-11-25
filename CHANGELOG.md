@@ -1,5 +1,12 @@
 
 
+<a name="9.0.1"></a>
+## [9.0.1](https://www.github.com/mu88/mu88.Shared/releases/tag/9.0.1) (2026-11-25)
+
+### 🐛 Bug Fixes
+
+* **testing:** avoid MA0001 in Dockerfile comment filtering ([eba14ba](https://www.github.com/mu88/mu88.Shared/commit/eba14ba4ce3111859917a919bff03d3cff286faa))
+
 <a name="9.0.0"></a>
 ## [9.0.0](https://www.github.com/mu88/mu88.Shared/releases/tag/9.0.0) (2026-11-25)
 
