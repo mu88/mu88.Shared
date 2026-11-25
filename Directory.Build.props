@@ -2,6 +2,7 @@
   <Import Project="src/mu88.Shared/mu88.Shared.props" />
   <PropertyGroup>
     <TargetFramework>net11.0</TargetFramework>
+    <Features>$(Features);runtime-async=on</Features>
     <Version>9.0.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
